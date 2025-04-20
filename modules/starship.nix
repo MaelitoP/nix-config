@@ -26,7 +26,7 @@ in {
 
       character = if pkgs.stdenv.isDarwin then macos_prompt else linux_prompt;
 
-      [os] = {
+      os = {
         disabled = false;
         style = "rosewater";
         symbols = {
@@ -93,11 +93,11 @@ in {
       };
 
       git_status = {
-        ahead = "⇡${count}";
-        behind = "⇣${count}";
+        ahead = "⇡\${count}";
+        behind = "⇣\${count}";
         conflicted = "󱃞";
         deleted = " ";
-        diverged = "⇕⇡${ahead_count}⇣${behind_count}";
+        diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
         format = "[\\($all_status$ahead_behind\\)]($style) ";
         modified = " ";
         renamed = "󰖷 ";
