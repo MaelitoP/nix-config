@@ -28,4 +28,4 @@ flake-update:
 [macos]
 rebuild:
     @echo " Rebuilding configuration"
-    @nix run nix-darwin -- switch --flake .#agorapulse --show-trace
+    @nix run nix-darwin -- switch --flake .#devnull --show-trace
