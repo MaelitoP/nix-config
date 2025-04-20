@@ -10,9 +10,8 @@ let
     ./pkgs.nix
     ./starship.nix
     ./nix.nix
-    ./pkgs.nix
     ./direnv.nix
-    ./fzf
+    ./fzf.nix
   ];
 in
 {
