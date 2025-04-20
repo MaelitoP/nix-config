@@ -6,7 +6,6 @@ let
     coreutils
     curl
     direnv
-    gcc
     gh
     git
     ripgrep
