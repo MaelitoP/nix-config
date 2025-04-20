@@ -34,7 +34,11 @@
       darwinConfigurations = {
         devnull = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
+
           modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
             ./modules/darwin.nix
             home-manager.darwinModules.home-manager
             {
