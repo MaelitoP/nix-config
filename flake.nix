@@ -43,7 +43,6 @@
               home-manager.users.maelito = {
                 imports = [
                   ./modules
-                  ./scripts
                   catppuccin.homeManagerModules.catppuccin
                 ];
               };
