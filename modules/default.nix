@@ -12,6 +12,7 @@ let
     ./nix.nix
     ./direnv.nix
     ./fzf.nix
+    ./tmux.nix
   ];
 in
 {

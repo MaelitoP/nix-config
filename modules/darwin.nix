@@ -3,14 +3,14 @@
 {
   system.stateVersion = 5;
 
-  users.users.pwnwriter = {
+  users.users.maelito = {
     name = "maelito";
     home = "/Users/maelito";
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  networking.computerName = "agorapulse";
+  networking.computerName = "devnull";
 
   nixpkgs.hostPlatform = "x86_64-darwin";
   nix.settings.trusted-users = [
