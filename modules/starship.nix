@@ -21,7 +21,7 @@ in {
     settings = {
       scan_timeout = 10;
 
-      format = "$directory$git_branch$os$character";
+      format = "$directory$git_branch$character";
       right_format = "$nix_shell";
 
       character = if pkgs.stdenv.isDarwin then macos_prompt else linux_prompt;
