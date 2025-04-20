@@ -32,7 +32,7 @@
     }:
     {
       darwinConfigurations = {
-        macbook-pro = darwin.lib.darwinSystem {
+        macbook-pro = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
           modules = [
             ./modules/darwin.nix
