@@ -10,6 +10,7 @@ let
     git
     ripgrep
     tree
+    fastfetch
 
     jq
     htop

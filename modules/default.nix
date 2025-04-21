@@ -13,6 +13,7 @@ let
     ./direnv.nix
     ./fzf.nix
     ./tmux.nix
+    ./fastfetch.nix
   ];
 in
 {
