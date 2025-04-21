@@ -21,7 +21,9 @@
       display = {
         separator = "  ";
         color = "1";
-        key = "icon";
+        key = {
+          type = "icon";
+        };
       };
 
       modules = [

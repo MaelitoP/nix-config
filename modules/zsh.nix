@@ -12,19 +12,23 @@
 
     ZDOTDIR = "${config.xdg.configHome}/zsh";
 
+    # Go
     GOPATH = "${config.xdg.dataHome}/go";
+
+    # Rust
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
     CARGO_HOME = "${config.xdg.dataHome}/cargo";
-    LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
-    NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
-    PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
-    SSH_HOME = "${config.xdg.configHome}/ssh/ssh_config";
 
     # OCaml
     OPAMROOT = "${config.xdg.dataHome}/opam";
     DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune}";
 
-    PYENV_ROOT = "${config.home.homeDirectory}/.pyenv";
+    LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
+
+    NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
+    PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
+
+    SSH_HOME = "${config.xdg.configHome}/ssh/ssh_config";
   };
 
   programs.zsh = {
@@ -78,39 +82,14 @@
 
       gpgconf --launch gpg-agent
 
-      # CUDA
-      if [ -d "/usr/local/cuda-12.4/bin" ]; then
-        export PATH="/usr/local/cuda-12.4/bin:$PATH"
-      fi
-      if [ -d "/usr/local/cuda-12.4/lib64" ]; then
-        export LD_LIBRARY_PATH="/usr/local/cuda-12.4/lib64:$LD_LIBRARY_PATH"
-      fi
-
-      # Opam
-      [[ -r "$HOME/.opam/opam-init/init.zsh" ]] && source "$HOME/.opam/opam-init/init.zsh" > /dev/null 2> /dev/null
-
-      # Pyenv
-      [[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-      eval "$(pyenv init -)"
-
-      # fnm
-      FNM_PATH="$HOME/.local/share/fnm"
-      if [ -d "$FNM_PATH" ]; then
-        export PATH="$FNM_PATH:$PATH"
-        eval "$(fnm env)"
-      fi
-
-      # Mention dev-env config
-      if [ -f "$HOME/dev/mention/dev-env/config/rc_files/zshrc" ]; then
-        source "$HOME/dev/mention/dev-env/config/rc_files/zshrc"
-      fi
-
       # Tmux autostart
       if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
         exec tmux
       fi
 
       eval "$(starship init zsh)"
+
+      fastfetch
     '';
   };
 }

@@ -3,6 +3,8 @@
 {
   programs.tmux = {
     enable = true;
+    newSession = true;
+    shell = "/bin/zsh";
 
     plugins = with pkgs; [
       tmuxPlugins.sensible
@@ -22,6 +24,8 @@
 
     extraConfig =
     ''
+      set-option -g default-command "/bin/zsh -l"
+
       set -g default-terminal "tmux-256color"
       set -ag terminal-overrides ",xterm-256color:RGB"
 
