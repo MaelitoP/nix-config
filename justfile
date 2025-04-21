@@ -29,3 +29,4 @@ flake-update:
 rebuild:
     @echo " Rebuilding configuration"
     @nix run nix-darwin -- switch --flake .#devnull --show-trace
+    ./scripts/import-gpg-key-once.sh

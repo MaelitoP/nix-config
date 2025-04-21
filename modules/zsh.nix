@@ -20,6 +20,10 @@
     PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
     SSH_HOME = "${config.xdg.configHome}/ssh/ssh_config";
 
+    # OCaml
+    OPAMROOT = "${config.xdg.dataHome}/opam";
+    DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune}";
+
     PYENV_ROOT = "${config.home.homeDirectory}/.pyenv";
   };
 

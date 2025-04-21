@@ -2,12 +2,12 @@
 
 let
   modules = [
+    ./pkgs.nix
     ./bat.nix
     ./git.nix
     ./gpg.nix
     ./ssh.nix
     ./zsh.nix
-    ./pkgs.nix
     ./starship.nix
     ./nix.nix
     ./direnv.nix

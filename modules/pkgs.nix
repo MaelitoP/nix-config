@@ -11,6 +11,8 @@ let
     ripgrep
     tree
     fastfetch
+    sops
+    age
 
     jq
     htop

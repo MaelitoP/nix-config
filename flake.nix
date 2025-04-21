@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     catppuccin.url = "github:catppuccin/nix";
   };
 
@@ -27,6 +32,7 @@
       home-manager,
       nix-darwin,
       nix-homebrew,
+      sops-nix,
       catppuccin,
       ... 
     }:
@@ -39,6 +45,7 @@
             {
               nixpkgs.config.allowUnfree = true;
             }
+            sops-nix.darwinModules.sops
             ./modules/darwin.nix
             home-manager.darwinModules.home-manager
             {
@@ -46,6 +53,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.maelito = {
                 imports = [
+                  sops-nix.homeManagerModules.sops
                   ./modules
                   catppuccin.homeManagerModules.catppuccin
                 ];
