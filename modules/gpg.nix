@@ -7,8 +7,6 @@ let
     else
       pkgs.pinentry-curses;
 
-  gpgBin = "${pkgs.gnupg}/bin/gpg";
-
 in {
   programs.gpg = {
     enable = true;
@@ -31,6 +29,11 @@ in {
     secrets.gpg_private_key = {
       sopsFile = ../secrets/default.yaml;
       path = "${config.xdg.dataHome}/gnupg/private.key";
+    };
+
+    secrets.gpg_passphrase = {
+      sopsFile = ../secrets/default.yaml;
+      path = "${config.xdg.dataHome}/gnupg/passphrase.txt";
     };
   };
 }

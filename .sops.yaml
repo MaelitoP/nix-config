@@ -1,6 +1,6 @@
 creation_rules:
   - path_regex: secrets/.*\.yaml$
-    encrypted_regex: "^(gpg_private_key|.*_secret)$"
+    encrypted_regex: "^(gpg_private_key|gpg_passphrase|.*_secret)$"
     age:
       - age1l7mzva8zk839xswa2yrnxknmzx0h3v29xaaxdj3ud08z5rn3hysqa8xfl6
     format: yaml
