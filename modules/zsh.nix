@@ -26,11 +26,12 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    enableSyntaxHighlighting = true;
     dotDir = ".config/zsh";
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "zsh-autosuggestions" "zsh-syntax-highlighting" "fzf" ];
+      plugins = [ "git" "fzf" ];
     };
 
     history = {
@@ -71,8 +72,7 @@
     initExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
 
-      # Brew
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      gpgconf --launch gpg-agent
 
       # CUDA
       if [ -d "/usr/local/cuda-12.4/bin" ]; then
@@ -107,7 +107,6 @@
       fi
 
       eval "$(starship init zsh)"
-      nerdfetch
     '';
   };
 }
