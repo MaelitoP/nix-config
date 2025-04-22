@@ -55,7 +55,7 @@
                 imports = [
                   sops-nix.homeManagerModules.sops
                   ./modules
-                  catppuccin.homeManagerModules.catppuccin
+                  catppuccin.homeModules.catppuccin
                 ];
               };
             }

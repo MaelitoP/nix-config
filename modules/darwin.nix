@@ -20,8 +20,40 @@
 
   programs.zsh.enable = true;
 
+  nix-homebrew.enable = true;
+  nix-homebrew.user = "maelito";
+  nix-homebrew.autoMigrate = true;
+
+  homebrew = {
+    enable = true;
+    onActivation.autoUpdate = false;
+    taps = [
+      "wez/wezterm"
+    ];
+    brews = [ ];
+    casks = [
+      "wezterm"
+      "goland"
+      "phpstorm"
+      "pycharm"
+      "slack"
+      "google-chrome"
+      "spotify"
+    ];
+  };
+
   system = {
     defaults = {
+      dock = {
+        tilesize = 20;
+        orientation = "left";
+        autohide = true;
+        persistent-apps = [
+          "/System/Applications/Wezterm.app"
+          "/System/Cryptexes/App/System/Applications/Google Chrome.app"
+        ];
+      };
+
       CustomUserPreferences = {
         "com.apple.screencapture" = {
           location = "~/Documents/screenshots";

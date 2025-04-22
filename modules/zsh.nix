@@ -34,7 +34,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting.enable = true;
     dotDir = ".config/zsh";
 
     oh-my-zsh = {

@@ -9,7 +9,7 @@
         type = "small";
         source = "apple";
         padding = {
-          top = 1;
+          top = 0;
           left = 2;
           right = 5;
         };
@@ -19,6 +19,7 @@
       };
 
       display = {
+        brightColor = true;
         separator = "  ";
         color = "1";
         key = {
