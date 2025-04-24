@@ -4,24 +4,24 @@
   system.stateVersion = 5;
 
   users.users.maelito = {
-    name = "maelito";
-    home = "/Users/maelito";
+    name = "mael.lepetit";
+    home = "/Users/mael.lepetit";
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
   networking.computerName = "devnull";
 
-  nixpkgs.hostPlatform = "x86_64-darwin";
+  nixpkgs.hostPlatform = "aarch64-darwin";
   nix.settings.trusted-users = [
     "root"
-    "maelito"
+    "mael.lepetit"
   ];
 
   programs.zsh.enable = true;
 
   nix-homebrew.enable = true;
-  nix-homebrew.user = "maelito";
+  nix-homebrew.user = "mael.lepetit";
   nix-homebrew.autoMigrate = true;
 
   homebrew = {
@@ -50,7 +50,13 @@
         autohide = true;
         persistent-apps = [
           "/System/Applications/Wezterm.app"
-          "/System/Cryptexes/App/System/Applications/Google Chrome.app"
+          "/System/Applications/PhpStorm.app"
+          "/System/Applications/GoLand.app"
+          "/System/Applications/PyCharm.app"
+          "/System/Applications/Slack.app"
+          "/System/Applications/Chromium.app"
+          "/System/Applications/Calendar.app"
+          "/System/Applications/Mail.app"
         ];
       };
 
