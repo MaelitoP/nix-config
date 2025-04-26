@@ -21,7 +21,7 @@
 
     # OCaml
     OPAMROOT = "${config.xdg.dataHome}/opam";
-    DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune}";
+    DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune";
 
     LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
 
