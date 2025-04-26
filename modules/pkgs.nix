@@ -13,15 +13,12 @@ let
     fastfetch
     sops
     age
-
     jq
     htop
-
     neovim
     fd
     tmux
     uv
-
     openssl
     pkg-config
   ];
@@ -47,7 +44,8 @@ let
 
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
-    ++ (import ./go.nix { pkgs = pkgs; });
+    ++ (import ./go.nix { pkgs = pkgs; })
+    ++ (import ./ocaml.nix { pkgs = pkgs; });
 in
 {
   home.packages = utils ++ development ++ darwin;

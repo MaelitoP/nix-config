@@ -46,8 +46,7 @@
     defaults = {
       dock = {
         tilesize = 20;
-        orientation = "left";
-        autohide = true;
+        orientation = "right";
         persistent-apps = [
           "/System/Applications/Wezterm.app"
           "/System/Applications/PhpStorm.app"
@@ -68,7 +67,6 @@
       };
 
       NSGlobalDomain = {
-        _HIHideMenuBar = true;
         InitialKeyRepeat = 15;
         KeyRepeat = 2;
       };
