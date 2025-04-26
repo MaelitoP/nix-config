@@ -10,7 +10,7 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  networking.computerName = "devnull";
+  networking.computerName = "maelito";
 
   nixpkgs.hostPlatform = "aarch64-darwin";
   nix.settings.trusted-users = [
