@@ -27,41 +27,46 @@
     catppuccin.url = "github:catppuccin/nix";
   };
 
-  outputs =
-    { 
-      home-manager,
-      nix-darwin,
-      nix-homebrew,
-      sops-nix,
-      catppuccin,
-      ... 
-    }:
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, nix-homebrew, sops-nix, catppuccin, ... }:
+    let
+      mkDarwinConfig = { system, hostname, hostModule }: nix-darwin.lib.darwinSystem {
+        inherit system;
+
+        modules = [
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
+          sops-nix.darwinModules.sops
+          hostModule
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.backupFileExtension = "bak";
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.maelito = {
+              imports = [
+                sops-nix.homeManagerModules.sops
+                ./modules
+                catppuccin.homeModules.catppuccin
+              ];
+            };
+          }
+          nix-homebrew.darwinModules.nix-homebrew
+        ];
+      };
+    in
     {
       darwinConfigurations = {
-        devnull = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
+        maelito-arm = mkDarwinConfig {
+          system = "aarch64-darwin";
+          hostname = "maelito-arm";
+          hostModule = ./machines/maelito-arm.nix;
+        };
 
-          modules = [
-            {
-              nixpkgs.config.allowUnfree = true;
-            }
-            sops-nix.darwinModules.sops
-            ./modules/darwin.nix
-            home-manager.darwinModules.home-manager
-            {
-	      home-manager.backupFileExtension = "bak";
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.maelito = {
-                imports = [
-                  sops-nix.homeManagerModules.sops
-                  ./modules
-                  catppuccin.homeModules.catppuccin
-                ];
-              };
-            }
-            nix-homebrew.darwinModules.nix-homebrew
-          ];
+        maelito-x86 = mkDarwinConfig {
+          system = "x86_64-darwin";
+          hostname = "maelito-x86";
+          hostModule = ./machines/maelito-x86.nix;
         };
       };
     };
