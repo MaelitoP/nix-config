@@ -13,7 +13,8 @@ let
     success_symbol = "[ ](rosewater)";
   };
 
-in {
+in
+{
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
@@ -165,4 +166,3 @@ in {
     flavor = "mocha";
   };
 }
-
