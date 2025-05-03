@@ -6,7 +6,7 @@ This repository contains my personal and professional Nix-based configuration sy
 
 ---
 
-## 🗂️ Layout
+### Layout
 
 ```console
 .
