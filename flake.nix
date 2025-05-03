@@ -24,6 +24,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nvim-config.url = "github:MaelitoP/nvim-config";
     catppuccin.url = "github:catppuccin/nix";
   };
 
@@ -64,6 +65,7 @@
                   sops-nix.homeManagerModules.sops
                   ./modules
                   catppuccin.homeModules.catppuccin
+                  inputs.nvim-config.homeManagerModules.nvim-config
                 ];
               };
             }
