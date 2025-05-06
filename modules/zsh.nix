@@ -86,7 +86,12 @@
       gpgconf --launch gpg-agent
 
       # Tmux autostart
-      if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+      if command -v tmux &> /dev/null \
+        && [ -n "$PS1" ] \
+        && [[ ! "$TERM" =~ screen ]] \
+        && [[ ! "$TERM" =~ tmux ]] \
+        && [ -z "$TMUX" ] \
+        && [[ "$TERMINAL_EMULATOR" != JetBrains* ]]; then
         exec tmux
       fi
 
