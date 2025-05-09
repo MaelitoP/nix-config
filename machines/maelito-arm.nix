@@ -48,12 +48,12 @@
         tilesize = 20;
         orientation = "right";
         persistent-apps = [
-          "/System/Applications/Wezterm.app"
-          "/System/Applications/PhpStorm.app"
-          "/System/Applications/GoLand.app"
-          "/System/Applications/PyCharm.app"
-          "/System/Applications/Slack.app"
-          "/System/Applications/Chromium.app"
+          "/Applications/WezTerm.app"
+          "/Applications/PhpStorm.app"
+          "/Applications/GoLand.app"
+          "/Applications/PyCharm.app"
+          "/Applications/Slack.app"
+          "/Applications/Google Chrome.app"
           "/System/Applications/Calendar.app"
           "/System/Applications/Mail.app"
         ];
