@@ -73,6 +73,7 @@ in
         "slack"
         "google-chrome"
         "spotify"
+        "1password"
       ] ++ extraCasks;
     };
 
