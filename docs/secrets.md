@@ -50,9 +50,7 @@ To add a new secret:
 This repository includes a `.sops.yaml` file in its root directory. This file defines encryption rules to ensure consistency and security when managing secrets. Here is an overview of its configuration:
 
 - **`path_regex`**: Specifies that files matching `secrets/.*\.yaml$` (all `.yaml` files in the `secrets` directory) should be encrypted.
-- **`encrypted_regex`**: Defines which keys inside the files should be encrypted, such as `gpg_private_key`, `gpg_passphrase`, or any key ending in `_secret`.
 - **`age`**: Lists the AGE recipient public keys used for encryption. Only holders of the corresponding private key can decrypt the secrets.
-- **`format`**: Specifies that the format of the secrets files is `yaml`.
 
 This configuration ensures that sensitive keys and data are always encrypted and follow a strict, predefined pattern.
 
