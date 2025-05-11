@@ -1,10 +1,10 @@
 # Handling secrets in your Nix configuration
 
-Managing secrets securely and conveniently is critical for reproducible system configuration—especially when setting up a new machine. This repository leverages [sops](https://github.com/mozilla/sops) and [age](https://github.com/FiloSottile/age) to manage secrets in a way that minimizes manual steps and maximizes portability.
+Managing secrets securely and conveniently is critical for reproducible system configuration—especially when setting up a new machine. This repository leverages [sops](https://github.com/mozilla/sops) and [age](https://github.com/FiloSottile/age) to handle secrets.
 
 ## Why use sops and age?
 
-The main goal is to ensure that you **only need your age key** to access all necessary secrets when provisioning a new machine. This approach prevents the need to manually import multiple secrets each time you set up a device.
+The main goal is to ensure that you **only need your age key** to access all necessary secrets when provisioning a new machine. This approach prevents the need to manually import multiple secrets every time.
 
 ## 1. Generate your age key
 
@@ -40,12 +40,23 @@ To add a new secret:
 2. **Encrypt the file with sops:**
 
     ```console
-    sops secrets/default.yml
+    sops -e -i secrets/default.yaml
     ```
 
     This will open your file in the editor as plaintext, and when you save and close, sops will encrypt it using your age key.
 
-## 4. Updating and decrypting secrets
+## 4. Understanding the `.sops.yaml` configuration file
+
+This repository includes a `.sops.yaml` file in its root directory. This file defines encryption rules to ensure consistency and security when managing secrets. Here is an overview of its configuration:
+
+- **`path_regex`**: Specifies that files matching `secrets/.*\.yaml$` (all `.yaml` files in the `secrets` directory) should be encrypted.
+- **`encrypted_regex`**: Defines which keys inside the files should be encrypted, such as `gpg_private_key`, `gpg_passphrase`, or any key ending in `_secret`.
+- **`age`**: Lists the AGE recipient public keys used for encryption. Only holders of the corresponding private key can decrypt the secrets.
+- **`format`**: Specifies that the format of the secrets files is `yaml`.
+
+This configuration ensures that sensitive keys and data are always encrypted and follow a strict, predefined pattern.
+
+## 5. Updating and decrypting secrets
 
 - **To update the list of keyholders (e.g., after generating a new age key):**
 
@@ -67,13 +78,13 @@ To add a new secret:
 
     (This will automatically decrypt, let you edit, then re-encrypt on save.)
 
-## 5. Good practices
+## 6. Good practices
 
 - **Never commit unencrypted secrets to the repository.** Always use sops to manage sensitive files.
 - **Backup your age key** (`~/.config/sops/age/keys.txt`) securely (e.g., password manager, hardware key, secure USB).
 - Rotate keys if you suspect they may be compromised and use `sops updatekeys` to re-encrypt secrets with new keys.
 
-## 6. Further Reading
+## 7. Further Reading
 
 - [sops documentation](https://github.com/mozilla/sops)
 - [age documentation](https://github.com/FiloSottile/age)
