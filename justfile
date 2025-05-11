@@ -19,7 +19,6 @@ clean:
 
 format:
 	@nixfmt $(find ./ -type f -name '*.nix')
-	@stylua -f $(find . -type f -name '.stylua.toml') $(find . -type f -name '*.lua')
 
 flake-update:
 	@echo "Syncing latest git rev"
