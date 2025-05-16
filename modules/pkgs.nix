@@ -21,6 +21,7 @@ let
     uv
     openssl
     pkg-config
+    claude-code
   ];
 
   darwin =
