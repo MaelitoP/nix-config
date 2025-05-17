@@ -1,24 +1,36 @@
-{ config, ... }:
+{ pkgs, config, lib, ... }:
 
 let
-  modules = [
-    ./pkgs.nix
-    ./bat.nix
-    ./git.nix
-    ./gpg.nix
-    ./ssh.nix
-    ./zsh.nix
-    ./starship.nix
-    ./nix.nix
-    ./direnv.nix
-    ./fzf.nix
-    ./tmux.nix
-    ./fastfetch.nix
+  # Detect platform
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
+  
+  # Common modules for all platforms
+  commonModules = [
+    ./core
+    ./dev
+    ./pkgs
   ];
-in
-{
-  imports = modules;
-  xdg.dataHome = "${config.home.homeDirectory}/.local/share";
+  
+  # Platform-specific modules
+  platformModules = if isDarwin then [
+    ./darwin
+  ] else if isLinux then [
+    ./nixos
+  ] else [];
+
+in {
+  imports = commonModules ++ platformModules;
+  
+  # Common settings for all platforms
   programs.home-manager.enable = true;
   home.stateVersion = "24.05";
+  
+  # Platform-specific data directories
+  xdg.dataHome = if isDarwin then 
+    "${config.home.homeDirectory}/.local/share"
+  else if isLinux then
+    "${config.home.homeDirectory}/.local/share"
+  else
+    "${config.home.homeDirectory}/.local/share";
 }

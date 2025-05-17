@@ -1,5 +1,5 @@
 {
-  description = "maelito's config";
+  description = "maelito's cross-platform configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -72,19 +72,59 @@
             nix-homebrew.darwinModules.nix-homebrew
           ];
         };
+      
+      mkNixOSConfig =
+        {
+          system,
+          hostname,
+          hostModule,
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+
+          modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+            sops-nix.nixosModules.sops
+            hostModule
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.backupFileExtension = "bak";
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.maelito = {
+                imports = [
+                  sops-nix.homeManagerModules.sops
+                  ./modules
+                  catppuccin.homeModules.catppuccin
+                  inputs.nvim-config.homeManagerModules.nvim-config
+                ];
+              };
+            }
+          ];
+        };
     in
     {
       darwinConfigurations = {
         maelito-arm = mkDarwinConfig {
           system = "aarch64-darwin";
           hostname = "maelito-arm";
-          hostModule = ./machines/maelito-arm.nix;
+          hostModule = ./hosts/darwin/maelito-arm.nix;
         };
 
         maelito-x86 = mkDarwinConfig {
           system = "x86_64-darwin";
           hostname = "maelito-x86";
-          hostModule = ./machines/maelito-x86.nix;
+          hostModule = ./hosts/darwin/maelito-x86.nix;
+        };
+      };
+      
+      nixosConfigurations = {
+        maelito-ubuntu = mkNixOSConfig {
+          system = "x86_64-linux";
+          hostname = "maelito-ubuntu";
+          hostModule = ./hosts/nixos/maelito-ubuntu.nix;
         };
       };
     };

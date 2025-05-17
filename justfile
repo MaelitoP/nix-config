@@ -20,6 +20,6 @@ flake-update:
 
 [macos]
 rebuild:
-    @echo " Rebuilding configuration"
-    ./scripts/rebuild-by-arch.sh
-    ./scripts/import-gpg-key-once.sh
+  @echo "Rebuilding macOS configuration"
+  ./scripts/rebuild-by-arch.sh
+  ./scripts/import-gpg-key-once.sh
