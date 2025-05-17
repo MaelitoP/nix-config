@@ -80,7 +80,7 @@
       gpf = "git push --force-with-lease";
     };
 
-    initExtra = ''
+    initContent = ''
       export PATH="$HOME/.local/bin:$PATH"
 
       gpgconf --launch gpg-agent

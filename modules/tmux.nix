@@ -53,7 +53,7 @@
       set -g mouse on
 
       unbind r
-      bind r source-file ${config.home.homeDirectory}/.config/tmux/tmux.conf\; display-message "Reloading tmux.conf"
+      bind r source-file "$HOME/.config/tmux/tmux.conf"\; display-message "Reloading tmux.conf"
 
       unbind x
       bind x kill-pane

@@ -27,7 +27,6 @@ let
   darwin =
     with pkgs.darwin.apple_sdk;
     [
-
       frameworks.Security
       frameworks.CoreFoundation
       frameworks.SystemConfiguration
