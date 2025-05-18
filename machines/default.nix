@@ -38,6 +38,7 @@ in
 
   config = {
     system.stateVersion = 5;
+    system.primaryUser = username;
 
     users.users.maelito = {
       name = realname;
