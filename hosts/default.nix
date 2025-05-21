@@ -3,27 +3,27 @@
 with lib;
 
 let
-  username = config.machine.username;
-  realname = config.machine.realname or username;
-  home = config.machine.home or "/Users/${username}";
-  platform = config.machine.platform;
-  extraCasks = config.machine.extraCasks or [ ];
-  extraBrews = config.machine.extraBrews or [ ];
+  username = config.host.username;
+  realname = config.host.realname or username;
+  home = config.host.home or "/Users/${username}";
+  platform = config.host.platform;
+  extraCasks = config.host.extraCasks or [ ];
+  extraBrews = config.host.extraBrews or [ ];
 in
 {
-  options.machine = {
+  options.host = {
     username = mkOption {
       type = types.str;
       description = "Username";
     };
     realname = mkOption {
       type = types.str;
-      default = config.machine.username;
+      default = config.host.username;
       description = "Real name (defaults to username)";
     };
     home = mkOption {
       type = types.str;
-      default = "/Users/${config.machine.username}";
+      default = "/Users/${config.host.username}";
       description = "Home directory";
     };
     platform = mkOption {

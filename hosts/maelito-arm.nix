@@ -3,7 +3,7 @@
 {
   imports = [ ./default.nix ];
 
-  machine = {
+  host = {
     username = "mael.lepetit";
     realname = "mael.lepetit";
     home = "/Users/mael.lepetit";

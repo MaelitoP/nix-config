@@ -78,13 +78,13 @@
         maelito-arm = mkDarwinConfig {
           system = "aarch64-darwin";
           hostname = "maelito-arm";
-          hostModule = ./machines/maelito-arm.nix;
+          hostModule = ./hosts/maelito-arm.nix;
         };
 
         maelito-x86 = mkDarwinConfig {
           system = "x86_64-darwin";
           hostname = "maelito-x86";
-          hostModule = ./machines/maelito-x86.nix;
+          hostModule = ./hosts/maelito-x86.nix;
         };
       };
     };
