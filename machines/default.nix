@@ -8,6 +8,7 @@ let
   home = config.machine.home or "/Users/${username}";
   platform = config.machine.platform;
   extraCasks = config.machine.extraCasks or [ ];
+  extraBrews = config.machine.extraBrews or [ ];
 in
 {
   options.machine = {
@@ -32,7 +33,12 @@ in
     extraCasks = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description = "Extra Homebrew casks";
+      description = "Extra casks";
+    };
+    extraBrews = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Extra brews";
     };
   };
 
@@ -65,7 +71,7 @@ in
       enable = true;
       onActivation.autoUpdate = false;
       taps = [ "wez/wezterm" ];
-      brews = [ ];
+      brews = [ ] ++ extraBrews;
       casks = [
         "wezterm"
         "goland"

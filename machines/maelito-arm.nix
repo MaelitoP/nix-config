@@ -9,5 +9,8 @@
     home = "/Users/mael.lepetit";
     platform = "aarch64-darwin";
     extraCasks = [ ];
+    extraBrews = [
+      "mysql-client"
+    ];
   };
 }

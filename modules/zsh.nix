@@ -81,6 +81,12 @@
     };
 
     initContent = ''
+      export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+
+      if [ -f "$HOME/dev/mention/dev-env/config/rc_files/zshrc" ]; then
+        source "$HOME/dev/mention/dev-env/config/rc_files/zshrc"
+      fi
+
       export PATH="$HOME/.local/bin:$PATH"
 
       gpgconf --launch gpg-agent
