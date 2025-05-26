@@ -25,14 +25,7 @@ let
   ];
 
   darwin =
-    with pkgs.darwin.apple_sdk;
-    [
-      frameworks.Security
-      frameworks.CoreFoundation
-      frameworks.SystemConfiguration
-    ]
-
-    ++ (import ./fonts.nix { pkgs = pkgs; });
+    (import ./fonts.nix { pkgs = pkgs; });
 
   development =
     with pkgs;

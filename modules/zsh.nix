@@ -89,6 +89,14 @@
 
       export PATH="$HOME/.local/bin:$PATH"
 
+      # OPAM configuration
+      [[ ! -r "$HOME/.local/share/opam/opam-init/init.zsh" ]] || source "$HOME/.local/share/opam/opam-init/init.zsh" > /dev/null 2> /dev/null
+
+      # NVM configuration
+      export NVM_DIR="$HOME/.config/nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
       gpgconf --launch gpg-agent
 
       # Tmux autostart
