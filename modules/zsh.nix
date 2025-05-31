@@ -74,7 +74,6 @@
       mysql57 = "ephp mysql -u mention -p -h mysql_5_7";
       brdiff = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff origin/$def_branch...";
       brfiles = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff --name-only origin/$def_branch...";
-      composer = "/usr/local/bin/composer";
       phpd = "docker compose -f ~/mention/dev-env/docker-compose.yml exec php_cli php -dzend_extension=xdebug.so -dxdebug.mode=debug -dxdebug.start_with_request=yes -dxdebug.client_host=172.17.0.1 -dxdebug.client_port=9003";
       gdiffc = "git diff master | xclip -selection clipboard";
       gpf = "git push --force-with-lease";
@@ -89,10 +88,13 @@
 
       export PATH="$HOME/.local/bin:$PATH"
 
-      # OPAM configuration
+      # Pulse configuration 
+      export PATH="$HOME/dev/cli/bin:$PATH"
+
+      # Opam configuration
       [[ ! -r "$HOME/.local/share/opam/opam-init/init.zsh" ]] || source "$HOME/.local/share/opam/opam-init/init.zsh" > /dev/null 2> /dev/null
 
-      # NVM configuration
+      # Nvm configuration
       export NVM_DIR="$HOME/.config/nvm"
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
