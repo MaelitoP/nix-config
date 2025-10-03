@@ -15,6 +15,7 @@ in
       push.autoSetupRemote = true;
       credential.helper = if pkgs.stdenv.isDarwin then "osxkeychain" else "cache";
       help.autocorrect = 10;
+      url."git@github.com:".insteadOf = "https://github.com/";
     };
 
     signing = {

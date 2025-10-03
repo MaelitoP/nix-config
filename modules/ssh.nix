@@ -2,7 +2,7 @@
 {
   programs.ssh = {
     enable = true;
-    userKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";
+    enableDefaultConfig = false;
     matchBlocks = {
       "bastion1.mention.net bastion2.mention.net" = {
         extraOptions = {
@@ -30,8 +30,17 @@
       
       "*" = {
         identityFile = "${config.xdg.dataHome}/ssh/id_rsa";
+        userKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";
         extraOptions = {
+          ForwardAgent = "no";
+          ServerAliveInterval = "0";
+          ServerAliveCountMax = "3";
+          Compression = "no";
           AddKeysToAgent = "yes";
+          HashKnownHosts = "no";
+          ControlMaster = "no";
+          ControlPath = "~/.ssh/master-%r@%n:%p";
+          ControlPersist = "no";
           UseKeychain = if pkgs.stdenv.isDarwin then "yes" else "no";
         };
       };
