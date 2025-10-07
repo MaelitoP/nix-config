@@ -63,18 +63,25 @@
       lkjh = "nvim";
       hjkl = "nvim";
 
+      cdi = "cd ~/dev/platform-ingestor";
+      iup = "cdi; ./tools/devenv.sh up";
+      iustop = "cdi; ./tools/devenv.sh up";
+      irdbt = "cdi; ./tools/reset-db.sh test";
+      irdtd = "cdi; ./tools/reset-db.sh dev";
+      itest = "cdi; ./tools/run-tests.sh";
+
       cdm = "cd ~/dev/mention";
-      devup = "cdm; ./tools/devenv.sh up";
-      devstop = "cdm; ./tools/devenv.sh stop";
-      resetdbt = "cdm; ./tools/reset-db.sh test";
-      resetdbd = "cdm; ./tools/reset-db.sh dev";
-      runtest = "cdm; ./tools/run-tests.sh";
-      ephp = "docker exec -it php_cli";
-      mysql56 = "ephp mysql -u mention -p -h mysql_5_6";
-      mysql57 = "ephp mysql -u mention -p -h mysql_5_7";
+      mup = "cdm; ./tools/devenv.sh stop";
+      mstop = "cdm; ./tools/devenv.sh stop";
+      mrdbt = "cdm; ./tools/reset-db.sh test";
+      mrdtd = "cdm; ./tools/reset-db.sh dev";
+      mtest = "cdm; ./tools/run-tests.sh";
+      mphp = "docker exec -it php_cli";
+      mysql56 = "mphp mysql -u mention -p -h mysql_5_6";
+      mysql57 = "mphp mysql -u mention -p -h mysql_5_7";
+
       brdiff = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff origin/$def_branch...";
       brfiles = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff --name-only origin/$def_branch...";
-      phpd = "docker compose -f ~/mention/dev-env/docker-compose.yml exec php_cli php -dzend_extension=xdebug.so -dxdebug.mode=debug -dxdebug.start_with_request=yes -dxdebug.client_host=172.17.0.1 -dxdebug.client_port=9003";
       gdiffc = "git diff master | xclip -selection clipboard";
       gpf = "git push --force-with-lease";
     };
@@ -83,6 +90,8 @@
       export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
       export PATH="$HOME/.local/bin:$PATH"
+
+      export PATH="$HOME/.opencode/bin:$PATH"
 
       # Pulse configuration 
       export PATH="$HOME/dev/cli/bin:$PATH"
