@@ -65,7 +65,7 @@
 
       cdi = "cd ~/dev/platform-ingestor";
       iup = "cdi; ./tools/devenv.sh up";
-      iustop = "cdi; ./tools/devenv.sh up";
+      istop = "cdi; ./tools/devenv.sh up";
       irdbt = "cdi; ./tools/reset-db.sh test";
       irdtd = "cdi; ./tools/reset-db.sh dev";
       itest = "cdi; ./tools/run-tests.sh";
@@ -82,7 +82,6 @@
 
       brdiff = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff origin/$def_branch...";
       brfiles = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff --name-only origin/$def_branch...";
-      gdiffc = "git diff master | xclip -selection clipboard";
       gpf = "git push --force-with-lease";
     };
 
@@ -93,7 +92,6 @@
 
       export PATH="$HOME/.opencode/bin:$PATH"
 
-      # Pulse configuration 
       export PATH="$HOME/dev/cli/bin:$PATH"
 
       # Opam configuration
@@ -115,6 +113,8 @@
         && [[ "$TERMINAL_EMULATOR" != JetBrains* ]]; then
         exec tmux
       fi
+
+      eval "$(scw autocomplete script shell=zsh)"
 
       eval "$(starship init zsh)"
 

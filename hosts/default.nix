@@ -77,6 +77,7 @@ in
         "goland"
         "phpstorm"
         "pycharm"
+        "rustrover"
         "intellij-idea"
         "slack"
         "google-chrome"
