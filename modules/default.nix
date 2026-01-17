@@ -14,6 +14,7 @@ let
     ./fzf.nix
     ./tmux.nix
     ./fastfetch.nix
+    ./claude.nix
   ];
 in
 {
