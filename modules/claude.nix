@@ -10,12 +10,13 @@ with lib;
 let
   cfg = config.programs.claude;
 
-  mkMcpServerWrapper = name: server:
+  mkMcpServerWrapper =
+    name: server:
     let
       envVars = lib.concatStringsSep "\n" (
-        (lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") server.env) ++
-        (lib.mapAttrsToList (k: secretPath:
-          "export ${k}=\"$(cat ${config.sops.secrets."${secretPath}".path})\""
+        (lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") server.env)
+        ++ (lib.mapAttrsToList (
+          k: secretPath: "export ${k}=\"$(cat ${config.sops.secrets."${secretPath}".path})\""
         ) server.envSecrets)
       );
 
@@ -34,8 +35,8 @@ let
   mcpServersConfig = lib.mapAttrs (name: server: {
     type = server.type;
     command = "${config.home.homeDirectory}/.claude/mcp-servers/${name}-wrapper";
-    args = [];
-    env = {};
+    args = [ ];
+    env = { };
   }) cfg.mcpServers;
 
 in
@@ -52,7 +53,7 @@ in
 
       enabledPlugins = mkOption {
         type = types.attrsOf types.bool;
-        default = {};
+        default = { };
         description = "Enabled LSP plugins";
         example = {
           "pyright-lsp@claude-plugins-official" = true;
@@ -85,40 +86,47 @@ in
     };
 
     mcpServers = mkOption {
-      type = types.attrsOf (types.submodule {
-        options = {
-          type = mkOption {
-            type = types.enum [ "stdio" "sse" ];
-            default = "stdio";
-            description = "MCP server type";
-          };
+      type = types.attrsOf (
+        types.submodule {
+          options = {
+            type = mkOption {
+              type = types.enum [
+                "stdio"
+                "sse"
+              ];
+              default = "stdio";
+              description = "MCP server type";
+            };
 
-          command = mkOption {
-            type = types.str;
-            description = "Command to run the MCP server";
-          };
+            command = mkOption {
+              type = types.str;
+              description = "Command to run the MCP server";
+            };
 
-          args = mkOption {
-            type = types.listOf types.str;
-            default = [];
-            description = "Arguments to pass to the command";
-          };
+            args = mkOption {
+              type = types.listOf types.str;
+              default = [ ];
+              description = "Arguments to pass to the command";
+            };
 
-          env = mkOption {
-            type = types.attrsOf types.str;
-            default = {};
-            description = "Environment variables (plain text values)";
-          };
+            env = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Environment variables (plain text values)";
+            };
 
-          envSecrets = mkOption {
-            type = types.attrsOf types.str;
-            default = {};
-            description = "Environment variables from sops secrets (map of env var name to secret path)";
-            example = { GITHUB_TOKEN = "claude_code/github_token"; };
+            envSecrets = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Environment variables from sops secrets (map of env var name to secret path)";
+              example = {
+                GITHUB_TOKEN = "claude_code/github_token";
+              };
+            };
           };
-        };
-      });
-      default = {};
+        }
+      );
+      default = { };
       description = "MCP servers configuration";
     };
 
@@ -150,7 +158,8 @@ in
           };
         }
 
-        (lib.mapAttrs' (name: server:
+        (lib.mapAttrs' (
+          name: server:
           lib.nameValuePair ".claude/mcp-servers/${name}-wrapper" (mkMcpServerWrapper name server)
         ) cfg.mcpServers)
 
@@ -164,7 +173,8 @@ in
 
       sops.secrets = lib.mkMerge (
         lib.flatten (
-          lib.mapAttrsToList (serverName: server:
+          lib.mapAttrsToList (
+            serverName: server:
             lib.mapAttrsToList (envVar: secretPath: {
               "${secretPath}" = {
                 sopsFile = ../secrets/common.yaml;
@@ -174,7 +184,7 @@ in
         )
       );
 
-      home.activation.updateClaudeMcpConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      home.activation.updateClaudeMcpConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [ -f ~/.claude.json ]; then
           $DRY_RUN_CMD ${pkgs.jq}/bin/jq -s '.[0] * {mcpServers: ((.[0].mcpServers | del(.github, .slite, .slack, .shortcut)) * .[1])}' \
             ~/.claude.json \

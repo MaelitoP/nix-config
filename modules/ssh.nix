@@ -28,25 +28,25 @@
           ProxyCommand = "none";
         };
       };
-      
+
       "*.d.mention.net" = {
         extraOptions = {
           ProxyCommand = "none";
         };
       };
-      
+
       "ssh_bastion" = {
         hostname = "bastion1.mention.net";
         user = "mael-lepetit";
       };
-      
+
       "*.mention.net" = {
         user = "mention";
         extraOptions = {
           ProxyJump = "ssh_bastion";
         };
       };
-      
+
       "*" = {
         identityFile = "${config.xdg.dataHome}/ssh/id_rsa";
         userKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";

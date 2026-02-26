@@ -1,25 +1,44 @@
 set shell := ["zsh", "-c"]
 
+hostname := if arch() == "aarch64" { "maelito-arm" } else { "maelito-x86" }
+
 _default:
 	@just -l
 
-gens:
-	@echo "Listing home-manager generations"
-	@nix-env --list-generations
+# First-time setup on a fresh machine (before darwin-rebuild exists)
+[macos]
+bootstrap:
+    @echo "Bootstrapping nix-darwin for {{hostname}}"
+    nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
+    ./scripts/import-gpg-key-once.sh
 
-clean:
-	@echo "Cleaning up unused Nix store items"
-	@nix-collect-garbage -d
-
-format:
-	@nixfmt $(find ./ -type f -name '*.nix')
-
-flake-update:
-	@echo "Syncing latest git rev"
-	@nix flake update
-
+# Rebuild and apply the configuration
 [macos]
 rebuild:
-    @echo " Rebuilding configuration"
-    ./scripts/rebuild-by-arch.sh
+    @echo "Rebuilding configuration for {{hostname}}"
+    nix --extra-experimental-features "nix-command flakes" build .#darwinConfigurations.{{hostname}}.system
+    sudo /run/current-system/sw/bin/darwin-rebuild switch --flake .#{{hostname}} --show-trace
     ./scripts/import-gpg-key-once.sh
+
+# Dry-run build to validate without applying
+[macos]
+check:
+    @echo "Checking configuration for {{hostname}}"
+    nix --extra-experimental-features "nix-command flakes" build .#darwinConfigurations.{{hostname}}.system --dry-run
+
+# List home-manager generations
+generations:
+    @nix-env --list-generations
+
+# Garbage-collect unused Nix store items
+clean:
+    @nix-collect-garbage -d
+
+# Format all .nix files
+format:
+    @fd -e nix -x nixfmt
+
+# Update flake inputs
+update:
+    @echo "Updating flake inputs"
+    @nix flake update

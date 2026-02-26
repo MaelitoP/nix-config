@@ -24,8 +24,7 @@ let
     claude-code
   ];
 
-  fonts =
-    (import ./fonts.nix { pkgs = pkgs; });
+  fonts = (import ./fonts.nix { pkgs = pkgs; });
 
   development =
     with pkgs;

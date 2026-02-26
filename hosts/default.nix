@@ -83,7 +83,8 @@ in
         "google-chrome"
         "spotify"
         "1password"
-      ] ++ extraCasks;
+      ]
+      ++ extraCasks;
     };
 
     system = {

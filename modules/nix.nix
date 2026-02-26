@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   githubTokenPath = "${config.xdg.configHome}/secrets/github_token";
@@ -25,4 +30,3 @@ in
     chmod 0600 ${nixTokenFile}
   '';
 }
-
