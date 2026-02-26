@@ -9,6 +9,16 @@
     sopsFile = ../secrets/ssh.yaml;
     path = "${config.xdg.dataHome}/ssh/id_rsa.pub";
   };
+
+  sops.secrets.id_ed25519_scaleway = {
+    sopsFile = ../secrets/ssh.yaml;
+    path = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
+  };
+
+  sops.secrets.id_ed25519_scaleway_pub = {
+    sopsFile = ../secrets/ssh.yaml;
+    path = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway.pub";
+  };
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
