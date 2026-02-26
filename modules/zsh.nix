@@ -14,6 +14,8 @@
 
     # Go
     GOPATH = "${config.xdg.dataHome}/go";
+    CGO_CC = "/usr/bin/clang";
+    CGO_CXX = "/usr/bin/clang++";
 
     # Rust
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
@@ -93,6 +95,11 @@
       export PATH="$HOME/.opencode/bin:$PATH"
 
       export PATH="$HOME/dev/cli/bin:$PATH"
+
+      export CGO_CC="/usr/bin/clang"
+      export CGO_CXX="/usr/bin/clang++"
+      export CC="/usr/bin/clang"
+      export CXX="/usr/bin/clang++"
 
       # Opam configuration
       [[ ! -r "$HOME/.local/share/opam/opam-init/init.zsh" ]] || source "$HOME/.local/share/opam/opam-init/init.zsh" > /dev/null 2> /dev/null

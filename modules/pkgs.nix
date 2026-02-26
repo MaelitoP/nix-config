@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   utils = with pkgs; [
     just
     bat
-    coreutils
+
     curl
     direnv
     gh
@@ -24,7 +24,7 @@ let
     claude-code
   ];
 
-  darwin =
+  fonts =
     (import ./fonts.nix { pkgs = pkgs; });
 
   development =
@@ -34,12 +34,15 @@ let
       stylua
       nixfmt-rfc-style
     ]
-
+    # macOS SDK - use apple-sdk for native compilation (CGO, etc.)
+    ++ lib.optionals stdenv.isDarwin [
+      apple-sdk_15
+    ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
     ++ (import ./go.nix { pkgs = pkgs; })
     ++ (import ./ocaml.nix { pkgs = pkgs; });
 in
 {
-  home.packages = utils ++ development ++ darwin;
+  home.packages = utils ++ development ++ fonts;
 }
