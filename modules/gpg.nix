@@ -30,12 +30,12 @@ in
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
     secrets.gpg_private_key = {
-      sopsFile = ../secrets/default.yaml;
+      sopsFile = ../secrets/gpg.yaml;
       path = "${config.xdg.dataHome}/gnupg/private.key";
     };
 
     secrets.gpg_passphrase = {
-      sopsFile = ../secrets/default.yaml;
+      sopsFile = ../secrets/gpg.yaml;
       path = "${config.xdg.dataHome}/gnupg/passphrase.txt";
     };
   };

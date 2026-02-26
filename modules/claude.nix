@@ -167,7 +167,7 @@ in
           lib.mapAttrsToList (serverName: server:
             lib.mapAttrsToList (envVar: secretPath: {
               "${secretPath}" = {
-                sopsFile = ../secrets/default.yaml;
+                sopsFile = ../secrets/common.yaml;
               };
             }) server.envSecrets
           ) cfg.mcpServers

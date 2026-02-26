@@ -1,5 +1,14 @@
 { config, pkgs, ... }:
 {
+  sops.secrets.id_rsa = {
+    sopsFile = ../secrets/ssh.yaml;
+    path = "${config.xdg.dataHome}/ssh/id_rsa";
+  };
+
+  sops.secrets.id_rsa_pub = {
+    sopsFile = ../secrets/ssh.yaml;
+    path = "${config.xdg.dataHome}/ssh/id_rsa.pub";
+  };
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;

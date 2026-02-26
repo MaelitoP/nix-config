@@ -14,36 +14,36 @@ First, generate a new age key if you do not already have one. This key will be u
 age-keygen -o ~/.config/sops/age/keys.txt
 ```
 
-> **Note:**  
+> **Note:**
 > Keep this key secure! It is the only secret you must have on hand to bootstrap your configuration and unlock all other secrets.
 
 ## 2. How secrets are used
 
-The age key is referenced in various parts of this Nix configuration to unlock secrets. For example, the file [`modules/gpg.nix`](../modules/gpg.nix) uses it to decrypt your GPG private key.
+The age key is referenced in various parts of this Nix configuration to unlock secrets. For example, the file [`modules/gpg.nix`](../modules/gpg.nix) uses it to decrypt your GPG private key, and [`modules/ssh.nix`](../modules/ssh.nix) uses it to deploy SSH keys.
 
 ## 3. Organizing secrets
 
-All secrets are stored in the [`secrets/default.yml`](../secrets/default.yml) file (or other YAML files in the same directory as needed for organization).
+Secrets are split across multiple YAML files in the [`secrets/`](../secrets/) directory:
+
+- **`secrets/common.yaml`** — Application tokens: `github_token`, `slite_api_key`, `slack_bot_token`, `shortcut_api_token`, `openai_token`
+- **`secrets/gpg.yaml`** — GPG keys: `gpg_private_key`, `gpg_passphrase`
+- **`secrets/ssh.yaml`** — SSH keys: `id_rsa`, `id_rsa_pub`
 
 To add a new secret:
 
-1. **Create or edit a YAML file in the `secrets/` directory** (e.g., `default.yml`):
+1. **Create or edit the appropriate YAML file in the `secrets/` directory:**
 
     ```yaml
-    gpg_private_key: |
-      -----BEGIN PGP PRIVATE KEY BLOCK-----
-      ...
-
-    github_token: your_github_token
+    my_new_secret: your_secret_value
     ```
 
 2. **Encrypt the file with sops:**
 
     ```console
-    sops -e -i secrets/default.yaml
+    sops -e -i secrets/common.yaml
     ```
 
-    This will open your file in the editor as plaintext, and when you save and close, sops will encrypt it using your age key.
+    This will encrypt the file in-place using your age key.
 
 ## 4. Understanding the `.sops.yaml` configuration file
 
@@ -59,19 +59,21 @@ This configuration ensures that sensitive keys and data are always encrypted and
 - **To update the list of keyholders (e.g., after generating a new age key):**
 
     ```console
-    sops updatekeys secrets/default.yml
+    sops updatekeys secrets/common.yaml
+    sops updatekeys secrets/gpg.yaml
+    sops updatekeys secrets/ssh.yaml
     ```
 
 - **To decrypt and view a secret file:**
 
     ```console
-    sops -d secrets/default.yml
+    sops -d secrets/common.yaml
     ```
 
     Or simply open for editing with:
 
     ```console
-    sops secrets/default.yml
+    sops secrets/common.yaml
     ```
 
     (This will automatically decrypt, let you edit, then re-encrypt on save.)

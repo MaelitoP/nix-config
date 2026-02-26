@@ -15,7 +15,7 @@ in
   '';
 
   sops.secrets.github_token = {
-    sopsFile = ../secrets/default.yaml;
+    sopsFile = ../secrets/common.yaml;
     path = githubTokenPath;
   };
 
