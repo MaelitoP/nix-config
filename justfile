@@ -9,7 +9,7 @@ _default:
 [macos]
 bootstrap:
     @echo "Bootstrapping nix-darwin for {{hostname}}"
-    nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
+    sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
     ./scripts/import-gpg-key-once.sh
 
 # Rebuild and apply the configuration
