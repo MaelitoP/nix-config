@@ -114,6 +114,7 @@ in
         };
 
         NSGlobalDomain = {
+          AppleInterfaceStyle = "Dark";
           InitialKeyRepeat = 15;
           KeyRepeat = 2;
         };
