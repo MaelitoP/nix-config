@@ -18,7 +18,7 @@ else
   info "Installing Xcode Command Line Tools..."
   xcode-select --install
   echo "Press enter once the installation is complete."
-  read -r
+  read -r < /dev/tty
 fi
 
 if command -v nix &>/dev/null; then
@@ -57,11 +57,12 @@ if [ -f "$AGE_KEY_FILE" ]; then
   ok "Age key already present"
 else
   warn "sops-nix needs your age secret key to decrypt secrets."
-  echo "Paste the key contents below, then press Ctrl-D:"
+  printf "Path to your age keys.txt: "
+  read -r AGE_KEY_SRC < /dev/tty
   mkdir -p "$AGE_KEY_DIR"
-  cat > "$AGE_KEY_FILE"
+  cp "$AGE_KEY_SRC" "$AGE_KEY_FILE"
   chmod 600 "$AGE_KEY_FILE"
-  ok "Age key written to $AGE_KEY_FILE"
+  ok "Age key copied to $AGE_KEY_FILE"
 fi
 
 info "Running bootstrap..."
