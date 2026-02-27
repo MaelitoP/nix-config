@@ -90,17 +90,17 @@ in
     system = {
       defaults = {
         dock = {
-          tilesize = 20;
+          tilesize = 40;
           orientation = "right";
           persistent-apps = [
             "/Applications/WezTerm.app"
             "/Applications/PhpStorm.app"
             "/Applications/GoLand.app"
+            "/Applications/IntelliJ IDEA.app"
+            "/Applications/RustRover.app"
             "/Applications/PyCharm.app"
             "/Applications/Slack.app"
             "/Applications/Google Chrome.app"
-            "/System/Applications/Calendar.app"
-            "/System/Applications/Mail.app"
           ];
         };
 
