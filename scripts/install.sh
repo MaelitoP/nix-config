@@ -49,7 +49,8 @@ else
 fi
 
 if [ -d "$REPO_DIR" ]; then
-  ok "Repo already cloned at $REPO_DIR"
+  info "Pulling latest changes..."
+  git -C "$REPO_DIR" pull --ff-only
 else
   info "Cloning nix-config..."
   mkdir -p "$(dirname "$REPO_DIR")"
