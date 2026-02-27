@@ -15,6 +15,12 @@ bootstrap:
         sudo mv -f "$$f" "$$f.before-nix-darwin"; \
       fi; \
     done
+    # First run may fail: nix-darwin's activate script runs
+    # `launchctl kill HUP system/org.nixos.nix-daemon` to reload the daemon,
+    # which exits 3 ("No process to signal") on a fresh machine because the
+    # daemon isn't running under nix-darwin's launchd service yet.
+    # The second run succeeds because the first registered the service.
+    -sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
     sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
     ./scripts/import-gpg-key-once.sh
 
