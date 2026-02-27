@@ -79,9 +79,9 @@ fi
 
 # Move macOS-default /etc shell configs so nix-darwin can manage them
 for f in /etc/bashrc /etc/zshrc; do
-  if [ -f "$f" ] && [ ! -f "$f.before-nix-darwin" ]; then
+  if [ -f "$f" ] && [ ! -L "$f" ]; then
     warn "Moving $f to $f.before-nix-darwin for nix-darwin"
-    sudo mv "$f" "$f.before-nix-darwin"
+    sudo mv -f "$f" "$f.before-nix-darwin"
   fi
 done
 

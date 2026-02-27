@@ -9,6 +9,12 @@ _default:
 [macos]
 bootstrap:
     @echo "Bootstrapping nix-darwin for {{hostname}}"
+    @for f in /etc/bashrc /etc/zshrc; do \
+      if [ -f "$$f" ] && [ ! -L "$$f" ]; then \
+        echo "==> Moving $$f to $$f.before-nix-darwin for nix-darwin"; \
+        sudo mv -f "$$f" "$$f.before-nix-darwin"; \
+      fi; \
+    done
     sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#{{hostname}} --show-trace
     ./scripts/import-gpg-key-once.sh
 
