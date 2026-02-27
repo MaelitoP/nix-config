@@ -83,6 +83,7 @@ in
         "google-chrome"
         "spotify"
         "1password"
+        "docker"
       ]
       ++ extraCasks;
     };
@@ -101,6 +102,7 @@ in
             "/Applications/PyCharm.app"
             "/Applications/Slack.app"
             "/Applications/Google Chrome.app"
+            "/Applications/Spotify.app"
           ];
         };
 
