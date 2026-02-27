@@ -37,6 +37,10 @@ rebuild:
 check:
     @echo "Checking configuration for {{hostname}}"
     nix --extra-experimental-features "nix-command flakes" build .#darwinConfigurations.{{hostname}}.system --dry-run
+    @echo "Linting shell scripts"
+    shellcheck scripts/*.sh
+    @echo "Checking formatting"
+    @fd -e nix -x nixfmt --check
 
 # List home-manager generations
 generations:

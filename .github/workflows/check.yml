@@ -1,0 +1,29 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Evaluate nix-darwin configurations
+        run: |
+          nix build .#darwinConfigurations.maelito-arm.system --dry-run
+          nix build .#darwinConfigurations.maelito-x86.system --dry-run
+
+      - name: Check formatting
+        run: |
+          nix run nixpkgs#fd -- -e nix -x nix run nixpkgs#nixfmt -- --check
+
+      - name: Lint shell scripts
+        run: |
+          nix run nixpkgs#shellcheck -- scripts/*.sh
