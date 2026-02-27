@@ -35,7 +35,7 @@ else
   info "Installing Nix..."
   NIX_INSTALLER="$(mktemp)"
   curl -L -o "$NIX_INSTALLER" https://nixos.org/nix/install
-  sh "$NIX_INSTALLER" < /dev/tty
+  sh "$NIX_INSTALLER" --yes
   rm -f "$NIX_INSTALLER"
   # shellcheck disable=SC1091
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
