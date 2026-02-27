@@ -8,11 +8,9 @@ This repository contains my personal and professional Nix-based configuration sy
 curl -sL https://raw.githubusercontent.com/MaelitoP/nix-config/main/scripts/install.sh | bash
 ```
 
-The script is idempotent and can be re-run safely if it fails partway through.
-
 ## Daily use
 
-```sh
+```shell
 just rebuild   # apply configuration changes
 just update    # update flake inputs
 just check     # dry-run build to validate
@@ -22,7 +20,7 @@ just format    # format all .nix files
 
 ## Layout
 
-```
+```shell
 .
 ├── flake.nix                # Flake entry point
 ├── flake.lock               # Locked dependencies
