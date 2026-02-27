@@ -21,6 +21,14 @@ else
   read -r < /dev/tty
 fi
 
+# Clean up stale backups from a previous Nix install
+for f in /etc/bashrc.backup-before-nix /etc/zshrc.backup-before-nix /etc/bash.bashrc.backup-before-nix; do
+  if [ -f "$f" ]; then
+    warn "Removing stale Nix backup: $f"
+    sudo rm "$f"
+  fi
+done
+
 if command -v nix &>/dev/null; then
   ok "Nix already installed"
 else
