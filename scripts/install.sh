@@ -25,7 +25,10 @@ if command -v nix &>/dev/null; then
   ok "Nix already installed"
 else
   info "Installing Nix..."
-  curl -L https://nixos.org/nix/install | sh
+  NIX_INSTALLER="$(mktemp)"
+  curl -L -o "$NIX_INSTALLER" https://nixos.org/nix/install
+  sh "$NIX_INSTALLER"
+  rm -f "$NIX_INSTALLER"
   # shellcheck disable=SC1091
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
