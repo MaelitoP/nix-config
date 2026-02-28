@@ -63,6 +63,7 @@ in
     ];
 
     programs.zsh.enable = true;
+    programs.zsh.enableGlobalCompInit = false;
 
     nix-homebrew.enable = true;
     nix-homebrew.user = realname;

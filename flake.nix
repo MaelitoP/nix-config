@@ -26,11 +26,6 @@
 
     nvim-config.url = "github:MaelitoP/nvim-config";
     catppuccin.url = "github:catppuccin/nix";
-
-    bar-wezterm = {
-      url = "github:adriankarlen/bar.wezterm";
-      flake = false;
-    };
   };
 
   outputs =
@@ -65,7 +60,7 @@
               home-manager.backupFileExtension = "bak";
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit (inputs) bar-wezterm; };
+              home-manager.extraSpecialArgs = { };
               home-manager.users.maelito = {
                 imports = [
                   sops-nix.homeManagerModules.sops

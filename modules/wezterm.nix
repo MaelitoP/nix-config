@@ -1,4 +1,4 @@
-{ pkgs, config, bar-wezterm, ... }:
+{ pkgs, config, ... }:
 
 {
   programs.wezterm = {
@@ -13,9 +13,9 @@
       local config = wezterm.config_builder()
 
       config.enable_tab_bar = false
-      config.color_scheme = 'Catppuccin Macchiato'
+      config.color_scheme = 'Catppuccin Mocha'
 
-      local bar = wezterm.plugin.require("file://${bar-wezterm}")
+      local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
       bar.apply_to_config(config)
 
       -- Fix Option key behavior for { and }

@@ -126,7 +126,11 @@
         exec tmux
       fi
 
-      eval "$(scw autocomplete script shell=zsh)"
+      # Strip the bare `compinit` call from scw's completion script.
+      # oh-my-zsh already runs compinit with -u (skip insecure dirs check),
+      # and scw's redundant bare compinit re-triggers the security audit,
+      # causing "insecure files" warnings from Docker Desktop's completions.
+      eval "$(scw autocomplete script shell=zsh | grep -v compinit)"
 
       eval "$(starship init zsh)"
 

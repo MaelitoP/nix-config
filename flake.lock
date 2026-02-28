@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "bar-wezterm": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1768824575,
-        "narHash": "sha256-qAbg6dqMtFJ0xEM/lUXO1FGCirap/AWk+ssATTQrGgc=",
-        "owner": "adriankarlen",
-        "repo": "bar.wezterm",
-        "rev": "bcb1701f949c382e7848bfeaa6b1972afcabeab3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "adriankarlen",
-        "repo": "bar.wezterm",
-        "type": "github"
-      }
-    },
     "brew-src": {
       "flake": false,
       "locked": {
@@ -231,7 +215,6 @@
     },
     "root": {
       "inputs": {
-        "bar-wezterm": "bar-wezterm",
         "catppuccin": "catppuccin",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
