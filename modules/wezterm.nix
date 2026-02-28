@@ -1,6 +1,10 @@
-{ pkgs, config, ... }:
+{ pkgs, config, bar-wezterm-repo, ... }:
 
 {
+  # Mark the nix store path as a trusted git directory — libgit2 rejects
+  # repos owned by a different user (root) without this.
+  programs.git.extraConfig.safe.directory = "${bar-wezterm-repo}";
+
   programs.wezterm = {
     enable = true;
     enableBashIntegration = true;
@@ -15,7 +19,8 @@
       config.enable_tab_bar = false
       config.color_scheme = 'Catppuccin Mocha'
 
-      local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
+      -- Use file:// instead of https:// to avoid libgit2 SSL issues on some machines
+      local bar = wezterm.plugin.require("file://${bar-wezterm-repo}")
       bar.apply_to_config(config)
 
       -- Fix Option key behavior for { and }
