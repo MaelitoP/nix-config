@@ -5,6 +5,11 @@
     EDITOR = "nvim";
     KEYTIMEOUT = 15;
 
+    # Disable oh-my-zsh's compaudit security check.
+    # Docker Desktop creates completion symlinks in /opt/homebrew/share/zsh/site-functions/
+    # with admin group ownership, which compinit flags as insecure.
+    ZSH_DISABLE_COMPFIX = "true";
+
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
