@@ -91,6 +91,7 @@ in
     system = {
       defaults = {
         dock = {
+          autohide = true;
           tilesize = 40;
           orientation = "right";
           persistent-apps = [
