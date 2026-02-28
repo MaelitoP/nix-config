@@ -19,7 +19,10 @@
       config.enable_tab_bar = false
       config.color_scheme = 'Catppuccin Mocha'
 
-      -- Use file:// instead of https:// to avoid libgit2 SSL issues on some machines
+      -- Use file:// instead of https:// to avoid libgit2 SSL issues on some machines.
+      -- The plugin hardcodes HTTPS URL-encoded paths for module resolution,
+      -- so we prepend the correct source path for require() to find bar.* modules.
+      package.path = "${bar-wezterm-repo}/plugin/?.lua;" .. package.path
       local bar = wezterm.plugin.require("file://${bar-wezterm-repo}")
       bar.apply_to_config(config)
 
