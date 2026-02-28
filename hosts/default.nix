@@ -71,10 +71,7 @@ in
       enable = true;
       onActivation.autoUpdate = false;
       taps = [ "wez/wezterm" ];
-      brews = [
-        "mise"
-        "scw"
-      ] ++ extraBrews;
+      brews = [ ] ++ extraBrews;
       casks = [
         "wezterm"
         "goland"
