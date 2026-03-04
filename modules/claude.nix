@@ -171,7 +171,7 @@ in
 
       home.activation.updateClaudeMcpConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [ -f ~/.claude.json ]; then
-          $DRY_RUN_CMD ${pkgs.jq}/bin/jq -s '.[0] * {mcpServers: ((.[0].mcpServers | del(.github, .slite, .slack, .shortcut)) * .[1])}' \
+          $DRY_RUN_CMD ${pkgs.jq}/bin/jq -s '.[0] * {mcpServers: (((.[0].mcpServers // {}) | del(.github, .slite, .shortcut)) * .[1])}' \
             ~/.claude.json \
             ~/.claude/mcp-servers-nix.json \
             > ~/.claude.json.tmp && \
