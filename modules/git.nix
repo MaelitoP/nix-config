@@ -17,6 +17,7 @@ in
       user.name = name;
       user.email = email;
       pull.rebase = true;
+      rebase.autoStash = true;
       push.autoSetupRemote = true;
       credential.helper = if pkgs.stdenv.isDarwin then "osxkeychain" else "cache";
       help.autocorrect = 10;
