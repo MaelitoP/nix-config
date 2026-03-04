@@ -208,6 +208,7 @@ in
             "php-lsp@claude-plugins-official" = true;
             "clangd-lsp@claude-plugins-official" = true;
             "lua-lsp@claude-plugins-official" = true;
+            "slack@claude-plugins-official" = true;
           };
 
           attribution = {
@@ -242,27 +243,6 @@ in
             ];
             envSecrets = {
               SLITE_API_KEY = "slite_api_key";
-            };
-          };
-
-          slack = {
-            type = "stdio";
-            command = "docker";
-            args = [
-              "run"
-              "-i"
-              "--rm"
-              "-e"
-              "SLACK_BOT_TOKEN"
-              "-e"
-              "SLACK_TEAM_ID"
-              "mcp/slack"
-            ];
-            env = {
-              SLACK_TEAM_ID = "T03D06TCH";
-            };
-            envSecrets = {
-              SLACK_BOT_TOKEN = "slack_bot_token";
             };
           };
 
