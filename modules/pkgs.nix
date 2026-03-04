@@ -31,7 +31,7 @@ let
     [
       clang
       stylua
-      nixfmt-rfc-style
+      nixfmt
     ]
     # macOS SDK - use apple-sdk for native compilation (CGO, etc.)
     ++ lib.optionals stdenv.isDarwin [
