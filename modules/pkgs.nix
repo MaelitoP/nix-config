@@ -21,7 +21,7 @@ let
     uv
     openssl
     pkg-config
-    claude-code
+    claude-code-bin
   ];
 
   fonts = (import ./fonts.nix { pkgs = pkgs; });
