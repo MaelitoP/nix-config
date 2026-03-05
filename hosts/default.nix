@@ -85,7 +85,7 @@ in
         "google-chrome"
         "spotify"
         "1password"
-        "docker"
+        "docker-desktop"
       ]
       ++ extraCasks;
     };
@@ -94,6 +94,7 @@ in
       defaults = {
         dock = {
           autohide = true;
+          show-recents = false;
           tilesize = 40;
           orientation = "right";
           persistent-apps = [
