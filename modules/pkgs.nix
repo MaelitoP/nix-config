@@ -13,6 +13,7 @@ let
     fastfetch
     sops
     age
+    grpcurl
     jq
     htop
     neovim
