@@ -1,12 +1,12 @@
 ---
 name: commit
-description: Generate a commit message
+description: Generate and create a conventional commit for staged changes
 ---
 
-Generate a conventional commit message for the staged changes.
+Generate a conventional commit message for the staged changes, then commit.
 Format: <type>(<scope>): <description>
 Types: feat, fix, refactor, ci, docs, test, chore
-Scope should be the service or module name.
+Scope should be the bounded context or module name (e.g. youtube, facebook, listening).
 Keep the description under 72 characters.
 Do NOT add a body.
 Do NOT include a footer unless there's a breaking change.

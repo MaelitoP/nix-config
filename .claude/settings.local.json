@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.claude.ai)",
+      "Bash(cp /Users/mael.lepetit/.claude/skills/expert/object-design-creation.md /Users/mael.lepetit/dev/nix-config/resources/claude/skills/expert/object-design-creation.md)",
+      "Bash(cp /Users/mael.lepetit/.claude/skills/expert/object-design-methods.md /Users/mael.lepetit/dev/nix-config/resources/claude/skills/expert/object-design-methods.md)",
+      "Bash(cp /Users/mael.lepetit/.claude/skills/expert/object-design-types.md /Users/mael.lepetit/dev/nix-config/resources/claude/skills/expert/object-design-types.md)",
+      "Bash(cp /Users/mael.lepetit/.claude/skills/expert/SKILL.md /Users/mael.lepetit/dev/nix-config/resources/claude/skills/expert/SKILL.md)",
+      "Bash(cp -r /Users/mael.lepetit/dev/nix-config/resources/claude/skills/ship /Users/mael.lepetit/.claude/skills/ship)",
+      "Bash(rm -rf /Users/mael.lepetit/.claude/skills/investigate)",
+      "Bash(find:*)",
+      "Bash(git:*)"
+    ]
+  }
+}

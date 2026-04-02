@@ -1,14 +1,17 @@
 ---
-name: investigate
-description: Investigate an idea or ticket before implementation — explores codebase, asks questions, presents approaches
+name: ship
+description: Take an idea or ticket from exploration to a draft PR — investigate, plan approaches, create Shortcut ticket, implement, and open a PR
 argument-hint: <ticket-id or idea description>
+disable-model-invocation: true
+effort: high
 ---
 
 # Investigate
 
 You are a senior staff software engineer conducting a thorough **read-only investigation** before any implementation begins. Your goal is to explore an idea, understand the codebase impact, and present 2-3 possible approaches with trade-offs.
 
-**You MUST NOT create, edit, or write any files. This is a read-only exploration.**
+**Phases 0–5 are strictly read-only** — no files created, no branches, no external writes.
+Phases 6–7 create a Shortcut ticket and optionally implement. Both are gated by explicit user confirmation.
 
 ## Phase 0: Parse Input
 
@@ -69,9 +72,62 @@ Conclude with:
 3. **Testing strategy** (which test types, what scenarios to cover)
 4. **Critical files to read** before starting implementation (file paths the implementer must understand)
 
+## Phase 6: Create Shortcut Ticket
+
+Use `AskUserQuestion` to ask in a single batch:
+- Which **epic** to attach this story to (offer to list recent epics via `mcp__shortcut__epics-search` if needed)
+- **Story type**: feature, bug, or chore
+
+Then:
+1. Get current user: `mcp__shortcut__users-get-current`
+2. Create the story with `mcp__shortcut__stories-create`:
+   - `name`: concise title derived from the investigation topic
+   - `description`: structured markdown built from the investigation output:
+
+     ```
+     ### Context
+     {problem summary from Phase 1}
+
+     ### Approach
+     {recommended approach: summary, how it works, affected files}
+
+     ### Testing
+     {testing strategy from Phase 5}
+     ```
+
+   - `type`: from user answer
+   - `team`: `6810ed64-0029-4375-a9f7-c94cb773ab97`
+   - `epic`: from user answer
+   - `owner`: current user ID
+3. Report the ticket URL and ID.
+
+## Phase 7: Implement?
+
+Ask the user (via `AskUserQuestion`): "Ticket created. Do you want me to implement it now?"
+
+**If yes:**
+1. Determine branch prefix from story type: feature → `feature`, bug → `bug`, chore → `chore`
+2. Create branch from up-to-date master:
+   ```bash
+   git fetch origin
+   git switch -c {type}/sc-{id} origin/master
+   ```
+3. Move ticket to In Progress: `mcp__shortcut__stories-update` with `workflow_state_id: 500143682`
+4. Implement the **recommended approach** from Phase 5 (re-read the critical files identified there first)
+5. Run tests and static analysis in the PHP container:
+   ```bash
+   docker exec ingestor-php_cli-1 php .composer/bin/phpunit [relevant test path]
+   docker exec ingestor-php_cli-1 ./tools/phpstan.sh
+   ```
+6. Fix any failures before proceeding. Do not skip or ignore failures.
+7. Use the `/commit` skill to generate and create the commit.
+8. Use the `/pr` skill to create the draft PR — pass the ticket ID as the argument.
+
+**If no:** End the session. The ticket URL is already reported above.
+
 ## Guiding Principles
 
-- **Read-only**: do not create files, branches, or make any changes
+- **Read-only through Phase 5**: do not create files, branches, or make any changes until Phase 6
 - **No speculation**: only reference code you have actually read
 - **Simplicity first**: recommend the simplest approach that solves the problem
 - **DDD compliance**: respect bounded context boundaries, follow existing patterns
