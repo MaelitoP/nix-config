@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+staged_nix=$(git diff --cached --name-only --diff-filter=ACM | grep '\.nix$' || true)
+
+if [ -z "$staged_nix" ]; then
+  exit 0
+fi
+
+echo "Formatting nix files..."
+echo "$staged_nix" | xargs nix run nixpkgs#nixfmt --
+echo "$staged_nix" | xargs git add
