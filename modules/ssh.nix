@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   sops.secrets.id_rsa = {
     sopsFile = ../secrets/ssh.yaml;
@@ -19,6 +19,21 @@
     sopsFile = ../secrets/ssh.yaml;
     path = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway.pub";
   };
+  launchd.agents.ssh-add-keychain = lib.mkIf pkgs.stdenv.isDarwin {
+    enable = true;
+    config = {
+      Label = "com.user.ssh-add-keychain";
+      ProgramArguments = [
+        "/usr/bin/ssh-add"
+        "--apple-use-keychain"
+        "${config.xdg.dataHome}/ssh/id_rsa"
+      ];
+      RunAtLoad = true;
+      StandardOutPath = "/tmp/ssh-add-keychain.log";
+      StandardErrorPath = "/tmp/ssh-add-keychain.log";
+    };
+  };
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
