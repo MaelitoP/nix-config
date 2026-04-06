@@ -23,6 +23,7 @@ let
     openssl
     pkg-config
     claude-code-bin
+    lnav
   ];
 
   fonts = (import ./fonts.nix { pkgs = pkgs; });
