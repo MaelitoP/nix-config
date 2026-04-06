@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   sops.secrets.id_rsa = {
     sopsFile = ../secrets/ssh.yaml;

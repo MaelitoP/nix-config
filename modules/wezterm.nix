@@ -1,4 +1,9 @@
-{ pkgs, config, bar-wezterm-repo, ... }:
+{
+  pkgs,
+  config,
+  bar-wezterm-repo,
+  ...
+}:
 
 {
   # Mark the nix store path as a trusted git directory — libgit2 rejects

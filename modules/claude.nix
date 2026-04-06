@@ -39,12 +39,14 @@ let
     env = { };
   }) cfg.mcpServers;
 
-  settingsFile = pkgs.writeText "claude-settings.json" (builtins.toJSON {
-    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-    enabledPlugins = cfg.settings.enabledPlugins;
-    alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
-    attribution = cfg.settings.attribution;
-  });
+  settingsFile = pkgs.writeText "claude-settings.json" (
+    builtins.toJSON {
+      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+      enabledPlugins = cfg.settings.enabledPlugins;
+      alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
+      attribution = cfg.settings.attribution;
+    }
+  );
 
   claudeMdFile = ../resources/claude/CLAUDE.md;
   skillsDir = ../resources/claude/skills;

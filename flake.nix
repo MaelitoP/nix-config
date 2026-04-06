@@ -53,21 +53,24 @@
           # Build a git-initialized copy of bar.wezterm plugin source.
           # Wezterm uses libgit2 to clone plugins — file:// avoids HTTPS/SSL issues,
           # and the .git directory is required for libgit2 to recognize it as a repo.
-          bar-wezterm-repo = pkgs.runCommand "bar-wezterm-repo" {
-            nativeBuildInputs = [ pkgs.git ];
-          } ''
-            export HOME=$(mktemp -d)
-            export GIT_AUTHOR_NAME="nix"
-            export GIT_AUTHOR_EMAIL="nix@localhost"
-            export GIT_COMMITTER_NAME="nix"
-            export GIT_COMMITTER_EMAIL="nix@localhost"
-            cp -r ${inputs.bar-wezterm} $out
-            chmod -R u+w $out
-            cd $out
-            git init
-            git add .
-            git commit -m "init"
-          '';
+          bar-wezterm-repo =
+            pkgs.runCommand "bar-wezterm-repo"
+              {
+                nativeBuildInputs = [ pkgs.git ];
+              }
+              ''
+                export HOME=$(mktemp -d)
+                export GIT_AUTHOR_NAME="nix"
+                export GIT_AUTHOR_EMAIL="nix@localhost"
+                export GIT_COMMITTER_NAME="nix"
+                export GIT_COMMITTER_EMAIL="nix@localhost"
+                cp -r ${inputs.bar-wezterm} $out
+                chmod -R u+w $out
+                cd $out
+                git init
+                git add .
+                git commit -m "init"
+              '';
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
