@@ -11,6 +11,7 @@ in
     signing = {
       key = "5F9DFF499091DE14";
       signByDefault = true;
+      format = "openpgp";
     };
 
     settings = {

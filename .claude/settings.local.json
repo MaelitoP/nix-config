@@ -9,7 +9,8 @@
       "Bash(cp -r /Users/mael.lepetit/dev/nix-config/resources/claude/skills/ship /Users/mael.lepetit/.claude/skills/ship)",
       "Bash(rm -rf /Users/mael.lepetit/.claude/skills/investigate)",
       "Bash(find:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(chmod +x /Users/mael.lepetit/dev/nix-config/.githooks/pre-commit)"
     ]
   }
 }

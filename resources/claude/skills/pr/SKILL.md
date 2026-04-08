@@ -1,7 +1,6 @@
 ---
 name: pr
 description: Create a draft pull request with conventional commit title and structured description
-disable-model-invocation: true
 argument-hint: [ticket-id]
 ---
 

@@ -120,8 +120,8 @@ Ask the user (via `AskUserQuestion`): "Ticket created. Do you want me to impleme
    docker exec ingestor-php_cli-1 ./tools/phpstan.sh
    ```
 6. Fix any failures before proceeding. Do not skip or ignore failures.
-7. Use the `/commit` skill to generate and create the commit.
-8. Use the `/pr` skill to create the draft PR — pass the ticket ID as the argument.
+7. Invoke the Skill tool with `skill: "commit"` to generate and create the commit.
+8. Invoke the Skill tool with `skill: "pr"` and `args: "{ticket-id}"` to create the draft PR.
 
 **If no:** End the session. The ticket URL is already reported above.
 
