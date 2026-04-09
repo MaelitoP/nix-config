@@ -60,6 +60,21 @@
         user = "mael-lepetit";
       };
 
+      "scaleway_bastion" = {
+        hostname = "51.15.221.197";
+        port = 61000;
+        user = "bastion";
+        identityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
+      };
+
+      "platform-*" = {
+        user = "root";
+        identityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
+        extraOptions = {
+          ProxyJump = "scaleway_bastion";
+        };
+      };
+
       "*.mention.net" = {
         user = "mention";
         extraOptions = {
