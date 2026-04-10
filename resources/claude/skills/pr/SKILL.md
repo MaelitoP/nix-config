@@ -56,17 +56,14 @@ Use `gh pr create` with:
 
 ### 7. Body format
 
-```markdown
-### Context
+Write the PR description following the style guide in [pr-description-style.md](pr-description-style.md).
 
-{Why this change is needed. 2-4 sentences as a senior staff engineer. Reference the ticket goal if available. No bullet points.}
+Read that file before writing the body. It defines:
+- How structure scales with PR complexity (trivial = empty, small = prose, large = structured sections)
+- Which `###` sections to use depending on PR type (fix, feat, chore, refactor, revert)
+- Writing rules: problem-first narrative, trade-off reasoning, evidence-based, no filler
 
-### Changes
-
-{What was changed and the technical reasoning. Prose, no bullet points.}
-```
-
-Add `### Deployment note` only if migrations, infra changes, config changes, or env vars are involved.
+Use the Shortcut ticket context (if available) and the actual diff to determine the appropriate level of detail.
 
 ### 8. After PR creation
 
