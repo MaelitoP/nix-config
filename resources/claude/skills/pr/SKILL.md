@@ -1,12 +1,27 @@
 ---
 name: pr
-description: Create a draft pull request with conventional commit title and structured description
+description: Create a draft pull request with conventional commit title and structured description. Use this whenever the user wants to open a PR, push changes for review, or is done with implementation and ready for code review — even if they don't say "PR" explicitly.
 argument-hint: [ticket-id]
 ---
 
 # Create Pull Request
 
 Create a draft pull request for the current branch.
+
+## Pre-flight checks
+
+Before proceeding, detect the repo's default branch and verify there is work to open a PR for:
+
+```bash
+DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+DEFAULT_BRANCH=${DEFAULT_BRANCH:-master}
+```
+
+Abort (and tell the user why) if:
+- The current branch **is** the default branch — there's nothing to open a PR from.
+- There are **no commits** ahead of `origin/$DEFAULT_BRANCH`.
+
+Use `origin/$DEFAULT_BRANCH` in place of `origin/master` for every git command below.
 
 ## Steps
 
@@ -23,9 +38,9 @@ Use this to inform the PR Context and Changes sections.
 ### 3. Gather branch context
 
 ```bash
-git log origin/master..HEAD --oneline
-git diff origin/master...HEAD --stat
-git diff origin/master...HEAD
+git log origin/$DEFAULT_BRANCH..HEAD --oneline
+git diff origin/$DEFAULT_BRANCH...HEAD --stat
+git diff origin/$DEFAULT_BRANCH...HEAD
 ```
 
 ### 4. Detect labels
@@ -36,7 +51,15 @@ git diff origin/master...HEAD
 - If changed files include `.php` files: add `php`
 - Multiple labels are allowed
 
-### 5. Create the pull request
+### 5. Push the branch
+
+If the current branch does not track a remote branch yet (or is behind), push it:
+
+```bash
+git push -u origin HEAD
+```
+
+### 6. Create the pull request
 
 Use `gh pr create` with:
 - `--draft`
@@ -44,7 +67,7 @@ Use `gh pr create` with:
 - `--label claude-code-assisted` (always)
 - Additional labels from step 4
 
-### 6. Title format
+**Title format:**
 
 ```
 [sc-{ticket-id}] {type}({scope}): {description}
@@ -54,7 +77,7 @@ Use `gh pr create` with:
 - `scope`: bounded context or module (e.g. youtube, facebook, listening)
 - Under 70 characters total
 
-### 7. Body format
+**Body format:**
 
 Write the PR description following the style guide in [pr-description-style.md](pr-description-style.md).
 
@@ -65,7 +88,7 @@ Read that file before writing the body. It defines:
 
 Use the Shortcut ticket context (if available) and the actual diff to determine the appropriate level of detail.
 
-### 8. After PR creation
+### 7. After PR creation
 
 If a Shortcut ticket was found, move it to "Tech Review" state:
 use `mcp__shortcut__stories-update` with `workflow_state_id: 500143701`.
