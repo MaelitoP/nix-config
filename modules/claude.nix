@@ -211,6 +211,12 @@ in
             "clangd-lsp@claude-plugins-official" = true;
             "lua-lsp@claude-plugins-official" = true;
             "slack@claude-plugins-official" = true;
+            "claude-code-setup@claude-plugins-official" = true;
+            "claude-md-management@claude-plugins-official" = true;
+            "skill-creator@claude-plugins-official" = true;
+            "gopls-lsp@claude-plugins-official" = true;
+            "terraform@claude-plugins-official" = true;
+            "rust-analyzer-lsp@claude-plugins-official" = true;
           };
 
           attribution = {
