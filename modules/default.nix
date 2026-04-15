@@ -10,6 +10,7 @@ let
     ./zsh.nix
     ./starship.nix
     ./nix.nix
+    ./npm.nix
     ./direnv.nix
     ./fzf.nix
     ./tmux.nix
