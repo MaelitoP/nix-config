@@ -24,6 +24,7 @@ let
     pkg-config
     claude-code-bin
     lnav
+    granted
   ];
 
   fonts = (import ./fonts.nix { pkgs = pkgs; });

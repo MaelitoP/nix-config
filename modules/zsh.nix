@@ -90,6 +90,8 @@
       brdiff = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff origin/$def_branch...";
       brfiles = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff --name-only origin/$def_branch...";
       gpf = "git push --force-with-lease";
+
+      assume = "source assume";
     };
 
     initContent = ''
