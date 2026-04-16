@@ -43,7 +43,8 @@ let
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
     ++ (import ./go.nix { pkgs = pkgs; })
-    ++ (import ./ocaml.nix { pkgs = pkgs; });
+    ++ (import ./ocaml.nix { pkgs = pkgs; })
+    ++ (import ./php.nix { pkgs = pkgs; });
 in
 {
   home.packages = utils ++ development ++ fonts;
