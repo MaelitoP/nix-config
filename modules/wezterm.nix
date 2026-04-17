@@ -35,6 +35,15 @@
       config.send_composed_key_when_left_alt_is_pressed = true
       config.send_composed_key_when_right_alt_is_pressed = true
 
+      -- Force canonical xterm sequences for modified arrows so word-jump
+      -- works in zsh, tmux, and TUIs regardless of composed-key mode.
+      config.keys = {
+        { key = 'LeftArrow',  mods = 'OPT',  action = wezterm.action.SendString '\x1b[1;3D' },
+        { key = 'RightArrow', mods = 'OPT',  action = wezterm.action.SendString '\x1b[1;3C' },
+        { key = 'LeftArrow',  mods = 'CTRL', action = wezterm.action.SendString '\x1b[1;5D' },
+        { key = 'RightArrow', mods = 'CTRL', action = wezterm.action.SendString '\x1b[1;5C' },
+      }
+
       -- Maximize window on startup
       wezterm.on("gui-startup", function(cmd)
         local _, _, window = mux.spawn_window(cmd or {})
