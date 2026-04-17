@@ -25,6 +25,7 @@ let
     claude-code-bin
     lnav
     granted
+    google-cloud-sdk
   ];
 
   fonts = (import ./fonts.nix { pkgs = pkgs; });
