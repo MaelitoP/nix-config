@@ -17,6 +17,8 @@
         extraConfig = ''
           set -g @catppuccin_flavor 'mocha'
           set -g @catppuccin_window_status_style 'rounded'
+          set -g @catppuccin_window_text " #W"
+          set -g @catppuccin_window_current_text " #W"
           set -g @catppuccin_date_time_icon "󰃰 "
         '';
       }
