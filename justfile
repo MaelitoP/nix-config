@@ -42,6 +42,11 @@ check:
     @echo "Checking formatting"
     @fd -e nix -x nixfmt --check
 
+# One-shot: accept Xcode license + download iOS simulator runtime
+[macos]
+ios-setup:
+    ./scripts/install-ios-simulator-once.sh
+
 # List home-manager generations
 generations:
     @nix-env --list-generations

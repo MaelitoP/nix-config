@@ -30,6 +30,10 @@
     OPAMROOT = "${config.xdg.dataHome}/opam";
     DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune";
 
+    # Android
+    ANDROID_HOME = "${config.home.homeDirectory}/Library/Android/sdk";
+    ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Library/Android/sdk";
+
     LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
 
     NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
@@ -107,6 +111,8 @@
       export PATH="$HOME/.opencode/bin:$PATH"
 
       export PATH="$HOME/dev/cli/bin:$PATH"
+
+      export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
       export CGO_CC="/usr/bin/clang"
       export CGO_CXX="/usr/bin/clang++"

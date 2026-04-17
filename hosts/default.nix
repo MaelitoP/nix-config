@@ -82,6 +82,7 @@ in
         "rustrover"
         "intellij-idea"
         "webstorm"
+        "android-studio"
         "slack"
         "google-chrome"
         "spotify"
@@ -89,6 +90,9 @@ in
         "docker-desktop"
       ]
       ++ extraCasks;
+      masApps = {
+        Xcode = 497799835;
+      };
     };
 
     system = {
@@ -106,6 +110,7 @@ in
             "/Applications/RustRover.app"
             "/Applications/PyCharm.app"
             "/Applications/WebStorm.app"
+            "/Applications/Android Studio.app"
             "/Applications/Slack.app"
             "/Applications/Google Chrome.app"
             "/Applications/Spotify.app"
