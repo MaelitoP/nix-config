@@ -11,6 +11,7 @@ let
     ./starship.nix
     ./nix.nix
     ./npm.nix
+    ./github.nix
     ./direnv.nix
     ./fzf.nix
     ./tmux.nix

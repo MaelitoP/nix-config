@@ -127,6 +127,9 @@
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+      [ -r "$XDG_CONFIG_HOME/secrets/github_token" ] && \
+        export GITHUB_TOKEN="$(<"$XDG_CONFIG_HOME/secrets/github_token")"
+
       gpgconf --launch gpg-agent
 
       # Tmux autostart
