@@ -27,6 +27,7 @@ in
       alias = {
         cl = "clone --depth=1 --filter=blob:none";
         lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --";
+        tidy = "!git fetch --prune && git branch -vv | awk '/: gone]/ {print $1}' | xargs -I{} git branch -D {}";
       };
     };
   };
