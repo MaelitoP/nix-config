@@ -61,6 +61,7 @@ in
       "root"
       realname
     ];
+    nix.settings.download-buffer-size = 268435456;
 
     programs.zsh.enable = true;
     programs.zsh.enableGlobalCompInit = false;
