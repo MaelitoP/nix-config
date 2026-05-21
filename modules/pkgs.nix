@@ -22,7 +22,7 @@ let
     uv
     openssl
     pkg-config
-    claude-code-bin
+    claude-code
     lnav
     granted
     google-cloud-sdk
