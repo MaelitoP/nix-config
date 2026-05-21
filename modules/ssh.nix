@@ -42,61 +42,51 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "bastion1.mention.net bastion2.mention.net" = {
-        extraOptions = {
-          ProxyCommand = "none";
-        };
+        ProxyCommand = "none";
       };
 
       "*.d.mention.net" = {
-        extraOptions = {
-          ProxyCommand = "none";
-        };
+        ProxyCommand = "none";
       };
 
       "ssh_bastion" = {
-        hostname = "bastion1.mention.net";
-        user = "mael-lepetit";
+        HostName = "bastion1.mention.net";
+        User = "mael-lepetit";
       };
 
       "scaleway_bastion" = {
-        hostname = "51.15.221.197";
-        port = 61000;
-        user = "bastion";
-        identityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
+        HostName = "51.15.221.197";
+        Port = 61000;
+        User = "bastion";
+        IdentityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
       };
 
       "platform-*" = {
-        user = "root";
-        identityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
-        extraOptions = {
-          ProxyJump = "scaleway_bastion";
-        };
+        User = "root";
+        IdentityFile = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway";
+        ProxyJump = "scaleway_bastion";
       };
 
       "*.mention.net" = {
-        user = "mention";
-        extraOptions = {
-          ProxyJump = "ssh_bastion";
-        };
+        User = "mention";
+        ProxyJump = "ssh_bastion";
       };
 
       "*" = {
-        identityFile = "${config.xdg.dataHome}/ssh/id_rsa";
-        userKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";
-        extraOptions = {
-          ForwardAgent = "no";
-          ServerAliveInterval = "0";
-          ServerAliveCountMax = "3";
-          Compression = "no";
-          AddKeysToAgent = "yes";
-          HashKnownHosts = "no";
-          ControlMaster = "no";
-          ControlPath = "~/.ssh/master-%r@%n:%p";
-          ControlPersist = "no";
-          UseKeychain = if pkgs.stdenv.isDarwin then "yes" else "no";
-        };
+        IdentityFile = "${config.xdg.dataHome}/ssh/id_rsa";
+        UserKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";
+        ForwardAgent = "no";
+        ServerAliveInterval = "0";
+        ServerAliveCountMax = "3";
+        Compression = "no";
+        AddKeysToAgent = "yes";
+        HashKnownHosts = "no";
+        ControlMaster = "no";
+        ControlPath = "~/.ssh/master-%r@%n:%p";
+        ControlPersist = "no";
+        UseKeychain = if pkgs.stdenv.isDarwin then "yes" else "no";
       };
     };
   };
