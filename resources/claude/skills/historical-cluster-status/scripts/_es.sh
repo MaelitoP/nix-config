@@ -14,7 +14,16 @@ CONTAINER_NAME="${CONTAINER_NAME:-ingestor-php_fpm-1}"
 
 es_get() {
     local path="$1"
-    docker exec "$CONTAINER_NAME" curl -s -XGET "${ES_PROXY}/${path}"
+    local body status
+    body="$(docker exec "$CONTAINER_NAME" curl -sS -XGET -w $'\n%{http_code}' "${ES_PROXY}/${path}")" \
+        || { echo "ERROR: curl failed for ${path}" >&2; return 3; }
+    status="${body##*$'\n'}"
+    body="${body%$'\n'*}"
+    if [[ "$status" != 2* ]] || [[ -z "$body" ]]; then
+        echo "ERROR: ES request failed for ${path}: HTTP ${status:-?}, body=${body:0:200}" >&2
+        return 3
+    fi
+    printf '%s' "$body"
 }
 
 require_es() {
