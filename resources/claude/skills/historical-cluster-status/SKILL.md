@@ -10,19 +10,8 @@ Targets the **Mention historical ES cluster** (`mention-es4`), the one where `me
 
 ## Baseline (auto-injected)
 
-### Cluster health
 ```!
-${CLAUDE_SKILL_DIR}/scripts/health.sh
-```
-
-### Recovery state
-```!
-${CLAUDE_SKILL_DIR}/scripts/recovery.sh
-```
-
-### Write pressure
-```!
-${CLAUDE_SKILL_DIR}/scripts/write-pressure.sh
+${CLAUDE_SKILL_DIR}/scripts/baseline.sh
 ```
 
 ## Interpretive rubric
