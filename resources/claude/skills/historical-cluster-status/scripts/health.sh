@@ -9,7 +9,8 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$DIR/_es.sh"
 require_es
 
-es_get "_cluster/health?pretty" | python3 -c "
+response=$(es_get "_cluster/health?pretty") || exit $?
+python3 -c "
 import json, sys
 h = json.load(sys.stdin)
 print(f\"cluster: {h['cluster_name']}  status: {h['status']}\")
@@ -17,11 +18,12 @@ print(f\"nodes: {h['number_of_nodes']} ({h['number_of_data_nodes']} data)\")
 print(f\"shards: active={h['active_shards']} primary={h['active_primary_shards']} init={h['initializing_shards']} reloc={h['relocating_shards']} unassigned={h['unassigned_shards']}\")
 print(f\"pending_tasks: {h['number_of_pending_tasks']}\")
 print(f\"delayed_unassigned: {h['delayed_unassigned_shards']}  in_flight_fetch: {h['number_of_in_flight_fetch']}\")
-"
+" <<< "$response"
 
 echo
 echo "--- Recent NODE_LEFT events (extracted from pending_tasks) ---"
-es_get "_cluster/pending_tasks?pretty" | python3 -c "
+response=$(es_get "_cluster/pending_tasks?pretty") || exit $?
+python3 -c "
 import json, re, sys
 from collections import Counter
 d = json.load(sys.stdin)
@@ -44,4 +46,4 @@ else:
         print(f'{nid:28} {c:10}')
 print(f'pending_tasks total: {len(tasks)}')
 print(f'distinct indices mentioned: {len(unique_indices)}')
-"
+" <<< "$response"

@@ -18,7 +18,8 @@ fi
 INDEX="$1"
 
 echo "=== ${INDEX} : per-shard segments & placement ==="
-es_get "${INDEX}/_segments?pretty" | python3 -c "
+response=$(es_get "${INDEX}/_segments?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 indices = d.get('indices', {})
@@ -37,11 +38,12 @@ for idx_name, idx in indices.items():
             n_del = sum(s.get('deleted_docs', 0) for s in segs.values())
             committed = sum(1 for s in segs.values() if s.get('committed'))
             print(f\"{shard_id:>5} {str(routing.get('primary')):>5} {routing.get('node','?')[:8]:>10} {routing.get('state','?'):>10} {n_segs:>5} {committed:>7} {n_docs:>14,} {n_del:>10,}\")
-"
+" <<< "$response"
 
 echo
 echo "=== ${INDEX} : indexing stats ==="
-es_get "${INDEX}/_stats/indexing,store?pretty" | python3 -c "
+response=$(es_get "${INDEX}/_stats/indexing,store?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 indices = d.get('indices', {})
@@ -54,11 +56,12 @@ for name, info in indices.items():
     print(f'  primaries: docs={ip.get(\"index_total\",0):,} avg_ms/doc={(ip.get(\"index_time_in_millis\",0)/ip.get(\"index_total\",1)) if ip.get(\"index_total\") else 0:.2f}  current_ops={ip.get(\"index_current\",0)}')
     print(f'             throttle_ms={ip.get(\"throttle_time_in_millis\",0)}  delete_total={ip.get(\"delete_total\",0):,}')
     print(f'  store: size={sp.get(\"size_in_bytes\",0)/(1024**3):.2f} GB  throttle={sp.get(\"throttle_time_in_millis\",0)/60000:.1f} min')
-"
+" <<< "$response"
 
 echo
 echo "=== ${INDEX} : settings (refresh_interval / merge policy) ==="
-es_get "${INDEX}/_settings?pretty" | python3 -c "
+response=$(es_get "${INDEX}/_settings?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 for name, info in d.items():
@@ -69,4 +72,4 @@ for name, info in d.items():
     mp = s.get('merge', {})
     if mp:
         print(f'  merge: {json.dumps(mp)}')
-"
+" <<< "$response"

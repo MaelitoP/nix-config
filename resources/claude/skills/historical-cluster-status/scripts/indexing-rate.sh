@@ -28,7 +28,8 @@ for i in range(days):
 print(','.join(parts))
 ")
 
-es_get "${PATTERN}/_stats/indexing?pretty" | python3 -c "
+response=$(es_get "${PATTERN}/_stats/indexing?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 indices = d.get('indices', {})
@@ -60,4 +61,4 @@ if backpressure:
     print(f'FLAG: {len(backpressure)} indices with in-flight ops > 0 (backpressure right now):')
     for r in backpressure[:5]:
         print(f'  - {r[0]}: {r[3]} current ops')
-"
+" <<< "$response"

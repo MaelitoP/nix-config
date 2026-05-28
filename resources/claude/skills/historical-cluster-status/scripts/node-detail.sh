@@ -15,7 +15,8 @@ if [[ $# -lt 1 ]]; then
 fi
 NODE="$1"
 
-es_get "_nodes/${NODE}/stats/jvm,os,process,thread_pool,indices?pretty" | python3 -c "
+response=$(es_get "_nodes/${NODE}/stats/jvm,os,process,thread_pool,indices?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 nodes = d.get('nodes', {})
@@ -79,4 +80,4 @@ for nid, n in nodes.items():
     print(f'  store: {store.get(\"size_in_bytes\",0)/(1024**3):.1f} GB  throttle={store.get(\"throttle_time_in_millis\",0)/60000:.1f} min')
     print(f'  segments: count={segs.get(\"count\",0):,}  memory={segs.get(\"memory_in_bytes\",0)/(1024**2):.1f} MB')
     print(f'  merges: current={merges.get(\"current\",0)} cur_size={merges.get(\"current_size_in_bytes\",0)/(1024**2):.0f}MB total={merges.get(\"total\",0)} total_time={merges.get(\"total_time_in_millis\",0)/3600000:.2f}h')
-"
+" <<< "$response"

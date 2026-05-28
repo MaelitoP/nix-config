@@ -9,7 +9,8 @@ source "$DIR/_es.sh"
 require_es
 
 echo "--- Indices health summary ---"
-es_get "_cluster/health?level=indices&pretty" | python3 -c "
+response=$(es_get "_cluster/health?level=indices&pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 idx = d.get('indices', {})
@@ -23,11 +24,12 @@ if red:
     print('Red indices:')
     for k,v in list(red.items())[:20]:
         print(f'  {k}: unassigned={v.get(\"unassigned_shards\",0)} init={v.get(\"initializing_shards\",0)}')
-"
+" <<< "$response"
 
 echo
 echo "--- Unassigned shards: reasons and origin nodes ---"
-es_get "_cluster/state/routing_table?pretty" | python3 -c "
+response=$(es_get "_cluster/state/routing_table?pretty") || exit $?
+python3 -c "
 import json, sys
 from collections import Counter
 d = json.load(sys.stdin)
@@ -59,4 +61,4 @@ if left_nodes:
     print(f'  {\"node_id\":28} {\"shards\":>8}  example')
     for nid, c in left_nodes.most_common():
         print(f'  {nid:28} {c:8}  {example_per_node[nid]}')
-"
+" <<< "$response"

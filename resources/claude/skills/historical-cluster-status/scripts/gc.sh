@@ -10,7 +10,8 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$DIR/_es.sh"
 require_es
 
-es_get "_nodes/stats/jvm,os?pretty" | python3 -c "
+response=$(es_get "_nodes/stats/jvm,os?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 nodes = d.get('nodes', {})
@@ -52,4 +53,4 @@ if bad_avg:
     print('FLAG: candidates for rolling restart (long Full GC pauses):')
     for r in sorted(bad_avg, key=lambda x:-x['old_avg'])[:10]:
         print(f\"  - {r['name']}: avg pause {r['old_avg']/1000:.1f}s, heap {r['pct']:.0f}%, {r['old_n']} old-GC events\")
-"
+" <<< "$response"

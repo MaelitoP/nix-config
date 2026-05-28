@@ -8,7 +8,8 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$DIR/_es.sh"
 require_es
 
-es_get "_nodes/stats/indices/merges,segments?pretty" | python3 -c "
+response=$(es_get "_nodes/stats/indices/merges,segments?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 nodes = d.get('nodes', {})
@@ -46,4 +47,4 @@ if active:
         print(f\"{r['name']:30} {r['merge_cur']:10} {r['merge_cur_mb']:13.0f}\")
 else:
     print('(no merges in flight in this snapshot)')
-"
+" <<< "$response"

@@ -11,7 +11,8 @@ source "$DIR/_es.sh"
 require_es
 
 echo "--- Bulk thread pool (right now) ---"
-es_get "_nodes/stats/thread_pool?pretty" | python3 -c "
+response=$(es_get "_nodes/stats/thread_pool?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 nodes = d.get('nodes', {})
@@ -31,11 +32,12 @@ if hot:
     print(f'{\"node\":30} {\"active\":>7} {\"queue\":>7} {\"rejected_cum\":>13}')
     for r in sorted(hot, key=lambda x:-(x[1]+x[2])):
         print(f'{r[0]:30} {r[1]:7} {r[2]:7} {r[3]:13}')
-"
+" <<< "$response"
 
 echo
 echo "--- Store throttle (cumulative, top 15 nodes) ---"
-es_get "_nodes/stats/indices/store?pretty" | python3 -c "
+response=$(es_get "_nodes/stats/indices/store?pretty") || exit $?
+python3 -c "
 import json, sys
 d = json.load(sys.stdin)
 nodes = d.get('nodes', {})
@@ -52,4 +54,4 @@ print()
 print(f'cluster total store throttle: {total_min:.0f} min ({total_min/60:.1f} h / {total_min/60/24:.2f} d)')
 hot_share = sum(r[2] for r in rows if 'hot' in r[0].lower())
 print(f'  share on \"hot\" nodes: {hot_share/60000:.0f} min ({(hot_share/sum(r[2] for r in rows)*100) if sum(r[2] for r in rows) else 0:.1f}%)')
-"
+" <<< "$response"
