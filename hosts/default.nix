@@ -77,6 +77,7 @@ in
       brews = [ ] ++ extraBrews;
       casks = [
         "wezterm"
+        "ghostty"
         "goland"
         "phpstorm"
         "pycharm"

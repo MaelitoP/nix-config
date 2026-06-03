@@ -18,6 +18,7 @@ let
     ./fastfetch.nix
     ./claude.nix
     ./wezterm.nix
+    ./ghostty.nix
   ];
 in
 {
