@@ -60,6 +60,8 @@
       unbind x
       bind x kill-pane
 
+      bind X confirm-before -p "kill session #S? (y/n)" kill-session
+
       unbind b 
       bind b set-option status\; refresh-client -S # Toggle tmux bar
 
