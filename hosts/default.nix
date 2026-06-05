@@ -106,6 +106,7 @@ in
           orientation = "right";
           persistent-apps = [
             "/Applications/WezTerm.app"
+            "/Applications/Ghostty.app"
             "/Applications/PhpStorm.app"
             "/Applications/GoLand.app"
             "/Applications/IntelliJ IDEA.app"
