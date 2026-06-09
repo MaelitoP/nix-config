@@ -54,6 +54,9 @@
       set -g renumber-windows on
       set -g mouse on
 
+      # On kill-session, switch to another session; only detach if none remain
+      set -g detach-on-destroy no-detached
+
       unbind r
       bind r source-file "$HOME/.config/tmux/tmux.conf"\; display-message "Reloading tmux.conf"
 
