@@ -139,7 +139,7 @@
         && [[ ! "$TERM" =~ tmux ]] \
         && [ -z "$TMUX" ] \
         && [[ "$TERMINAL_EMULATOR" != JetBrains* ]]; then
-        exec tmux
+        exec tmux new-session -A -s main
       fi
 
       # Strip the bare `compinit` call from scw's completion script.
