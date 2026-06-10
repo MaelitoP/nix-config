@@ -36,6 +36,7 @@ let
       clang
       stylua
       nixfmt
+      tree-sitter
     ]
     # macOS SDK - use apple-sdk for native compilation (CGO, etc.)
     ++ lib.optionals stdenv.isDarwin [
