@@ -12,6 +12,7 @@ let
     ./nix.nix
     ./npm.nix
     ./github.nix
+    ./intelephense.nix
     ./direnv.nix
     ./fzf.nix
     ./tmux.nix
