@@ -8,3 +8,19 @@
 4. **Simplicity Above All**: Make every task and code change as simple as possible. Avoid massive or complex changes. Every change should impact as little code as possible. Everything is about simplicity.
 5. **Maintain Documentation**: Maintain a documentation file that describes how the architecture of the app works inside and out.
 6. **Never Speculate**: Never speculate about code you have not opened. If I reference a specific file, you MUST read the file before answering. Investigate and read relevant files BEFORE answering questions about the codebase. Never make any claims about code before investigating unless you are certain - give grounded and hallucination-free answers.
+
+## Code Comments
+
+Default to zero comments. Before writing one, apply this test: does it state a constraint, invariant, or workaround that a competent engineer could NOT infer from the code itself? If not, delete it.
+
+Never write:
+- Comments that narrate what the code does ("// loop over the results", "// return the error")
+- Comments that restate the function or variable name
+- Comments justifying your change or addressed to a reviewer ("// this matches the README", "// per the spec", "// as discussed")
+- Comments cross-referencing docs, tickets, or other files unless the code is wrong without that context
+- Summary/section banners, or doc comments on private helpers whose name already says everything
+- Words no engineer writes in comments: "gracefully", "robust", "seamlessly", "leverage", "ensure proper", "for clarity"
+
+The only acceptable comments: a surprising invariant or ordering constraint, a workaround for an external bug (with link), or business logic that contradicts intuition. One line, factual, no hedging.
+
+Never re-add a comment I deleted. When in doubt: no comment.
