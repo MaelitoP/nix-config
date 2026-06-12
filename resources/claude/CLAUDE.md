@@ -24,3 +24,10 @@ Never write:
 The only acceptable comments: a surprising invariant or ordering constraint, a workaround for an external bug (with link), or business logic that contradicts intuition. One line, factual, no hedging.
 
 Never re-add a comment I deleted. When in doubt: no comment.
+
+## Tests
+
+- Never use a sleep as synchronization or as an assertion barrier (any language: `time.Sleep`, `time.sleep`, `sleep()`, `usleep`, `thread::sleep`, `setTimeout`). Wait on a condition: a signal from a fake, a synchronous API, or a polling helper with a deadline.
+- Never add an exported method or public accessor to production code solely so a test can observe it. Observe through a fake or a test-package hook.
+- Tests exist to catch regressions, not to pad volume: no near-duplicate test bodies, no assertions that cannot fail.
+- One canonical syntax per construct; match the surrounding file instead of introducing a second idiom.
