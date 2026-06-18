@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   launchd.agents.emacs = {
     enable = true;
     config = {
       ProgramArguments = [
-        "${pkgs.emacs-macport}/bin/emacs"
+        "/opt/homebrew/bin/emacs"
         "--fg-daemon"
       ];
       RunAtLoad = true;

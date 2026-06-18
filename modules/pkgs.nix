@@ -42,7 +42,6 @@ let
     ]
     ++ lib.optionals stdenv.isDarwin [
       apple-sdk_15
-      emacs-macport
     ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })

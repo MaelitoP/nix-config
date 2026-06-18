@@ -73,8 +73,17 @@ in
     homebrew = {
       enable = true;
       onActivation.autoUpdate = false;
-      taps = [ "wez/wezterm" ];
-      brews = [ ] ++ extraBrews;
+      taps = [
+        "wez/wezterm"
+        "d12frosted/emacs-plus"
+      ];
+      brews = [
+        {
+          name = "emacs-plus@30";
+          args = [ "with-imagemagick" ];
+        }
+      ]
+      ++ extraBrews;
       casks = [
         "wezterm"
         "ghostty"
@@ -98,6 +107,16 @@ in
     };
 
     system = {
+      activationScripts.postActivation.text = mkAfter ''
+        emacs_opt="/opt/homebrew/opt/emacs-plus@30"
+        if [ -d "$emacs_opt" ]; then
+          for app in "$emacs_opt"/*.app; do
+            [ -e "$app" ] || continue
+            /bin/ln -sfn "$app" "/Applications/$(/usr/bin/basename "$app")"
+          done
+        fi
+      '';
+
       defaults = {
         dock = {
           autohide = true;
@@ -107,6 +126,7 @@ in
           persistent-apps = [
             "/Applications/WezTerm.app"
             "/Applications/Ghostty.app"
+            "/Applications/Emacs Client.app"
             "/Applications/PhpStorm.app"
             "/Applications/GoLand.app"
             "/Applications/IntelliJ IDEA.app"
