@@ -58,11 +58,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1781789969,
-        "narHash": "sha256-SBJV2mui5u6/9P3h9reJO/DOryknlkVuYhgV5XyPEe4=",
+        "lastModified": 1781790315,
+        "narHash": "sha256-0gpn762onYOcPrd5OiuORQdbP0mrXAL/fmDV1MJqQUg=",
         "owner": "MaelitoP",
         "repo": "emacs-config",
-        "rev": "37f8734e31d6e52fa3fdc628ebc025e926523752",
+        "rev": "aa9432fd9a933c6b1c9a4f76ad26958ed809316b",
         "type": "github"
       },
       "original": {
