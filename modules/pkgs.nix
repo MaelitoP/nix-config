@@ -28,8 +28,6 @@ let
     google-cloud-sdk
   ];
 
-  fonts = (import ./fonts.nix { pkgs = pkgs; });
-
   development =
     with pkgs;
     [
@@ -54,5 +52,5 @@ let
     ++ (import ./python.nix { pkgs = pkgs; });
 in
 {
-  home.packages = utils ++ development ++ fonts;
+  home.packages = utils ++ development;
 }

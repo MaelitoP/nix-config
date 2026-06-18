@@ -80,6 +80,12 @@
             {
               nixpkgs.config.allowUnfree = true;
             }
+            (
+              { pkgs, ... }:
+              {
+                fonts.packages = import ./modules/fonts.nix { inherit pkgs; };
+              }
+            )
             sops-nix.darwinModules.sops
             hostModule
             home-manager.darwinModules.home-manager

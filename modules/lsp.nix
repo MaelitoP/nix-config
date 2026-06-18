@@ -4,6 +4,8 @@ with pkgs;
   nodejs
   typescript
   typescript-language-server
+  stylelint
+  js-beautify
   lua-language-server
   bash-language-server
   nixd
