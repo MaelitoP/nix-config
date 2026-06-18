@@ -22,6 +22,7 @@
     };
 
     nvim-config.url = "github:MaelitoP/nvim-config";
+    emacs-config.url = "github:MaelitoP/emacs-config";
     catppuccin.url = "github:catppuccin/nix";
 
     bar-wezterm = {
@@ -93,6 +94,7 @@
                   ./modules
                   catppuccin.homeModules.catppuccin
                   inputs.nvim-config.homeManagerModules.nvim-config
+                  inputs.emacs-config.homeManagerModules.emacs-config
                 ];
               };
             }

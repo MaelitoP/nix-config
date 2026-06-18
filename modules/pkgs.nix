@@ -34,19 +34,24 @@ let
     with pkgs;
     [
       clang
+      cmake
       stylua
       nixfmt
       tree-sitter
+      shfmt
+      shellcheck
+      pandoc
     ]
-    # macOS SDK - use apple-sdk for native compilation (CGO, etc.)
     ++ lib.optionals stdenv.isDarwin [
       apple-sdk_15
+      emacs-macport
     ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
     ++ (import ./go.nix { pkgs = pkgs; })
     ++ (import ./ocaml.nix { pkgs = pkgs; })
-    ++ (import ./php.nix { pkgs = pkgs; });
+    ++ (import ./php.nix { pkgs = pkgs; })
+    ++ (import ./python.nix { pkgs = pkgs; });
 in
 {
   home.packages = utils ++ development ++ fonts;
