@@ -80,7 +80,10 @@ in
       brews = [
         {
           name = "emacs-plus@30";
-          args = [ "with-imagemagick" ];
+          args = [
+            "with-imagemagick"
+            "with-xwidgets"
+          ];
         }
       ]
       ++ extraBrews;
