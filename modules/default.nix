@@ -20,6 +20,7 @@ let
     ./claude.nix
     ./wezterm.nix
     ./ghostty.nix
+    ./emacs.nix
   ];
 in
 {

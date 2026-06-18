@@ -74,6 +74,9 @@
       lkjh = "nvim";
       hjkl = "nvim";
 
+      ec = "emacsclient -c -n";
+      et = "emacsclient -t";
+
       cdi = "cd ~/dev/platform-ingestor";
       iup = "cdi; ./tools/devenv.sh up";
       istop = "cdi; ./tools/devenv.sh up";
