@@ -110,10 +110,10 @@ in
       activationScripts.postActivation.text = mkAfter ''
         emacs_opt="/opt/homebrew/opt/emacs-plus@30"
         if [ -d "$emacs_opt" ]; then
-          for app in "$emacs_opt"/*.app; do
-            [ -e "$app" ] || continue
-            /bin/ln -sfn "$app" "/Applications/$(/usr/bin/basename "$app")"
-          done
+          /bin/ln -sfn "$emacs_opt/Emacs.app" "/Applications/Emacs.app"
+          # the Dock can't launch a symlinked bundle (shows "?"), so copy this one
+          /bin/rm -rf "/Applications/Emacs Client.app"
+          /bin/cp -R "$emacs_opt/Emacs Client.app" "/Applications/Emacs Client.app"
         fi
       '';
 
