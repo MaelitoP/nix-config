@@ -102,6 +102,9 @@
     };
 
     initContent = ''
+      # vterm/eshell can't interpret wezterm's OSC escape sequences
+      [ -n "$INSIDE_EMACS" ] && export WEZTERM_SHELL_SKIP_ALL=1
+
       bindkey "^[[1;3D" backward-word
       bindkey "^[[1;3C" forward-word
       bindkey "^[[1;5D" backward-word
