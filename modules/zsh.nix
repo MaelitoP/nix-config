@@ -141,6 +141,7 @@
         && [[ ! "$TERM" =~ screen ]] \
         && [[ ! "$TERM" =~ tmux ]] \
         && [ -z "$TMUX" ] \
+        && [ -z "$INSIDE_EMACS" ] \
         && [[ "$TERMINAL_EMULATOR" != JetBrains* ]]; then
         exec tmux new-session -A -s main
       fi
@@ -155,7 +156,7 @@
 
       eval "$(mise activate zsh)"
 
-      fastfetch
+      [ -z "$INSIDE_EMACS" ] && fastfetch
     '';
   };
 }
