@@ -13,4 +13,5 @@ with pkgs;
   intelephense
   ocamlPackages.ocaml-lsp
   haskell-language-server
+  jdt-language-server
 ]

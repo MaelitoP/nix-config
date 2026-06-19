@@ -49,7 +49,8 @@ let
     ++ (import ./ocaml.nix { pkgs = pkgs; })
     ++ (import ./php.nix { pkgs = pkgs; })
     ++ (import ./python.nix { pkgs = pkgs; })
-    ++ (import ./haskell.nix { pkgs = pkgs; });
+    ++ (import ./haskell.nix { pkgs = pkgs; })
+    ++ (import ./java.nix { pkgs = pkgs; });
 in
 {
   home.packages = utils ++ development;
