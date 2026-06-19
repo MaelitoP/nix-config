@@ -5,5 +5,6 @@ with pkgs;
   cabal-install
   ormolu
   hlint
+  haskellPackages.apply-refact
   haskellPackages.ghcid
 ]
