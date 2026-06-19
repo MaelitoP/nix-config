@@ -12,4 +12,5 @@ with pkgs;
   pyright
   intelephense
   ocamlPackages.ocaml-lsp
+  haskell-language-server
 ]
