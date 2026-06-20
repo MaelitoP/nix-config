@@ -39,6 +39,7 @@ let
       shfmt
       shellcheck
       pandoc
+      protobuf
     ]
     ++ lib.optionals stdenv.isDarwin [
       apple-sdk_15
