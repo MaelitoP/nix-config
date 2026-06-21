@@ -1,7 +1,7 @@
 ---
 name: rust-review
 description: Review the current PR's Rust code for correctness, panics, concurrency and async safety, idiomatic style, naming, single-syntax consistency, and test adequacy. Use for reviewing Rust pull requests or Rust diffs.
-disable-model-invocation: true
+disable-model-invocation: false
 context: fork
 argument-hint: [PR-number or GitHub PR URL]
 effort: high

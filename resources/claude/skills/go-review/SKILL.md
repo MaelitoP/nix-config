@@ -1,7 +1,7 @@
 ---
 name: go-review
 description: Review the current PR's Go code for correctness, concurrency safety, idiomatic style, naming, single-syntax consistency, and test adequacy. Use for reviewing Go pull requests or Go diffs.
-disable-model-invocation: true
+disable-model-invocation: false
 context: fork
 argument-hint: [PR-number or GitHub PR URL]
 effort: high
