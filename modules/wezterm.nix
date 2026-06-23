@@ -6,8 +6,8 @@
 }:
 
 {
-  # Mark the nix store path as a trusted git directory — libgit2 rejects
-  # repos owned by a different user (root) without this.
+  # Mark the nix store path as a trusted git directory.
+  # libgit2 rejects repos owned by a different user (root) without this.
   programs.git.settings.safe.directory = "${bar-wezterm-repo}";
 
   programs.wezterm = {
