@@ -26,6 +26,14 @@ Use these examples as a tone and quality reference.
 - **Recommendation:** Add a behavioral test covering the already-disabled case and assert the expected domain outcome, whether that is a no-op or a domain exception.
 - **Confidence:** high
 
+## Good example — Type precision
+
+- **File:** `src/Ingestor/Listening/Application/ReadModel/SearchSummary.php:27`
+- **Title:** Structured data returned as an untyped `array`
+- **Why it matters:** `toRecord(): array` returns `['id' => ..., 'name' => ..., 'matches' => ...]`, so every caller re-discovers the shape and PHPStan can't catch a typo'd key or a wrong element type. The `matches` list is also dereferenced with `[0]` downstream, assuming it is non-empty.
+- **Recommendation:** Pin the shape — `@return array{id: positive-int, name: non-empty-string, matches: non-empty-list<MatchId>}` — or, better, return a `SearchSummary` value object. `id` is an ID so `positive-int`, and `matches` is built non-empty so `non-empty-list<MatchId>` makes the `[0]` access safe. See `types.md`.
+- **Confidence:** high
+
 ## Good example — Preference clearly labeled
 
 - **File:** `src/Ingestor/CoreBundle/Foo/Bar.php:78`

@@ -53,6 +53,8 @@ They are signals to look for a clearer decomposition.
 - Is this return type too weak to be safely consumed?
 - Are property defaults spread across the class instead of concentrated in the constructor?
 
+For the precise type vocabulary that replaces a bare `array` (`list<T>`, `non-empty-list<T>`, `array{...}` shapes, `positive-int`, `non-empty-string`, generics) see `types.md`; for `readonly` value objects and DTOs that replace structured arrays entirely, see `modern-php.md`.
+
 ## 4. Type assertions
 
 ### Rule of thumb

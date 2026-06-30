@@ -16,6 +16,7 @@ Typical blocking cases:
 - materially misleading naming for a core domain concept
 - missing regression test for a bug fix
 - risky behavioral change without meaningful coverage
+- type-safety hole: a missing type, structured data behind a bare `array`, an `iterable` return, an unnarrowed `mixed` flowing into method calls, or wrong nullability that allows a real `TypeError` (see `types.md`)
 
 Ask:
 - Could this create wrong behavior in production?
@@ -35,6 +36,7 @@ Typical suggestion cases:
 - readability problem that hides intent
 - weak timeout / retry posture in a non-critical path
 - code that fights project conventions without immediate correctness risk
+- missed precise-type opportunity: `int` where `positive-int` is provable, `string` where `non-empty-string`/`class-string<T>` fits, `array` where a `list<T>` or `array{...}` shape fits, a base-type return a generic would sharpen (see `types.md`)
 
 Ask:
 - Does this make the code meaningfully harder to evolve?
