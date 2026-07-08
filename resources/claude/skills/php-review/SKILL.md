@@ -130,7 +130,9 @@ Focus on:
 - missed refined-type opportunities: `positive-int` / `non-negative-int` / `int<a,b>`, `non-empty-string` / `class-string<T>` / `literal-string`, `non-empty-list<T>` — push runtime bound checks into the signature
 - generics (`@template`) for repositories, collections, factories, and result wrappers instead of re-declared base-type returns
 - unnarrowed `mixed`; exact nullability (`?T` only where `null` is real); `never` for always-throwing methods
-- `@phpstan-assert` on custom guard helpers; `@phpstan-type` aliases for repeated complex shapes
+- `@phpstan-assert` on custom guard helpers (incl. `!T` / `=T` forms); `@phpstan-type` aliases for repeated complex shapes
+- signature-less `callable`/`\Closure` params/returns → `callable(...): ...`; untyped `stdClass`/anonymous objects → `object{...}` shapes; positional tuples → `list{...}`
+- contract-hardening tags: `@immutable`/`@readonly` on value objects, `@phpstan-sealed`/`@phpstan-consistent-constructor` on hierarchies, `@property`/`@method`/`@mixin` for magic access, `@phpstan-pure` where provable
 - fold in PHPStan/Psalm output from the static gate; cite the rule rather than restating it
 
 Read: `types.md`, `severity-rubric.md`
