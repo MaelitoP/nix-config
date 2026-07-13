@@ -25,6 +25,11 @@ let
 in
 {
   imports = modules;
+  catppuccin = {
+    enable = true;
+    autoEnable = true;
+    flavor = "mocha";
+  };
   xdg.dataHome = "${config.home.homeDirectory}/.local/share";
   programs.home-manager.enable = true;
   home.stateVersion = "24.05";

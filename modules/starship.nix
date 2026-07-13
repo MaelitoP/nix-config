@@ -160,9 +160,4 @@ in
       gradle.symbol = " ";
     };
   };
-
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-  };
 }
