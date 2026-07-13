@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    # cargo-watch fails to link on newer nixpkgs (cctools ld crashes on
+    # mac-notification-sys, aarch64-darwin). Pin it to the last rev that builds.
+    # https://github.com/NixOS/nixpkgs/issues/226031
+    nixpkgs-cargo-watch.url = "github:nixos/nixpkgs/d99b013d5d1931ad77fe3912ed218170dec5d9a4";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -79,6 +84,11 @@
           modules = [
             {
               nixpkgs.config.allowUnfree = true;
+              nixpkgs.overlays = [
+                (final: prev: {
+                  cargo-watch = inputs.nixpkgs-cargo-watch.legacyPackages.${system}.cargo-watch;
+                })
+              ];
             }
             (
               { pkgs, ... }:
