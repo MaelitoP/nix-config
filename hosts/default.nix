@@ -74,8 +74,14 @@ in
       enable = true;
       onActivation.autoUpdate = false;
       taps = [
-        "wez/wezterm"
-        "d12frosted/emacs-plus"
+        {
+          name = "wez/wezterm";
+          trusted = true;
+        }
+        {
+          name = "d12frosted/emacs-plus";
+          trusted = true;
+        }
       ];
       brews = [
         {
