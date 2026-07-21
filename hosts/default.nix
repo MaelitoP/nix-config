@@ -108,6 +108,7 @@ in
         "spotify"
         "1password"
         "docker-desktop"
+        "claude"
       ]
       ++ extraCasks;
       masApps = {
