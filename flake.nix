@@ -9,6 +9,19 @@
     # https://github.com/NixOS/nixpkgs/issues/226031
     nixpkgs-cargo-watch.url = "github:nixos/nixpkgs/d99b013d5d1931ad77fe3912ed218170dec5d9a4";
 
+    # Nixpkgs 26.11 dropped x86_64-darwin (including from lib.platforms.darwin,
+    # which home-manager and nix-darwin consult), so the Intel host needs the
+    # whole stack on the 26.05 branches, security-fixed until the end of 2026.
+    nixpkgs-x86.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+    home-manager-x86 = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-x86";
+    };
+    nix-darwin-x86 = {
+      url = "github:LnL7/nix-darwin/nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-x86";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -53,6 +66,9 @@
           system,
           hostname,
           hostModule,
+          nixpkgs ? inputs.nixpkgs,
+          home-manager ? inputs.home-manager,
+          nix-darwin ? inputs.nix-darwin,
         }:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -83,12 +99,15 @@
 
           modules = [
             {
-              nixpkgs.config.allowUnfree = true;
-              nixpkgs.overlays = [
-                (final: prev: {
-                  cargo-watch = inputs.nixpkgs-cargo-watch.legacyPackages.${system}.cargo-watch;
-                })
-              ];
+              nixpkgs.pkgs = import nixpkgs {
+                inherit system;
+                config.allowUnfree = true;
+                overlays = [
+                  (final: prev: {
+                    cargo-watch = inputs.nixpkgs-cargo-watch.legacyPackages.${system}.cargo-watch;
+                  })
+                ];
+              };
             }
             (
               { pkgs, ... }:
@@ -130,6 +149,9 @@
           system = "x86_64-darwin";
           hostname = "maelito-x86";
           hostModule = ./hosts/maelito-x86.nix;
+          nixpkgs = inputs.nixpkgs-x86;
+          home-manager = inputs.home-manager-x86;
+          nix-darwin = inputs.nix-darwin-x86;
         };
       };
     };
