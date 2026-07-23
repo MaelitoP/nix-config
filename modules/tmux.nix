@@ -10,8 +10,6 @@
       tmuxPlugins.sensible
       tmuxPlugins.vim-tmux-navigator
       tmuxPlugins.yank
-      tmuxPlugins.resurrect
-      tmuxPlugins.continuum
       {
         plugin = tmuxPlugins.catppuccin;
         extraConfig = ''
@@ -20,6 +18,17 @@
           set -g @catppuccin_window_text " #W"
           set -g @catppuccin_window_current_text " #W"
           set -g @catppuccin_date_time_icon "󰃰 "
+        '';
+      }
+      tmuxPlugins.resurrect
+      {
+        # continuum injects its autosave hook into status-right when it loads:
+        # status-right must be set before this plugin, and nothing may set it after.
+        plugin = tmuxPlugins.continuum;
+        extraConfig = ''
+          set -g status-right "#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '10'
         '';
       }
     ];
@@ -76,7 +85,28 @@
       bind -r l select-pane -R
 
       set -g status-left ""
-      set -g status-right "#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
     '';
+  };
+
+  # The catppuccin module's autoEnable already themes tmux through its own
+  # plugin load; the manual plugin entry above is the one carrying our options.
+  catppuccin.tmux.enable = false;
+
+  # Own the tmux server via launchd so it lives outside any terminal app's
+  # process group; macOS terminating ghostty/wezterm cannot take it down.
+  launchd.agents.tmux = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "/bin/sh"
+        "-c"
+        "${pkgs.tmux}/bin/tmux has-session 2>/dev/null || ${pkgs.tmux}/bin/tmux new-session -d -s main"
+      ];
+      # resurrect/continuum run-shell scripts inherit the server env and
+      # invoke tmux and coreutils by bare name.
+      EnvironmentVariables.PATH = "/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+      RunAtLoad = true;
+      StartInterval = 300;
+    };
   };
 }
