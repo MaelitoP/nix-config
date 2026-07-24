@@ -136,7 +136,7 @@
       [ -r "$XDG_CONFIG_HOME/secrets/github_token" ] && \
         export GITHUB_TOKEN="$(<"$XDG_CONFIG_HOME/secrets/github_token")"
 
-      gpgconf --launch gpg-agent
+      [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && gpgconf --launch gpg-agent
 
       # Tmux autostart
       if command -v tmux &> /dev/null \
@@ -145,6 +145,7 @@
         && [[ ! "$TERM" =~ tmux ]] \
         && [ -z "$TMUX" ] \
         && [ -z "$INSIDE_EMACS" ] \
+        && [ -z "$INTELLIJ_ENVIRONMENT_READER" ] \
         && [[ "$TERMINAL_EMULATOR" != JetBrains* ]]; then
         exec tmux new-session -A -s main
       fi
@@ -153,13 +154,13 @@
       # oh-my-zsh already runs compinit with -u (skip insecure dirs check),
       # and scw's redundant bare compinit re-triggers the security audit,
       # causing "insecure files" warnings from Docker Desktop's completions.
-      eval "$(scw autocomplete script shell=zsh | grep -v compinit)"
-
-      eval "$(starship init zsh)"
+      if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
+        eval "$(scw autocomplete script shell=zsh | grep -v compinit)"
+      fi
 
       eval "$(mise activate zsh)"
 
-      [ -z "$INSIDE_EMACS" ] && fastfetch
+      [ -z "$INSIDE_EMACS" ] && [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && fastfetch
     '';
   };
 }
