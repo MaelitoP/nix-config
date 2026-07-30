@@ -106,10 +106,43 @@ The highest-priority lens. A concurrency or correctness bug outranks every style
 - `panic`/`recover` is for truly unrecoverable states or for crossing a package boundary that must not leak panics; `recover` only works in a deferred function in the same goroutine.
 - A panic in a goroutine with no recover crashes the whole process — never let request-scoped goroutines panic unguarded.
 
-## 9. What makes a correctness finding blocking
+## 9. Interactions between changes in the same diff
+
+Every lens above is single-site: it asks whether a line or a construct is wrong. Some
+defects exist at no single site — they are produced by two changes that are each correct
+alone. Nothing else in this document will find them.
+
+This pass belongs to the serial whole-diff step in `SKILL.md`, which sees the complete
+diff. A single-lens agent should raise an interaction only when it can point at both
+changes and show the resulting output; otherwise it is speculation.
+
+### Hard rules
+
+- A diff fixing N defects has N(N-1)/2 possible interactions. Examine every pair that
+  touches the same data path, even when each change is correct in isolation.
+- Any change that **widens a set** — inputs accepted, labels resolved, cases matched,
+  errors tolerated — must name the downstream branch that just became less reachable.
+  Widening a predicate upstream of a first-match loop silently deletes the candidates
+  after it.
+- "It returned no error" is not "it produced the right value". A conversion — charset,
+  unit, timezone, deserialization — can succeed and still be wrong. Judge the output,
+  not the absence of an error.
+
+### Review questions
+
+- For every `return` inside a loop over ordered candidates: does another change in this
+  diff alter which candidate now matches first?
+- Is there a single input to which two of this diff's fixes both apply? If the tests
+  never build one, the interaction is unverified.
+- Does this diff replace a visible failure (error returned, item rejected) with a silent
+  one (wrong value returned successfully)? That trade is a regression even when the new
+  path "works".
+
+## 10. What makes a correctness finding blocking
 
 Usually blocking:
 - a data race or unsynchronized shared write
+- a fix that silently changes what a *different* fix in the same diff produces
 - a goroutine or resource leak
 - a swallowed error on a path that can actually fail
 - dropped `context` cancellation on an outbound call

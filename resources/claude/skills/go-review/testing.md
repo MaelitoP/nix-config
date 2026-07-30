@@ -10,6 +10,22 @@ Tests should prove behavior, not restate implementation. A review asks:
 - what breaks if this is wrong?
 - do the tests prove the new behavior, including the failure paths?
 
+### The mutation check
+
+Existence of a test is not coverage. For each fix in the diff, revert it — mentally or
+actually — and name the test that fails. If none fails, the fix is untested no matter how
+many tests surround it. Apply the same check to tests the PR *modifies*: an assertion
+flipped to match new behavior should fail against the old behavior.
+
+Then ask whether the assertion can observe the defect at all. A test whose input exercises
+the changed path but whose assertions only cover the invariant part of the output cannot
+fail for the right reason. Recurring shapes:
+
+- non-ASCII in the input, assertions only on ASCII fields — encoding bugs hide here
+- assertions on `len(items)` or on `err == nil`, when the defect corrupts item *content*
+- a case where the changed branch is never reached, so the assertion holds either way
+  (asserting a value is unchanged, in a scenario where nothing would have changed it)
+
 ## 2. Table-driven tests
 
 ### Strong defaults

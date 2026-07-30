@@ -115,6 +115,7 @@ Focus on:
 - needless complexity: nesting over early return, premature abstraction, premature interfaces, unnecessary generics
 - table-driven test structure, subtests via `t.Run`, helpers marked `t.Helper()`
 - missing error-path / edge-case coverage; weak assertions
+- assertions that cannot observe the defect: apply the mutation check in `testing.md` §1 — revert each fix and name the test that fails
 - assertions inside goroutines; tests that depend on timing or network
 - readability: line-of-sight, guard clauses, short variable scope
 
@@ -130,6 +131,30 @@ Rules:
 - Do not surface speculative issues unless clearly labeled low confidence.
 - Do not invent line numbers. Use exact file and line when available.
 - Propose concrete fixes or rename suggestions whenever possible — ideally a small code snippet.
+
+### 4) Whole-diff interaction pass
+
+Run this **serially, after the merge, yourself** — not as a fourth parallel agent. Its whole
+point is to hold the diff as one object, which fan-out by dimension cannot do: three agents
+each looking through one lens will never hypothesise a defect that exists only in the
+composition of two changes, and merging their conclusions cannot reconstruct it.
+
+Skip it only for a single-purpose diff. Any PR fixing more than one defect gets this pass.
+
+Ask, over the complete diff:
+
+- Which two changes touch the same data path? For each such pair, what does the first
+  change alter about the second's inputs or reachability?
+- Does any change **widen a set** — inputs accepted, labels resolved, cases matched, errors
+  tolerated? Name the branch downstream that is now reached less often. A widened predicate
+  in front of a first-match loop deletes the candidates after it.
+- Construct one input where two fixes apply at once, and predict the output by hand before
+  running anything. If no test in the diff builds such an input, say so as a finding.
+- Does the diff turn a loud failure into a quiet wrong answer anywhere? Compare against the
+  PR's own stated goals: a PR that argues "a visible error beats silent corruption" in one
+  place and violates it in another is self-inconsistent, and that is a strong finding.
+
+Verify anything found here by running it, not by reasoning alone. See `correctness-concurrency.md` §9.
 
 ## Output format
 
