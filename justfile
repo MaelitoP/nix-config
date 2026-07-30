@@ -10,11 +10,15 @@ _default:
 bootstrap:
     @echo "Bootstrapping nix-darwin for {{hostname}}"
     @for f in /etc/bashrc /etc/zshrc; do \
-      if [ -f "$$f" ] && [ ! -L "$$f" ]; then \
-        echo "==> Moving $$f to $$f.before-nix-darwin for nix-darwin"; \
-        sudo mv -f "$$f" "$$f.before-nix-darwin"; \
+      if [ -f "$f" ] && [ ! -L "$f" ]; then \
+        echo "==> Moving $f to $f.before-nix-darwin for nix-darwin"; \
+        sudo mv -f "$f" "$f.before-nix-darwin"; \
       fi; \
     done
+    @if ! command -v brew >/dev/null 2>&1; then \
+      echo "==> Installing Homebrew"; \
+      NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+    fi
     # First run may fail: nix-darwin's activate script runs
     # `launchctl kill HUP system/org.nixos.nix-daemon` to reload the daemon,
     # which exits 3 ("No process to signal") on a fresh machine because the

@@ -66,13 +66,9 @@ in
     programs.zsh.enable = true;
     programs.zsh.enableGlobalCompInit = false;
 
-    nix-homebrew.enable = true;
-    nix-homebrew.user = realname;
-    nix-homebrew.autoMigrate = true;
-
     homebrew = {
       enable = true;
-      onActivation.autoUpdate = false;
+      onActivation.autoUpdate = true;
       taps = [
         {
           name = "wez/wezterm";
