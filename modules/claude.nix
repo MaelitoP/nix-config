@@ -44,6 +44,7 @@ let
       "$schema" = "https://json.schemastore.org/claude-code-settings.json";
       enabledPlugins = cfg.settings.enabledPlugins;
       alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
+      cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
       attribution = cfg.settings.attribution;
     }
   );
@@ -61,6 +62,12 @@ in
         type = types.bool;
         default = true;
         description = "Enable always-thinking mode";
+      };
+
+      cleanupPeriodDays = mkOption {
+        type = types.ints.positive;
+        default = 365;
+        description = "Days before Claude Code deletes session transcripts";
       };
 
       enabledPlugins = mkOption {
@@ -204,6 +211,7 @@ in
 
         settings = {
           alwaysThinkingEnabled = true;
+          cleanupPeriodDays = 365;
 
           enabledPlugins = {
             "pyright-lsp@claude-plugins-official" = true;
