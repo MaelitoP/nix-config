@@ -110,6 +110,9 @@
       bindkey "^[[1;5D" backward-word
       bindkey "^[[1;5C" forward-word
 
+      # Appended, not prepended: nix tools must win over brew's (both ship git).
+      export PATH="$PATH:/opt/homebrew/bin:/opt/homebrew/sbin"
+
       export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
       export PATH="$HOME/.local/bin:$PATH"
