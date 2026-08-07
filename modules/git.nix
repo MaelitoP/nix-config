@@ -23,6 +23,8 @@ in
       credential.helper = if pkgs.stdenv.isDarwin then "osxkeychain" else "cache";
       help.autocorrect = 10;
       url."git@github.com:".insteadOf = "https://github.com/";
+      # Longest insteadOf prefix wins: keeps brew self-update on https, which has no ssh agent (Homebrew/brew#13830).
+      url."https://github.com/Homebrew/".insteadOf = "https://github.com/Homebrew/";
 
       alias = {
         cl = "clone --depth=1 --filter=blob:none";
