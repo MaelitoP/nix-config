@@ -77,6 +77,13 @@
       unbind b 
       bind b set-option status\; refresh-client -S # Toggle tmux bar
 
+      unbind c
+      unbind '"'
+      unbind %
+      bind c new-window -c "#{pane_current_path}"
+      bind '"' split-window -v -c "#{pane_current_path}"
+      bind % split-window -h -c "#{pane_current_path}"
+
       # vim-like pane switching
       bind -r ^ last-window
       bind -r k select-pane -U
