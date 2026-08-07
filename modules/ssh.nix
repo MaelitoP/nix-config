@@ -78,7 +78,7 @@
         IdentityFile = "${config.xdg.dataHome}/ssh/id_rsa";
         UserKnownHostsFile = "${config.xdg.dataHome}/ssh/known_hosts";
         ForwardAgent = "no";
-        ServerAliveInterval = "0";
+        ServerAliveInterval = "15";
         ServerAliveCountMax = "3";
         Compression = "no";
         AddKeysToAgent = "yes";
