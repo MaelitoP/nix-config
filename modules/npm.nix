@@ -9,6 +9,8 @@ let
   npmrcFile = "${config.xdg.configHome}/npm/npmrc";
 in
 {
+  home.sessionPath = [ "${config.home.homeDirectory}/.npm-packages/bin" ];
+
   sops.secrets.npm_access_token = {
     sopsFile = ../secrets/common.yaml;
     path = npmTokenPath;
