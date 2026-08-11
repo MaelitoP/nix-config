@@ -3,6 +3,7 @@
 {
   home.sessionVariables = {
     EDITOR = "nvim";
+    LANG = "en_US.UTF-8";
     KEYTIMEOUT = 15;
 
     # Disable oh-my-zsh's compaudit security check.

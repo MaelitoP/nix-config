@@ -42,6 +42,8 @@
     extraConfig = ''
       set-option -g default-command "/bin/zsh -l"
 
+      set-environment -g LANG "en_US.UTF-8"
+
       set -g default-terminal "tmux-256color"
       set -ag terminal-overrides ",xterm-256color:RGB"
 
