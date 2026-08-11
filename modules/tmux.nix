@@ -20,7 +20,13 @@
           set -g @catppuccin_date_time_icon "󰃰 "
         '';
       }
-      tmuxPlugins.resurrect
+      {
+        plugin = tmuxPlugins.resurrect;
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+          set -g @resurrect-processes '"~bin/nvim->nvim" "~claude"'
+        '';
+      }
       {
         # continuum injects its autosave hook into status-right when it loads:
         # status-right must be set before this plugin, and nothing may set it after.
