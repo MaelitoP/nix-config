@@ -43,6 +43,10 @@
       url = "github:MaelitoP/scwx";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    scwx-x86 = {
+      url = "github:MaelitoP/scwx";
+      inputs.nixpkgs.follows = "nixpkgs-x86";
+    };
     catppuccin.url = "github:catppuccin/nix";
 
     bar-wezterm = {
@@ -70,6 +74,7 @@
           nixpkgs ? inputs.nixpkgs,
           home-manager ? inputs.home-manager,
           nix-darwin ? inputs.nix-darwin,
+          scwx ? inputs.scwx,
         }:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -133,6 +138,10 @@
                   inputs.emacs-config.homeManagerModules.emacs-config
                   inputs.scwx.homeManagerModules.scwx
                 ];
+                # The module's default package evaluates the scwx flake's own
+                # nixpkgs, which has dropped x86_64-darwin; each host must pin
+                # the package to its nixpkgs generation.
+                programs.scwx.package = scwx.packages.${system}.default;
               };
             }
           ];
@@ -153,6 +162,7 @@
           nixpkgs = inputs.nixpkgs-x86;
           home-manager = inputs.home-manager-x86;
           nix-darwin = inputs.nix-darwin-x86;
+          scwx = inputs.scwx-x86;
         };
       };
     };
