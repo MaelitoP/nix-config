@@ -92,6 +92,11 @@
       bind '"' split-window -v -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"
 
+      bind s display-popup -E -w 80% -h 75% "scwx connect"
+      bind d display-popup -E -w 80% -h 75% "scwx db"
+      bind p display-popup -E -w 80% -h 75% "scwx pf"
+      bind D detach-client
+
       # vim-like pane switching
       bind -r ^ last-window
       bind -r k select-pane -U

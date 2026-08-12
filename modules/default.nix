@@ -17,6 +17,7 @@ let
     ./fzf.nix
     ./tmux.nix
     ./fastfetch.nix
+    ./scwx.nix
     ./claude.nix
     ./wezterm.nix
     ./ghostty.nix
