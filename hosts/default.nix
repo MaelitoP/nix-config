@@ -130,7 +130,6 @@ in
           tilesize = 40;
           orientation = "right";
           persistent-apps = [
-            "/Applications/WezTerm.app"
             "/Applications/Ghostty.app"
             "/Applications/Emacs Client.app"
             "/Applications/PhpStorm.app"
