@@ -415,11 +415,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786964972,
-        "narHash": "sha256-34JCpZWCiFz0b0DHgkKNFJLSIsrU4PwpR3pwKEC9C7g=",
+        "lastModified": 1788245293,
+        "narHash": "sha256-3LNrjCoMZJpKsUzZYdpG5XI323ClTCR++SilF5La4yg=",
         "owner": "MaelitoP",
         "repo": "scwx",
-        "rev": "29bb593fc0ccdb3285f3e20e3da851632b124d0e",
+        "rev": "c9dc3ec09574b4d6dd8db99cee859fea3a4ebe50",
         "type": "github"
       },
       "original": {
@@ -436,11 +436,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786964972,
-        "narHash": "sha256-34JCpZWCiFz0b0DHgkKNFJLSIsrU4PwpR3pwKEC9C7g=",
+        "lastModified": 1788245293,
+        "narHash": "sha256-3LNrjCoMZJpKsUzZYdpG5XI323ClTCR++SilF5La4yg=",
         "owner": "MaelitoP",
         "repo": "scwx",
-        "rev": "29bb593fc0ccdb3285f3e20e3da851632b124d0e",
+        "rev": "c9dc3ec09574b4d6dd8db99cee859fea3a4ebe50",
         "type": "github"
       },
       "original": {
