@@ -46,6 +46,10 @@ let
       alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
       cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
       attribution = cfg.settings.attribution;
+      env = cfg.settings.env;
+      permissions = {
+        allow = cfg.settings.permissions.allow;
+      };
     }
   );
 
@@ -101,6 +105,18 @@ in
           pr = "";
         };
         description = "Attribution settings for commits and pull requests";
+      };
+
+      env = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Environment variables applied to every Claude Code session";
+      };
+
+      permissions.allow = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Tool permission rules always allowed";
       };
     };
 
@@ -225,12 +241,28 @@ in
             "gopls-lsp@claude-plugins-official" = true;
             "terraform@claude-plugins-official" = true;
             "rust-analyzer-lsp@claude-plugins-official" = true;
+            "project-memory@agorapulse-marketplace" = true;
           };
 
           attribution = {
             commit = "";
             pr = "";
           };
+
+          env = {
+            CLAUDE_PROJECTS_DIR = "${config.home.homeDirectory}/dev/claude-projects";
+            CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
+          };
+
+          permissions.allow = [
+            "Bash(echo $CLAUDE_PROJECTS_DIR)"
+            "Read(${config.home.homeDirectory}/dev/claude-projects/**)"
+            "Edit(${config.home.homeDirectory}/dev/claude-projects/**)"
+            "Read(~/dev/claude-projects/**)"
+            "Edit(~/dev/claude-projects/**)"
+            "Read(~/.claude/plugins/cache/agorapulse-marketplace/project-memory/**/skills/**)"
+            "Bash(git -C ${config.home.homeDirectory}/dev/claude-projects/shared:*)"
+          ];
         };
 
         mcpServers = {
