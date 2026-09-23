@@ -100,6 +100,8 @@
       gpf = "git push --force-with-lease";
 
       assume = "source assume";
+
+      sleepstatus = "pmset -g | grep SleepDisabled";
     };
 
     initContent = ''
@@ -123,6 +125,12 @@
       export PATH="$HOME/dev/cli/bin:$PATH"
 
       export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+
+      claude() {
+        sudo /usr/bin/pmset -a disablesleep 1
+        trap 'pgrep -x claude >/dev/null || sudo /usr/bin/pmset -a disablesleep 0' EXIT
+        command claude "$@"
+      }
 
       export CGO_CC="/usr/bin/clang"
       export CGO_CXX="/usr/bin/clang++"

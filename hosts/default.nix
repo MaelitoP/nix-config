@@ -53,6 +53,9 @@ in
 
     security.pam.services.sudo_local.touchIdAuth = true;
     security.pam.services.sudo_local.reattach = true;
+    security.sudo.extraConfig = ''
+      ${realname} ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 1, /usr/bin/pmset -a disablesleep 0
+    '';
 
     networking.computerName = "maelito";
 
