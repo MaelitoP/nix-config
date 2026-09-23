@@ -47,6 +47,14 @@
       url = "github:MaelitoP/scwx";
       inputs.nixpkgs.follows = "nixpkgs-x86";
     };
+    cairn = {
+      url = "github:MaelitoP/cairn";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    cairn-x86 = {
+      url = "github:MaelitoP/cairn";
+      inputs.nixpkgs.follows = "nixpkgs-x86";
+    };
     catppuccin.url = "github:catppuccin/nix";
 
     bar-wezterm = {
@@ -75,6 +83,7 @@
           home-manager ? inputs.home-manager,
           nix-darwin ? inputs.nix-darwin,
           scwx ? inputs.scwx,
+          cairn ? inputs.cairn,
         }:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -137,11 +146,13 @@
                   inputs.nvim-config.homeManagerModules.nvim-config
                   inputs.emacs-config.homeManagerModules.emacs-config
                   inputs.scwx.homeManagerModules.scwx
+                  inputs.cairn.homeManagerModules.default
                 ];
                 # The module's default package evaluates the scwx flake's own
                 # nixpkgs, which has dropped x86_64-darwin; each host must pin
                 # the package to its nixpkgs generation.
                 programs.scwx.package = scwx.packages.${system}.default;
+                programs.cairn.package = cairn.packages.${system}.default;
               };
             }
           ];
@@ -163,6 +174,7 @@
           home-manager = inputs.home-manager-x86;
           nix-darwin = inputs.nix-darwin-x86;
           scwx = inputs.scwx-x86;
+          cairn = inputs.cairn-x86;
         };
       };
     };

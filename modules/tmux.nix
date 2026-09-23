@@ -32,7 +32,7 @@
         # status-right must be set before this plugin, and nothing may set it after.
         plugin = tmuxPlugins.continuum;
         extraConfig = ''
-          set -g status-right "#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
+          set -g status-right "#[fg=yellow]#(cairn status --tmux)#[default]#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
           set -g @continuum-restore 'on'
           set -g @continuum-save-interval '10'
         '';

@@ -18,6 +18,7 @@ let
     ./tmux.nix
     ./fastfetch.nix
     ./scwx.nix
+    ./cairn.nix
     ./claude.nix
     ./wezterm.nix
     ./ghostty.nix
