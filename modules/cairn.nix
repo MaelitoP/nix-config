@@ -19,7 +19,7 @@
       review.repositories."agorapulse/platform-ingestor" = {
         worktree_root = "${config.home.homeDirectory}/dev/platform-ingestor/.claude/worktrees";
         setup = [
-          "docker"
+          "/usr/local/bin/docker"
           "exec"
           "-u"
           "mention"
@@ -32,7 +32,7 @@
           "--no-progress"
         ];
         instructions = ''
-          Run the tests through `docker exec -u mention -w {worktree} ingestor-php_cli-1 .composer/bin/phpunit ...`.
+          Run the tests through `/usr/local/bin/docker exec -u mention -w {worktree} ingestor-php_cli-1 .composer/bin/phpunit ...`.
           The test database and Kafka are shared with the engineer's own test runs.
         '';
       };
