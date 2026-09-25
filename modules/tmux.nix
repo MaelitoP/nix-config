@@ -1,5 +1,26 @@
 { pkgs, config, ... }:
 
+let
+  catppuccinModule =
+    name: body:
+    pkgs.writeText "tmux-catppuccin-${name}.conf" ''
+      %hidden MODULE_NAME="${name}"
+      ${body}
+      source ${pkgs.tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
+    '';
+
+  cairnModule = catppuccinModule "cairn" ''
+    set -g @catppuccin_cairn_icon "✻ "
+    set -gF @catppuccin_cairn_color "#{E:@thm_peach}"
+    set -g @catppuccin_cairn_text " #(cairn status --tmux)"
+  '';
+
+  ramModule = catppuccinModule "ram" ''
+    set -g @catppuccin_ram_icon " "
+    set -gF @catppuccin_ram_color "#{E:@thm_green}"
+    set -g @catppuccin_ram_text " #{l:#{ram_percentage}}"
+  '';
+in
 {
   programs.tmux = {
     enable = true;
@@ -34,12 +55,6 @@
       {
         plugin = tmuxPlugins.cpu;
         extraConfig = ''
-          %hidden MODULE_NAME="cairn"
-          set -g @catppuccin_cairn_icon "✻ "
-          set -gF @catppuccin_cairn_color "#{E:@thm_peach}"
-          set -g @catppuccin_cairn_text " #(cairn status --tmux)"
-          source ${tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
-
           set -gF @cpu_low_fg_color "#{E:@thm_fg}"
           set -gF @cpu_medium_fg_color "#{E:@thm_fg}"
           set -gF @cpu_high_fg_color "#{E:@thm_crust}"
@@ -47,11 +62,8 @@
           set -gF @cpu_medium_bg_color "#{E:@catppuccin_status_module_text_bg}"
           set -gF @cpu_high_bg_color "#{E:@thm_red}"
 
-          %hidden MODULE_NAME="ram"
-          set -g @catppuccin_ram_icon " "
-          set -gF @catppuccin_ram_color "#{E:@thm_green}"
-          set -g @catppuccin_ram_text " #{l:#{ram_percentage}}"
-          source ${tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
+          source ${cairnModule}
+          source ${ramModule}
 
           set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}"
           set -agF status-right "#{E:@catppuccin_status_cpu}#{E:@catppuccin_status_ram}"
