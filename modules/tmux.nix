@@ -32,7 +32,13 @@
         # status-right must be set before this plugin, and nothing may set it after.
         plugin = tmuxPlugins.continuum;
         extraConfig = ''
-          set -g status-right "#[fg=yellow]#(cairn status --tmux)#[default]#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
+          %hidden MODULE_NAME="cairn"
+          set -g @catppuccin_cairn_icon "✻ "
+          set -gF @catppuccin_cairn_color "#{E:@thm_peach}"
+          set -g @catppuccin_cairn_text " #(cairn status --tmux)"
+          source ${tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
+
+          set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
           set -g @continuum-restore 'on'
           set -g @continuum-save-interval '10'
         '';
@@ -105,6 +111,7 @@
       bind -r l select-pane -R
 
       set -g status-left ""
+      set -g status-right-length 100
     '';
   };
 
