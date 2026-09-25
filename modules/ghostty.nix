@@ -18,7 +18,7 @@
       window-padding-x = 8;
       window-padding-y = 8;
 
-      title = ''" "'';
+      title = "⠀";
       macos-titlebar-proxy-icon = "hidden";
 
       mouse-hide-while-typing = true;
