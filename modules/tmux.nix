@@ -18,6 +18,7 @@
           set -g @catppuccin_window_text " #W"
           set -g @catppuccin_window_current_text " #W"
           set -g @catppuccin_date_time_icon "󰃰 "
+          set -g @catppuccin_date_time_text " %Y-%m-%d %H:%M:%S"
         '';
       }
       {
@@ -61,6 +62,7 @@
       bind -n M-L next-window
 
       set -g status on
+      set -g status-interval 1
       set -g escape-time 0
       set -g set-clipboard on
       set -g allow-rename off
