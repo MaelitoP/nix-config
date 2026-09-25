@@ -24,11 +24,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790339209,
-        "narHash": "sha256-6ATpd+GRnqO9MaKiNv47c/hEbXohW1MUI+yPnAAa8MI=",
+        "lastModified": 1790340138,
+        "narHash": "sha256-c/tKb76szo6c8lD98QMI58mP7Eh8A+kK1fsSnKqYoAE=",
         "owner": "MaelitoP",
         "repo": "cairn",
-        "rev": "754d20512c52525bcbdd60e6585a03522da87368",
+        "rev": "36a3eec5e97a2cb812f501e3189bc132c4dedb9d",
         "type": "github"
       },
       "original": {
@@ -45,11 +45,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790339209,
-        "narHash": "sha256-6ATpd+GRnqO9MaKiNv47c/hEbXohW1MUI+yPnAAa8MI=",
+        "lastModified": 1790340138,
+        "narHash": "sha256-c/tKb76szo6c8lD98QMI58mP7Eh8A+kK1fsSnKqYoAE=",
         "owner": "MaelitoP",
         "repo": "cairn",
-        "rev": "754d20512c52525bcbdd60e6585a03522da87368",
+        "rev": "36a3eec5e97a2cb812f501e3189bc132c4dedb9d",
         "type": "github"
       },
       "original": {
