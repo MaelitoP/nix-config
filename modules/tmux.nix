@@ -14,7 +14,10 @@
         plugin = tmuxPlugins.catppuccin;
         extraConfig = ''
           set -g @catppuccin_flavor 'mocha'
-          set -g @catppuccin_window_status_style 'rounded'
+          set -g @catppuccin_window_status_style 'custom'
+          set -g @catppuccin_window_left_separator '##{?window_start_flag,#[fg=#{@_ctp_status_bg}]#[reverse]#[none], }'
+          set -g @catppuccin_window_middle_separator " "
+          set -g @catppuccin_window_right_separator '##{?window_end_flag,#[fg=#{@_ctp_status_bg}]#[reverse]#[none], }'
           set -g @catppuccin_window_text " #W"
           set -g @catppuccin_window_current_text " #W"
           set -g @catppuccin_date_time_icon "󰃰 "
@@ -113,6 +116,7 @@
       bind -r l select-pane -R
 
       set -g status-left ""
+      set -g window-status-separator ""
       set -g status-right-length 100
     '';
   };
