@@ -32,9 +32,7 @@
         '';
       }
       {
-        # continuum injects its autosave hook into status-right when it loads:
-        # status-right must be set before this plugin, and nothing may set it after.
-        plugin = tmuxPlugins.continuum;
+        plugin = tmuxPlugins.cpu;
         extraConfig = ''
           %hidden MODULE_NAME="cairn"
           set -g @catppuccin_cairn_icon "✻ "
@@ -42,7 +40,29 @@
           set -g @catppuccin_cairn_text " #(cairn status --tmux)"
           source ${tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
 
-          set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
+          set -gF @cpu_low_fg_color "#{E:@thm_fg}"
+          set -gF @cpu_medium_fg_color "#{E:@thm_fg}"
+          set -gF @cpu_high_fg_color "#{E:@thm_crust}"
+          set -gF @cpu_low_bg_color "#{E:@catppuccin_status_module_text_bg}"
+          set -gF @cpu_medium_bg_color "#{E:@catppuccin_status_module_text_bg}"
+          set -gF @cpu_high_bg_color "#{E:@thm_red}"
+
+          %hidden MODULE_NAME="ram"
+          set -g @catppuccin_ram_icon " "
+          set -gF @catppuccin_ram_color "#{E:@thm_green}"
+          set -g @catppuccin_ram_text " #{l:#{ram_percentage}}"
+          source ${tmuxPlugins.catppuccin}/share/tmux-plugins/catppuccin/utils/status_module.conf
+
+          set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}"
+          set -agF status-right "#{E:@catppuccin_status_cpu}#{E:@catppuccin_status_ram}"
+          set -ag status-right "#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
+        '';
+      }
+      {
+        # continuum injects its autosave hook into status-right when it loads:
+        # status-right must be set before this plugin, and nothing may set it after.
+        plugin = tmuxPlugins.continuum;
+        extraConfig = ''
           set -g @continuum-restore 'on'
           set -g @continuum-save-interval '10'
         '';
@@ -117,7 +137,7 @@
 
       set -g status-left ""
       set -g window-status-separator ""
-      set -g status-right-length 100
+      set -g status-right-length 120
     '';
   };
 
