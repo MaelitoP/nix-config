@@ -78,9 +78,13 @@ Before commenting, determine:
 
 If the PR description is weak, infer intent from the diff and the surrounding code.
 
-### 2) Run 3 review agents in parallel
+### 2) Run the review agents in parallel (mandatory)
 
-Spawn 3 parallel `Explore` agents, each with a distinct lens. Give each agent the changed files, the diff, and tell it which supporting docs to read.
+Spawn the `Explore` agents below in parallel, each with a distinct lens. Give each agent the changed files, the diff, and tell it which supporting docs to read.
+
+This step is mandatory. Never replace it with a single inline review: one pass with several checklists misses what separate lenses catch. If agents cannot be spawned, say so on the first line of the verdict and name the lenses that were not run.
+
+Agents 1–3 always run. Agent 4 runs whenever the PR touches a data pipeline, a parser, a file or wire format, an artifact, or a protocol with an external process; if it is skipped, say so in the verdict.
 
 **Agent 1 — Correctness & Concurrency**
 
@@ -122,9 +126,23 @@ Focus on:
 
 Read: `consistency.md`, `testing.md`, `idioms.md`, `severity-rubric.md`
 
+**Agent 4 — Data contracts & pipeline invariants**
+
+Focus on:
+- every guarantee the PR states (description, README, docstrings, error messages): try to build an input that passes the checks but breaks the guarantee, and report it with that input
+- validation of external output by identity, not cardinality: counts that match can hide a duplicated record plus a missing one; require unique, disjoint and complete ID sets
+- every parse path over external data (headers, rows, sidecars, manifests) raising the module's domain error, not a bare `KeyError`/`TypeError`
+- degenerate results that still "succeed": empty partitions, missing classes, one group swallowing the data, thresholds that let 100% failure through
+- artifact identity and provenance: names and versions encode every input that changes content; hashes checked on inputs as well as on reads; no silent overwrite or collision
+- key granularity: grouping, deduplication and join keys match the stated intent (hostname vs registrable domain, URL vs content hash)
+
+Read: `severity-rubric.md`
+
+A low-confidence finding against a stated guarantee must still come with the input that breaks it; if you can build that input, it is not low confidence.
+
 ### 3) Merge findings
 
-Merge duplicate findings from the 3 agents.
+Merge duplicate findings from the agents.
 
 Rules:
 - Prefer fewer, stronger comments over many weak comments.
