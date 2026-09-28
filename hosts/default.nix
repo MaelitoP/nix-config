@@ -83,6 +83,7 @@ in
         }
       ];
       brews = [
+        "libomp"
         {
           name = "emacs-plus@30";
           args = [
