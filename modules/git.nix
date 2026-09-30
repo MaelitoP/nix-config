@@ -20,7 +20,7 @@ in
       pull.rebase = true;
       rebase.autoStash = true;
       push.autoSetupRemote = true;
-      credential.helper = if pkgs.stdenv.isDarwin then "osxkeychain" else "cache";
+      credential.helper = if pkgs.stdenv.hostPlatform.isDarwin then "osxkeychain" else "cache";
       help.autocorrect = 10;
       url."git@github.com:".insteadOf = "https://github.com/";
       # Longest insteadOf prefix wins: keeps brew self-update on https, which has no ssh agent (Homebrew/brew#13830).

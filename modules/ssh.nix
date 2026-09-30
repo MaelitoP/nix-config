@@ -24,7 +24,7 @@
     sopsFile = ../secrets/ssh.yaml;
     path = "${config.xdg.dataHome}/ssh/id_ed25519_scaleway.pub";
   };
-  launchd.agents.ssh-add-keychain = lib.mkIf pkgs.stdenv.isDarwin {
+  launchd.agents.ssh-add-keychain = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     enable = true;
     config = {
       Label = "com.user.ssh-add-keychain";
@@ -89,7 +89,7 @@
         ControlMaster = "no";
         ControlPath = "~/.ssh/master-%r@%n:%p";
         ControlPersist = "no";
-        UseKeychain = if pkgs.stdenv.isDarwin then "yes" else "no";
+        UseKeychain = if pkgs.stdenv.hostPlatform.isDarwin then "yes" else "no";
       };
     };
   };

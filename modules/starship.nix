@@ -25,7 +25,7 @@ in
       format = "$directory$git_branch$character";
       right_format = "$nix_shell";
 
-      character = if pkgs.stdenv.isDarwin then macos_prompt else linux_prompt;
+      character = if pkgs.stdenv.hostPlatform.isDarwin then macos_prompt else linux_prompt;
 
       os = {
         disabled = false;

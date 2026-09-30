@@ -40,7 +40,7 @@ let
       pandoc
       protobuf
     ]
-    ++ lib.optionals stdenv.isDarwin [
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
       apple-sdk_15
     ]
     ++ (import ./rust.nix { pkgs = pkgs; })
