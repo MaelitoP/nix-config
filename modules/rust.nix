@@ -3,5 +3,5 @@ with pkgs;
 [
   rustup
   cargo-watch
-  cargo-generate
+  (cargo-generate.overrideAttrs { doCheck = false; })
 ]
