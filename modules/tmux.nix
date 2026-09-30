@@ -14,19 +14,38 @@ let
     ];
     text = ''
       file="$1"
+      last="$(dirname "$file")/last"
+      if ! grep -q '^window' "$file" && [ -e "$last" ]; then
+        cp "$last" "$file"
+        exit 0
+      fi
+      declare -A pane_pids
+      while IFS=$'\t' read -r target pid; do
+        pane_pids[$target]="$pid"
+      done < <(tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}"$'\t'"#{pane_pid}")
       tmp="$file.tmp"
       while IFS= read -r line; do
-        if [[ "$line" == pane* ]] && [[ "$(cut -f11 <<<"$line")" == :claude* ]]; then
-          target="$(cut -f2 <<<"$line"):$(cut -f3 <<<"$line").$(cut -f6 <<<"$line")"
-          pane_pid="$(tmux display-message -p -t "$target" '#{pane_pid}')"
-          for pid in $(pgrep -a -P "$pane_pid"); do
-            session="$HOME/.claude/sessions/$pid.json"
-            if [ -f "$session" ]; then
-              line="$(cut -f1-10 <<<"$line")"$'\t'":claude --resume $(jq -r .sessionId "$session")"
-              break
-            fi
-          done
-        fi
+        case "$line" in
+          pane*) ;;
+          window* | state* | grouped_session*)
+            printf '%s\n' "$line"
+            continue
+            ;;
+          *) continue ;;
+        esac
+        target="$(cut -f2 <<<"$line"):$(cut -f3 <<<"$line").$(cut -f6 <<<"$line")"
+        pane_pid="''${pane_pids[$target]:-}"
+        [ -n "$pane_pid" ] || {
+          printf '%s\n' "$line"
+          continue
+        }
+        for pid in $(pgrep -a -P "$pane_pid"); do
+          session="$HOME/.claude/sessions/$pid.json"
+          if [ -f "$session" ]; then
+            line="$(cut -f1-10 <<<"$line")"$'\t'":claude --resume $(jq -r .sessionId "$session")"
+            break
+          fi
+        done
         printf '%s\n' "$line"
       done <"$file" >"$tmp"
       mv "$tmp" "$file"
