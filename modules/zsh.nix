@@ -172,7 +172,8 @@
 
       eval "$(mise activate zsh)"
 
-      [ -z "$INSIDE_EMACS" ] && [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && fastfetch
+      [ -z "$INSIDE_EMACS" ] && [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && [ -z "$TMUX_RESURRECT_RESTORING" ] && fastfetch
+      unset TMUX_RESURRECT_RESTORING
     '';
   };
 }

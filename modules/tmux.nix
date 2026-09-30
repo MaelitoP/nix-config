@@ -1,6 +1,38 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
+  claudeResumeHook = pkgs.writeShellApplication {
+    name = "tmux-resurrect-claude-resume";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.tmux
+    ];
+    text = ''
+      file="$1"
+      tmp="$file.tmp"
+      while IFS= read -r line; do
+        if [[ "$line" == pane* ]] && [[ "$(cut -f11 <<<"$line")" == :claude* ]]; then
+          target="$(cut -f2 <<<"$line"):$(cut -f3 <<<"$line").$(cut -f6 <<<"$line")"
+          pane_pid="$(tmux display-message -p -t "$target" '#{pane_pid}')"
+          for pid in $(pgrep -a -P "$pane_pid"); do
+            session="$HOME/.claude/sessions/$pid.json"
+            if [ -f "$session" ]; then
+              line="$(cut -f1-10 <<<"$line")"$'\t'":claude --resume $(jq -r .sessionId "$session")"
+              break
+            fi
+          done
+        fi
+        printf '%s\n' "$line"
+      done <"$file" >"$tmp"
+      mv "$tmp" "$file"
+    '';
+  };
+
   catppuccinModule =
     name: body:
     pkgs.writeText "tmux-catppuccin-${name}.conf" ''
@@ -24,7 +56,6 @@ in
 {
   programs.tmux = {
     enable = true;
-    newSession = true;
     shell = "/bin/zsh";
 
     plugins = with pkgs; [
@@ -50,6 +81,9 @@ in
         extraConfig = ''
           set -g @resurrect-capture-pane-contents 'on'
           set -g @resurrect-processes '"~bin/nvim->nvim" "~claude"'
+          set -g @resurrect-hook-post-save-layout '${lib.getExe claudeResumeHook}'
+          set -g @resurrect-hook-pre-restore-all 'tmux set-environment -g TMUX_RESURRECT_RESTORING 1'
+          set -g @resurrect-hook-post-restore-all 'tmux set-environment -gu TMUX_RESURRECT_RESTORING'
         '';
       }
       {
@@ -101,6 +135,7 @@ in
       set -g escape-time 0
       set -g set-clipboard on
       set -g allow-rename off
+      set -g allow-set-title off
 
       set -g visual-activity off
       set -g visual-bell off
@@ -170,6 +205,7 @@ in
       # resurrect/continuum run-shell scripts inherit the server env and
       # invoke tmux and coreutils by bare name.
       EnvironmentVariables.PATH = "/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+      WorkingDirectory = config.home.homeDirectory;
       RunAtLoad = true;
       StartInterval = 300;
     };
