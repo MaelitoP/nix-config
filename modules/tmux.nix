@@ -9,7 +9,9 @@ let
   claudeResumeHook = pkgs.writeShellApplication {
     name = "tmux-resurrect-claude-resume";
     runtimeInputs = [
+      pkgs.coreutils
       pkgs.jq
+      pkgs.neovim-unwrapped
       pkgs.tmux
     ];
     text = ''
@@ -19,10 +21,21 @@ let
         cp "$last" "$file"
         exit 0
       fi
-      declare -A pane_pids
-      while IFS=$'\t' read -r target pid; do
+      declare -A pane_pids pane_targets
+      while IFS=$'\t' read -r target pid id; do
         pane_pids[$target]="$pid"
-      done < <(tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}"$'\t'"#{pane_pid}")
+        pane_targets[$id]="$target"
+      done < <(tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}"$'\t'"#{pane_pid}"$'\t'"#{pane_id}")
+      nvim_dir="$(dirname "$file")/nvim"
+      rm -rf "$nvim_dir"
+      mkdir -p "$nvim_dir"
+      shopt -s nullglob
+      for socket in "$(getconf DARWIN_USER_TEMP_DIR)nvim.$(id -un)"/*/nvim.*.0; do
+        id="$(timeout 2 nvim --server "$socket" --remote-expr "getenv('TMUX_PANE')")" || continue
+        target="''${pane_targets[$id]:-}"
+        [ -n "$target" ] || continue
+        timeout 2 nvim --server "$socket" --remote-expr "execute('mksession! $nvim_dir/$target.vim')" >/dev/null || continue
+      done
       tmp="$file.tmp"
       while IFS= read -r line; do
         case "$line" in
@@ -46,6 +59,9 @@ let
             break
           fi
         done
+        if grep -qs '^badd ' "$nvim_dir/$target.vim"; then
+          line="$(cut -f1-10 <<<"$line")"$'\t'":nvim -S $(printf '%q' "$nvim_dir/$target.vim")"
+        fi
         printf '%s\n' "$line"
       done <"$file" >"$tmp"
       mv "$tmp" "$file"
