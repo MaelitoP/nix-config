@@ -56,6 +56,7 @@ in
 {
   programs.tmux = {
     enable = true;
+    baseIndex = 1;
     shell = "/bin/zsh";
 
     plugins = with pkgs; [
@@ -143,9 +144,6 @@ in
       setw -g monitor-activity off
       set -g bell-action none
 
-      set -g base-index 1
-      set -g pane-base-index 1
-      set -g pane-base-index 1
       set -g renumber-windows on
       set -g mouse on
 
