@@ -12,6 +12,7 @@
     extraBrews = [
       "bash"
       "debianutils"
+      "ghz"
       "jq"
       "mise"
       "mysql-client"
