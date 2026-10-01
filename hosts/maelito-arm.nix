@@ -16,6 +16,8 @@
       "mise"
       "mysql-client"
       "openssl@3"
+      "qemu"
+      "riscv64-elf-gdb"
       "scw"
     ];
   };
