@@ -38,6 +38,32 @@
           The test database and Kafka are shared with the engineer's own test runs.
         '';
       };
+      runs.repositories."agorapulse/platform-ingestor" = {
+        worktree_root = "${config.home.homeDirectory}/dev/platform-ingestor/.claude/worktrees";
+        setup = [
+          "docker"
+          "exec"
+          "-u"
+          "mention"
+          "-w"
+          "{worktree}"
+          "ingestor-php_cli-1"
+          "composer"
+          "install"
+          "--no-interaction"
+          "--no-progress"
+        ];
+        preflight = [
+          "docker"
+          "ps"
+          "--filter"
+          "name=ingestor-php_cli-1"
+          "--format"
+          "x"
+        ];
+        verify = "docker exec -u mention -w {worktree} ingestor-php_cli-1 .composer/bin/phpunit";
+        instructions = "The test database and Kafka are shared with the engineer's own test runs.";
+      };
     };
   };
 }
