@@ -1,122 +1,126 @@
 # PR Description Style Guide
 
-This document defines how to write PR descriptions. The structure is **not a rigid template** — it adapts organically to the type and complexity of the change.
+Write for a human reviewer, not for the project record. A PR description is not documentation, an investigation report or a diff walkthrough. A teammate should understand the problem and the resulting behavior in under 30 seconds.
 
-## Core Principle: Structure Scales with Complexity
+## Voice
 
-| PR weight | Structure |
-|---|---|
-| **Trivial** (typo, config tweak, single-line fix) | Empty body or one sentence. The title carries the meaning. |
-| **Small** (focused fix, minor refactor) | 1-3 plain prose paragraphs. No section headers. |
-| **Medium** (feature, non-trivial fix, dep upgrade) | 2-4 `###` sections chosen from the section catalog below. |
-| **Large** (new aggregate, major investigation, breaking change) | Full structured description with design decisions, tests, deployment notes. |
+Write like the engineer who implemented the change is explaining it to a teammate. Natural, concise and technical. Use common developer vocabulary. Prefer short sentences and concrete verbs.
 
-## Core Writing Rules
+Avoid polished or formal transitions such as:
 
-1. **Problem-first narrative**: Always start with *why*, never with *what you changed*. The reader must understand the problem/need before the solution.
-2. **Prose over bullets**: Use paragraphs, not bullet lists, for context and reasoning. Bullets are acceptable only for enumerating discrete items (files, steps, checklist).
-3. **Trade-off reasoning**: When a design decision exists, explain what alternatives were considered and why they were rejected.
-4. **Evidence-based**: Include real production errors, stack traces, metrics, or benchmark data when they motivated the change.
-5. **No filler**: No "This PR does the following:", no boilerplate intro, no restating the title.
+* "This PR introduces..."
+* "This change ensures..."
+* "This allows..."
+* "As a result..."
+* "It is worth noting..."
+* "In order to..."
 
-## Section Catalog
+Avoid em dashes. If a sentence sounds like release notes, documentation or a design doc, simplify it.
 
-Pick only the sections that add value. Never use all of them. Order them as listed.
+## Default shape
 
-### `### Context` / `### Problem` / `### Goal`
-**When**: Almost always for medium+ PRs.
-**What**: The business or technical reason this change exists. For bugs: the observed symptom. For features: what gap this fills. For chores: what triggered the need (deprecation, log noise, dependency conflict).
+Most PRs are 2 short paragraphs:
 
-Include verbatim production errors, log lines, or Slack thread links when they are the trigger.
+1. What is wrong or missing today.
+2. What changes after merge.
 
-### `### Root Cause` / `### Investigation`
-**When**: Complex bugs where the symptom is non-obvious.
-**What**: The technical investigation. May include:
-- Hypotheses tested (table format: hypothesis | result)
-- Metrics/observations (tables with numbers)
-- Race condition timelines (ASCII diagrams showing concurrent flows)
-- MySQL/infra behavior explanations with documentation quotes
+Use 60 to 120 words. There is no minimum. A trivial PR has an empty body.
 
-### `### Changes` / `### What this PR does` / `### Fix` / `### Solution`
-**When**: When the change isn't self-evident from the diff.
-**What**: Technical description of the approach. Include before/after code snippets for fixes. Explain the architectural reasoning, not just what files were touched.
+Add a third paragraph only for an operational consequence, a compatibility constraint or a reviewer trap that is not obvious from the diff. Use headers only when the PR contains several genuinely independent changes.
 
-### `### Key Design Decisions`
-**When**: Large features with non-obvious architectural choices.
-**What**: Each decision as a bullet with the reasoning. Explicitly state the rejected alternative and why it's unsafe/wrong.
+## Write about behavior, not implementation
 
-Example pattern:
-> * Sources are carried in the event, not re-read from the Search aggregate.
-> `SearchRegisteredEvent` now embeds the source list active at registration time. The alternative was to compare the event's revision against the Search's current SearchSettings revision. This is unsafe: [reason].
+Prefer:
 
-### `### Out of scope`
-**When**: Large features where the reader might expect more.
-**What**: What was deliberately NOT included and why. Bold the key statement.
+> Existing historical indices do not receive new component-template mappings, so deploying a new field can block ingestion. The release now applies the mapping before deploying the binary.
 
-Example:
-> **This PR does not fetch anything from the YouTube API.** The handler immediately acknowledges the backfill without calling any external service. This is intentional: the infrastructure needs to be in place and verified before the real fetch logic is wired in.
+Not:
 
-### `### Breaking changes`
-**When**: API changes, field renames, behavioral changes.
-**What**: List each breaking change. Be specific about what clients must update.
+> The workflow moves template detection before Docker build, retrieves the secret, calls `apply-templates-via-function.sh`, which sends `action=apply-mapping`...
 
-### `### Tests` / `### Testing`
-**When**: Large features with significant test coverage.
-**What**: Test coverage summary with concrete numbers (scenarios, steps, test cases). Group by test type (Behat, PHPUnit). Mention edge cases explicitly.
+The diff already tells the reviewer how the code does it. Name classes, functions, files, config keys and commands only when the reviewer needs that name to understand the contract.
 
-Example:
-> - **Behat (`youtube-matches-backfill`)**: 15 scenarios / 73 steps covering the full state machine
-> - **PHPUnit (`FetchYoutubeBackfillMatchesTaskHandlerTest`)**: 6 unit tests, one per main code path
+## Delete aggressively
 
-### `### Deployment note` / `### Deployment Steps` / `### Deploy` / `### Post-deploy`
-**When**: Migrations, infra changes, env vars, topic creation, process restarts, multi-PR sequencing.
-**What**: Concrete actions. Use checklists for multi-step deployments. For multi-PR sequences, number the steps and mark which are done.
+Remove a sentence if it only explains:
 
-Example (multi-PR ordering):
-> 1. This PR — apply Terraform to create the secret slot
-> 2. Ops populates the secret value in Scaleway Secret Manager
-> 3. Second PR (#830) — deploy Ansible changes that inject the secret at runtime
+* how the code is implemented;
+* which files changed;
+* which helper calls which helper;
+* why a local variable, type, interface or class exists;
+* test cases, individually;
+* commands that passed;
+* exact fixture counts;
+* exact benchmark numbers, unless performance is the purpose of the PR;
+* ticket history or investigation chronology;
+* alternatives considered or rejected designs;
+* why something is out of scope;
+* future work;
+* rollout steps already enforced by CI;
+* details already obvious from the title;
+* facts useful only to prove the author investigated thoroughly.
 
-Include safety notes: "non-destructive schema change", "online DDL, concurrent reads continue uninterrupted".
+Do not keep a detail merely because it is technically correct.
 
-### `### Notes` / `### Additional Notes` / `### References`
-**When**: Upstream links, related documentation, future considerations.
-**What**: Links to upstream commits, Slite docs, official documentation. Brief notes about future improvements (e.g., "evaluating the extension-based alternative can be done separately").
+## Context
 
-## Patterns by PR Type
+Describe the user-visible, operational or architectural problem. Do not include dates unless timing matters to an incident, sample sizes unless they establish the problem, raw error payloads, production investigation details, implementation archaeology, previous ticket numbers, or more than the minimum example that makes a bug concrete. If one sentence explains the problem, stop there.
 
-### Bug fix
-- **Trivial**: empty body or one sentence.
-- **Substantial**: `### Context` (symptom with real error) → root cause analysis → `### Fix` (with code snippet) → `### Deployment note` if needed.
-- **Complex**: Full investigation narrative with hypotheses table, race condition diagram, or metrics. See "Root Cause / Investigation" section above.
+## Changes
 
-### Feature
-- **Small**: 1-2 paragraphs of context + what was built.
-- **Large**: `### Context/Goal` → `### Changes` → `### Key Design Decisions` → `### Out of scope` → `### Tests` → `### Deployment Steps`.
+Describe the new system behavior, not the patch structure.
 
-### Dependency upgrade
-`### Context` (what triggered: bug, deprecation, log noise) → `### Changes` (version old → new) → `### Breaking changes` (if any, with how they were fixed) → `### Deployment note` (cache clearing, restarts).
+Good:
 
-### Chore / Refactor
-Brief context + what changed. Keep it short. Add `### Notes` only if there's a non-obvious subtlety.
+> Rule ids now remain strings from the X response through the delete request.
 
-### Revert
-`Reverts org/repo#N` + one sentence explaining why the revert was needed.
+Bad:
 
-## Visual Aids
+> `GnipRule::id`, two Valinor array shapes, the store docblock and the `%s` placeholder now use strings.
 
-Use these when they genuinely clarify:
-- **Tables**: for benchmark comparisons, metrics, hypothesis results, version changes.
-- **ASCII timelines**: for race conditions or concurrent flow explanations.
-- **Code blocks**: for before/after fixes, error messages, stack traces, CLI commands.
-- **Screenshots**: for UI-related context (use GitHub image markdown).
-- **Checklists**: for deployment steps.
+Good:
 
-## Cross-Referencing
+> Code-only releases now reapply the current mapping before deploying.
 
-Link to related context when it exists:
-- Related PRs: full GitHub URL or `#NNN` shorthand
-- Shortcut tickets: already in the title as `[sc-XXXXXX]`
-- Slack threads: full Slack archive URL
-- Upstream commits/issues: full GitHub URL
-- Internal docs: Slite links
+Bad:
+
+> The secret and apply steps move ahead of the Docker build and their `if` conditions now include `code_changed`.
+
+## Validation
+
+Omit it by default. Mention it only when it tells the reviewer something normal CI cannot: a migration tested against a production-shaped dataset, a compatibility change checked against the real external API, measured results of a performance PR, a data transformation validated over the full corpus. Never list lint, format, unit-test or static-analysis commands. Never enumerate test cases.
+
+## Operational notes
+
+Mention merge or deployment behavior only when a reviewer could otherwise approve something unsafe, in one sentence. No Deployment, Post-deploy, Verification, Testing, Notes or Out of scope sections for ordinary PRs.
+
+## Numbers
+
+Keep a number only when changing or removing it would weaken the explanation. Useful: "the cursor exceeds Nginx's 8 KB request-line limit", "the API allows at most two GPU nodes". Usually useless: document counts, test counts, artifact hashes, commit SHAs, fixture row counts, every measured latency, every host or node involved in an investigation.
+
+**Prefer the invariant over the evidence used to discover it.** Not "100% of 1,500 sampled RSS documents across three indices spanning 15 months had...", but "RSS articles were using crawl time instead of the publication date from the feed." For a GPU node PR the reviewer needs "we provision dedicated GPU nodes for Triton", not zones, disk sizes, image names, replacement strategy or the sequencing of later tickets.
+
+## Titles
+
+The title names the behavior change, not the implementation.
+
+Prefer:
+
+* `feat(inference): provision GPU serving nodes`
+* `fix(report): keep X rule ids as strings`
+* `fix(historical-ingestor): retry writes rejected by strict mappings`
+* `ci(historical-ingestor): apply mapping before the build`
+
+Avoid internal mechanism names when a simpler behavior exists, multiple clauses, counts, versions, instance types or parameter names, words invented during the implementation, and "support", "handle", "improve", "update" when a more precise verb exists. A good title still makes sense six months later without reading the ticket.
+
+## Final deletion pass
+
+Before creating the PR, review every sentence and ask: if I delete this, can a teammate still understand what was broken and what changes after merge? If yes, delete it. Then check:
+
+* Is the body shorter than the first draft?
+* Does it describe behavior more than code?
+* Did I omit normal test and CI details?
+* Did I avoid ticket history and investigation detail?
+* Did I avoid repeating the title?
+* Did I avoid em dashes?
+* Could any paragraph be removed entirely? If yes, remove it.
