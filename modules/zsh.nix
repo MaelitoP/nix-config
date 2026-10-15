@@ -176,4 +176,36 @@
       unset TMUX_RESURRECT_RESTORING
     '';
   };
+
+  # disablesleep persists across reboots and the claude() EXIT trap above never runs on SIGTERM.
+  launchd.agents.claude-sleepwatch = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "${pkgs.writeShellScript "claude-sleepwatch" ''
+          alive() {
+            for pid in $(/usr/bin/pgrep -x claude); do
+              case "$(/bin/ps -o stat= -p "$pid")" in
+                Z*) ;;
+                *) return 0 ;;
+              esac
+            done
+            return 1
+          }
+
+          /usr/bin/pmset -g | /usr/bin/grep -q 'SleepDisabled[[:space:]]*1' || exit 0
+          alive && exit 0
+          /bin/sleep 2
+          alive && exit 0
+          if /usr/bin/sudo -n /usr/bin/pmset -a disablesleep 0; then
+            /usr/bin/logger -t claude-sleepwatch "no claude session running, sleep re-enabled"
+          else
+            /usr/bin/logger -t claude-sleepwatch -p user.err "pmset disablesleep 0 failed"
+          fi
+        ''}"
+      ];
+      RunAtLoad = true;
+      StartInterval = 60;
+    };
+  };
 }
