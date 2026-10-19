@@ -78,6 +78,8 @@ If the PR description is weak, infer intent from the diff and the surrounding co
 
 Spawn 3 parallel `Explore` agents, each with a distinct lens. Give each agent the changed files, the diff, and tell it which supporting docs to read.
 
+Spawn each agent without a `name`: an unnamed agent is a one-shot child whose final message comes back as its result, while a named agent becomes a long-lived teammate that reports by mail and is never waited on. Tell each agent to put its full findings in its final message and to send nothing else; no `SendMessage`. Do not produce the verdict until every agent's result has arrived and been merged. If an agent cannot be spawned or never returns a result, review that lens inline and say so on the first line of the verdict.
+
 **Agent 1 — Correctness & Concurrency**
 
 Focus on:

@@ -82,7 +82,9 @@ If the PR description is weak, infer intent from the diff and the surrounding co
 
 Spawn the `Explore` agents below in parallel, each with a distinct lens. Give each agent the changed files, the diff, and tell it which supporting docs to read.
 
-This step is mandatory. Never replace it with a single inline review: one pass with several checklists misses what separate lenses catch. If agents cannot be spawned, say so on the first line of the verdict and name the lenses that were not run.
+Spawn each agent without a `name`: an unnamed agent is a one-shot child whose final message comes back as its result, while a named agent becomes a long-lived teammate that reports by mail and is never waited on. Tell each agent to put its full findings in its final message and to send nothing else; no `SendMessage`. Do not produce the verdict until every agent's result has arrived and been merged.
+
+This step is mandatory. Never replace it with a single inline review: one pass with several checklists misses what separate lenses catch. If an agent cannot be spawned or never returns a result, review that lens inline and say so on the first line of the verdict, naming the lenses that did not run as agents.
 
 Agents 1–3 always run. Agent 4 runs whenever the PR touches a data pipeline, a parser, a file or wire format, an artifact, or a protocol with an external process; if it is skipped, say so in the verdict.
 
