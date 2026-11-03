@@ -9,6 +9,8 @@ let
   platform = config.host.platform;
   extraCasks = config.host.extraCasks or [ ];
   extraBrews = config.host.extraBrews or [ ];
+  brewBundle = config.homebrew.onActivation.brewBundleCmd { onlyCheck = false; };
+  acceptXcodeLicense = "/bin/bash ${../scripts/accept-xcode-license.sh} || true";
 in
 {
   options.host = {
@@ -122,18 +124,15 @@ in
 
     environment.etc."Brewfile".text = config.homebrew.brewfile;
 
-    system.activationScripts.preActivation.text = ''
-      if ! /bin/bash ${../scripts/accept-xcode-license.sh}; then
-        printf >&2 '\e[1;33mwarning: could not accept the Xcode license\e[0m\n'
-      fi
-    '';
-
     # Upstream aborts the whole activation (home-manager included) when brew bundle fails.
+    # mas installs Xcode inside brew bundle, so its license can only be accepted after the first attempt.
     system.activationScripts.homebrew.text = mkForce ''
       echo >&2 "Homebrew bundle..."
       if [ -f "${config.homebrew.prefix}/bin/brew" ]; then
-        if ! ${config.homebrew.onActivation.brewBundleCmd { onlyCheck = false; }}; then
-          printf >&2 '\e[1;33mwarning: brew bundle failed; continuing activation. Run `just brew` to retry.\e[0m\n'
+        ${acceptXcodeLicense}
+        if ! ${brewBundle}; then
+          ${acceptXcodeLicense}
+          ${brewBundle} || printf >&2 '\e[1;33mwarning: brew bundle failed; continuing activation. Run `just brew` to retry.\e[0m\n'
         fi
       else
         echo -e "\e[1;31merror: Homebrew is not installed, skipping...\e[0m" >&2

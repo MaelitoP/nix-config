@@ -8,6 +8,11 @@ AGE_KEY_DIR="$HOME/.config/sops/age"
 AGE_KEY_FILE="$AGE_KEY_DIR/keys.txt"
 NIX_CONF="$HOME/.config/nix/nix.conf"
 NIX_PROFILE="/nix/var/nix/profiles/default"
+case "$(uname -m)" in
+  arm64) BREW_PREFIX=/opt/homebrew ;;
+  x86_64) BREW_PREFIX=/usr/local ;;
+  *) echo "error: unsupported architecture $(uname -m)" >&2; exit 1 ;;
+esac
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m==>\033[0m %s\n' "$*"; }
@@ -17,10 +22,12 @@ if xcode-select -p &> /dev/null; then
   ok "Xcode Command Line Tools already installed"
 else
   info "Installing Xcode Command Line Tools..."
-  xcode-select --install || true
-  until xcode-select -p &> /dev/null; do
+  xcode-select --install
+  for _ in $(seq 180); do
+    xcode-select -p &> /dev/null && break
     sleep 10
   done
+  xcode-select -p &> /dev/null || { echo "error: Command Line Tools still not installed; re-run this script" >&2; exit 1; }
   ok "Xcode Command Line Tools installed"
 fi
 
@@ -54,13 +61,13 @@ else
   echo "experimental-features = nix-command flakes" >> "$NIX_CONF"
 fi
 
-if [ -x /opt/homebrew/bin/brew ]; then
+if [ -x "$BREW_PREFIX/bin/brew" ]; then
   ok "Homebrew already installed"
 else
   info "Installing Homebrew..."
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$("$BREW_PREFIX/bin/brew" shellenv)"
 
 if [ -d "$REPO_DIR/.git" ]; then
   info "Pulling latest changes..."

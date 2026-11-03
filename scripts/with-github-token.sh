@@ -3,8 +3,10 @@ set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 owner="${SUDO_USER:-$(id -un)}"
-owner_home="$(dscl . -read "/Users/$owner" NFSHomeDirectory 2>/dev/null | awk '{print $2}')"
-owner_home="${owner_home:-$HOME}"
+owner_home="$HOME"
+if [ -n "${SUDO_USER:-}" ]; then
+  owner_home="$(dscl . -read "/Users/$SUDO_USER" NFSHomeDirectory | awk '{print $2}')"
+fi
 config_home="$owner_home/.config"
 
 export PATH="/nix/var/nix/profiles/default/bin:/etc/profiles/per-user/$owner/bin:$PATH"
@@ -30,6 +32,9 @@ fi
 
 if [ -z "$token" ]; then
   echo "warning: no GitHub token found; private flake inputs will fail to fetch" >&2
+elif [[ ! "$token" =~ ^[A-Za-z0-9_]+$ ]]; then
+  echo "error: GitHub token has unexpected characters; refusing to put it in NIX_CONFIG" >&2
+  exit 1
 else
   export NIX_CONFIG="${NIX_CONFIG:+$NIX_CONFIG
 }access-tokens = github.com=$token"
