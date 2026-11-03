@@ -23,6 +23,7 @@ let
     ./wezterm.nix
     ./ghostty.nix
     ./emacs.nix
+    ./wallpaper.nix
   ];
 in
 {
