@@ -69,6 +69,10 @@ in
     programs.zsh.enable = true;
     programs.zsh.enableGlobalCompInit = false;
 
+    # git rewrites https://github.com/ to ssh (modules/git.nix); without this a fresh machine fails every clone with "Host key verification failed".
+    programs.ssh.knownHosts."github.com".publicKey =
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
+
     homebrew = {
       enable = true;
       onActivation.autoUpdate = true;
@@ -115,6 +119,26 @@ in
         Xcode = 497799835;
       };
     };
+
+    environment.etc."Brewfile".text = config.homebrew.brewfile;
+
+    system.activationScripts.preActivation.text = ''
+      if ! /bin/bash ${../scripts/accept-xcode-license.sh}; then
+        printf >&2 '\e[1;33mwarning: could not accept the Xcode license\e[0m\n'
+      fi
+    '';
+
+    # Upstream aborts the whole activation (home-manager included) when brew bundle fails.
+    system.activationScripts.homebrew.text = mkForce ''
+      echo >&2 "Homebrew bundle..."
+      if [ -f "${config.homebrew.prefix}/bin/brew" ]; then
+        if ! ${config.homebrew.onActivation.brewBundleCmd { onlyCheck = false; }}; then
+          printf >&2 '\e[1;33mwarning: brew bundle failed; continuing activation. Run `just brew` to retry.\e[0m\n'
+        fi
+      else
+        echo -e "\e[1;31merror: Homebrew is not installed, skipping...\e[0m" >&2
+      fi
+    '';
 
     system = {
       activationScripts.postActivation.text = mkAfter ''
