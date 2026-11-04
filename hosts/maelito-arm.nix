@@ -8,7 +8,12 @@
     realname = "mael.lepetit";
     home = "/Users/mael.lepetit";
     platform = "aarch64-darwin";
-    extraCasks = [ ];
+    extraCasks = [
+      "chatgpt"
+      "codex"
+      "codex-app"
+      "whatsapp"
+    ];
     extraBrews = [
       "bash"
       "debianutils"

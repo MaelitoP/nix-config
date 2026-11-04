@@ -81,6 +81,7 @@ in
     homebrew = {
       enable = true;
       onActivation.autoUpdate = true;
+      onActivation.upgrade = true;
       taps = [
         {
           name = "wez/wezterm";
