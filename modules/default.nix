@@ -23,6 +23,7 @@ let
     ./ghostty.nix
     ./emacs.nix
     ./wallpaper.nix
+    ./mise.nix
   ];
 in
 {

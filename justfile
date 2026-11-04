@@ -21,6 +21,7 @@ bootstrap: _preflight
     # nix-darwin HUPs the nix-daemon, which exits 3 on a fresh machine where the daemon isn't under its launchd service yet.
     {{switch}} || { echo "==> First switch failed; retrying once"; {{switch}}; }
     ./scripts/import-gpg-key-once.sh
+    mise install
     @echo "==> Done. Open a new terminal to pick up the new environment."
 
 # Rebuild and apply the configuration
