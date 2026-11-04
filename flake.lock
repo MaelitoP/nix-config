@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "bar-wezterm": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1776263225,
-        "narHash": "sha256-7FJfDV3X3Xi799dRXO7zT+Zid5EBfLMVIFmB3g013cU=",
-        "owner": "adriankarlen",
-        "repo": "bar.wezterm",
-        "rev": "af6642a004942d6b58b777d002cb7ee82ca94872",
-        "type": "github"
-      },
-      "original": {
-        "owner": "adriankarlen",
-        "repo": "bar.wezterm",
-        "type": "github"
-      }
-    },
     "cairn": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -466,7 +450,6 @@
     },
     "root": {
       "inputs": {
-        "bar-wezterm": "bar-wezterm",
         "cairn": "cairn",
         "cairn-x86": "cairn-x86",
         "catppuccin": "catppuccin",

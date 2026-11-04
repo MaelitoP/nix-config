@@ -226,7 +226,7 @@ in
   catppuccin.tmux.enable = false;
 
   # Own the tmux server via launchd so it lives outside any terminal app's
-  # process group; macOS terminating ghostty/wezterm cannot take it down.
+  # process group; macOS terminating ghostty cannot take it down.
   launchd.agents.tmux = {
     enable = true;
     config = {

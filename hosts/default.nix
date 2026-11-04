@@ -84,10 +84,6 @@ in
       onActivation.upgrade = true;
       taps = [
         {
-          name = "wez/wezterm";
-          trusted = true;
-        }
-        {
           name = "d12frosted/emacs-plus";
           trusted = true;
         }
@@ -106,7 +102,6 @@ in
       ]
       ++ extraBrews;
       casks = [
-        "wezterm"
         "ghostty"
         "goland"
         "phpstorm"
