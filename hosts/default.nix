@@ -150,6 +150,9 @@ in
           /bin/rm -rf "/Applications/Emacs Client.app"
           /bin/cp -R "$emacs_opt/Emacs Client.app" "/Applications/Emacs Client.app"
         fi
+
+        # screencapture silently falls back to the Desktop when its location is missing.
+        /usr/bin/sudo -u ${username} /bin/mkdir -p "${home}/Documents/screenshots"
       '';
 
       defaults = {

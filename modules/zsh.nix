@@ -80,13 +80,13 @@
 
       cdi = "cd ~/dev/platform-ingestor";
       iup = "cdi; ./tools/devenv.sh up";
-      istop = "cdi; ./tools/devenv.sh up";
+      istop = "cdi; ./tools/devenv.sh stop";
       irdbt = "cdi; ./tools/reset-db.sh test";
       irdtd = "cdi; ./tools/reset-db.sh dev";
       itest = "cdi; ./tools/run-tests.sh";
 
       cdm = "cd ~/dev/mention";
-      mup = "cdm; ./tools/devenv.sh stop";
+      mup = "cdm; ./tools/devenv.sh up";
       mstop = "cdm; ./tools/devenv.sh stop";
       mrdbt = "cdm; ./tools/reset-db.sh test";
       mrdtd = "cdm; ./tools/reset-db.sh dev";
@@ -122,8 +122,6 @@
 
       export PATH="$HOME/.opencode/bin:$PATH"
 
-      export PATH="$HOME/dev/cli/bin:$PATH"
-
       export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
       claude() {
@@ -144,6 +142,9 @@
       export NVM_DIR="$HOME/.config/nvm"
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+      # pulse appends its source line to ~/.zshrc, which zsh never reads under this ZDOTDIR.
+      [ -r "$HOME/.pulse_aliases" ] && source "$HOME/.pulse_aliases"
 
       [ -r "$XDG_CONFIG_HOME/secrets/github_token" ] && \
         export GITHUB_TOKEN="$(<"$XDG_CONFIG_HOME/secrets/github_token")"
