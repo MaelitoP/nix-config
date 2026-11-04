@@ -149,6 +149,9 @@
       [ -r "$XDG_CONFIG_HOME/secrets/github_token" ] && \
         export GITHUB_TOKEN="$(<"$XDG_CONFIG_HOME/secrets/github_token")"
 
+      # The org-synced GitHub plugin for Claude Code reads its token from this name.
+      [ -n "$GITHUB_TOKEN" ] && export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+
       [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && gpgconf --launch gpg-agent
 
       # Tmux autostart

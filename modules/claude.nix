@@ -40,17 +40,21 @@ let
   }) cfg.mcpServers;
 
   settingsFile = pkgs.writeText "claude-settings.json" (
-    builtins.toJSON {
-      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-      enabledPlugins = cfg.settings.enabledPlugins;
-      alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
-      cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
-      attribution = cfg.settings.attribution;
-      env = cfg.settings.env;
-      permissions = {
-        allow = cfg.settings.permissions.allow;
-      };
-    }
+    builtins.toJSON (
+      {
+        "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+        enabledPlugins = cfg.settings.enabledPlugins;
+        alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
+        cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
+        attribution = cfg.settings.attribution;
+        env = cfg.settings.env;
+        permissions = {
+          allow = cfg.settings.permissions.allow;
+        };
+        modelSettings = cfg.settings.modelSettings;
+      }
+      // optionalAttrs (cfg.settings.model != null) { model = cfg.settings.model; }
+    )
   );
 
   claudeMdFile = ../resources/claude/CLAUDE.md;
@@ -111,6 +115,18 @@ in
         type = types.attrsOf types.str;
         default = { };
         description = "Environment variables applied to every Claude Code session";
+      };
+
+      model = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Default model alias (e.g. opus)";
+      };
+
+      modelSettings = mkOption {
+        type = types.attrsOf (types.attrsOf types.str);
+        default = { };
+        description = "Per-model settings keyed by model ID, e.g. effortLevel";
       };
 
       permissions.allow = mkOption {
@@ -234,7 +250,10 @@ in
             "php-lsp@claude-plugins-official" = true;
             "clangd-lsp@claude-plugins-official" = true;
             "lua-lsp@claude-plugins-official" = true;
-            "slack@claude-plugins-official" = true;
+            "typescript-lsp@claude-plugins-official" = true;
+            "context7@claude-plugins-official" = true;
+            "frontend-design@claude-plugins-official" = true;
+            "chrome-devtools-mcp@claude-plugins-official" = true;
             "claude-code-setup@claude-plugins-official" = true;
             "claude-md-management@claude-plugins-official" = true;
             "skill-creator@claude-plugins-official" = true;
@@ -247,6 +266,12 @@ in
           attribution = {
             commit = "";
             pr = "";
+          };
+
+          model = "opus";
+          modelSettings = {
+            "claude-opus-5-5".effortLevel = "xhigh";
+            "claude-fable-5-1".effortLevel = "high";
           };
 
           env = {
@@ -263,48 +288,6 @@ in
             "Read(~/.claude/plugins/cache/agorapulse-marketplace/project-memory/**/skills/**)"
             "Bash(git -C ${config.home.homeDirectory}/dev/claude-projects/shared:*)"
           ];
-        };
-
-        mcpServers = {
-          github = {
-            type = "stdio";
-            command = "docker";
-            args = [
-              "run"
-              "-i"
-              "--rm"
-              "-e"
-              "GITHUB_PERSONAL_ACCESS_TOKEN"
-              "ghcr.io/github/github-mcp-server"
-            ];
-            envSecrets = {
-              GITHUB_PERSONAL_ACCESS_TOKEN = "github_token";
-            };
-          };
-
-          slite = {
-            type = "stdio";
-            command = "npx";
-            args = [
-              "-y"
-              "slite-mcp-server"
-            ];
-            envSecrets = {
-              SLITE_API_KEY = "slite_api_key";
-            };
-          };
-
-          shortcut = {
-            type = "stdio";
-            command = "npx";
-            args = [
-              "-y"
-              "@shortcut/mcp"
-            ];
-            envSecrets = {
-              SHORTCUT_API_TOKEN = "shortcut_api_token";
-            };
-          };
         };
       };
     }

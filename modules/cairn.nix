@@ -1,6 +1,8 @@
 { config, ... }:
 
 {
+  sops.secrets.shortcut_api_token.sopsFile = ../secrets/common.yaml;
+
   programs.cairn = {
     enable = true;
     daemon.enable = true;
