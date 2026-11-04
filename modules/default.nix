@@ -24,6 +24,7 @@ let
     ./emacs.nix
     ./wallpaper.nix
     ./mise.nix
+    ./agorapulse.nix
   ];
 in
 {

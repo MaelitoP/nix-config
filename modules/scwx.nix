@@ -1,6 +1,11 @@
 { config, ... }:
 
 {
+  sops.secrets.scw_config = {
+    sopsFile = ../secrets/common.yaml;
+    path = "${config.xdg.configHome}/scw/config.yaml";
+  };
+
   programs.scwx = {
     enable = true;
     settings = {

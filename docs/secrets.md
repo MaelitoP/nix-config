@@ -23,11 +23,19 @@ The age key is referenced in various parts of this Nix configuration to unlock s
 
 ## 3. Organizing secrets
 
-Secrets are split across multiple YAML files in the [`secrets/`](../secrets/) directory:
+Secrets are split across several files in the [`secrets/`](../secrets/) directory:
 
-- **`secrets/common.yaml`** — Application tokens: `github_token`, `slite_api_key`, `slack_bot_token`, `shortcut_api_token`, `openai_token`
+- **`secrets/common.yaml`** — Tokens and personal config: `github_token`, `npm_access_token`, `intelephense_licence`, `slite_api_key`, `shortcut_api_token`, `slack_bot_token`, `openai_token`, `1password_secret_key`, `netrc` (`~/.netrc`), `scw_config` (`~/.config/scw/config.yaml`)
 - **`secrets/gpg.yaml`** — GPG keys: `gpg_private_key`, `gpg_passphrase`
-- **`secrets/ssh.yaml`** — SSH keys: `id_rsa`, `id_rsa_pub`
+- **`secrets/ssh.yaml`** — SSH keys: `id_rsa`, `id_rsa_pub`, `id_ed25519_scaleway`, `id_ed25519_scaleway_pub`
+- **`secrets/agorapulse.yaml`** — Everything tied to the Agorapulse job, so it can be dropped in one go: pulse tokens, `aws_credentials`, `nomad_token`, `historical_netrc`, `p12_password`
+- **`secrets/client-key_dev.p12`** — The dev client certificate, encrypted in sops binary format
+- **`secrets/wireguard.yaml`** — `wg_laptop_private_key`, decrypted at system level into `/run/secrets` for `wg-quick`
+
+Secrets reach the machine in one of two ways:
+
+- **Read-only symlinks** (`sops.secrets.<name>.path`), for files that tools only read: SSH and GPG keys, `~/.netrc`, the scw config, the nomad token, the `.p12`.
+- **Plain files written on every activation**, for files that other tools also write to: `~/.agorapulse/environment/*` (pulse), `~/.aws/credentials`, `~/.config/npm/npmrc`. [`modules/agorapulse.nix`](../modules/agorapulse.nix) decrypts these with `sops` directly, because on macOS the sops-nix agent reloads asynchronously after activation.
 
 To add a new secret:
 
@@ -49,7 +57,7 @@ To add a new secret:
 
 This repository includes a `.sops.yaml` file in its root directory. This file defines encryption rules to ensure consistency and security when managing secrets. Here is an overview of its configuration:
 
-- **`path_regex`**: Specifies that files matching `secrets/.*\.yaml$` (all `.yaml` files in the `secrets` directory) should be encrypted.
+- **`path_regex`**: Specifies that files matching `secrets/.*$` (every file in the `secrets` directory, including binary ones like the `.p12`) should be encrypted.
 - **`age`**: Lists the AGE recipient public keys used for encryption. Only holders of the corresponding private key can decrypt the secrets.
 
 This configuration ensures that sensitive keys and data are always encrypted and follow a strict, predefined pattern.
@@ -59,9 +67,7 @@ This configuration ensures that sensitive keys and data are always encrypted and
 - **To update the list of keyholders (e.g., after generating a new age key):**
 
     ```console
-    sops updatekeys secrets/common.yaml
-    sops updatekeys secrets/gpg.yaml
-    sops updatekeys secrets/ssh.yaml
+    for f in secrets/*; do sops updatekeys "$f"; done
     ```
 
 - **To decrypt and view a secret file:**

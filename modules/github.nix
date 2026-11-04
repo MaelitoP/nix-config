@@ -11,4 +11,9 @@ in
     sopsFile = ../secrets/common.yaml;
     path = githubTokenPath;
   };
+
+  sops.secrets.netrc = {
+    sopsFile = ../secrets/common.yaml;
+    path = "${config.home.homeDirectory}/.netrc";
+  };
 }
