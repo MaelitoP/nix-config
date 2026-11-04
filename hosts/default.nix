@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -9,6 +14,7 @@ let
   platform = config.host.platform;
   extraCasks = config.host.extraCasks or [ ];
   extraBrews = config.host.extraBrews or [ ];
+  extraHosts = pkgs.writeText "extra-hosts" config.host.extraHosts;
   # nix-darwin 26.05 (x86 host) exposes brewBundleCmd as a string; unstable made it a function.
   brewBundleCmd = config.homebrew.onActivation.brewBundleCmd;
   brewBundle =
@@ -44,6 +50,11 @@ in
       type = types.listOf types.str;
       default = [ ];
       description = "Extra brews";
+    };
+    extraHosts = mkOption {
+      type = types.lines;
+      default = "";
+      description = "Lines kept in a managed block of /etc/hosts";
     };
   };
 
@@ -152,6 +163,15 @@ in
 
         # screencapture silently falls back to the Desktop when its location is missing.
         /usr/bin/sudo -u ${username} /bin/mkdir -p "${home}/Documents/screenshots"
+
+        # /etc/hosts stays a plain file: Docker Desktop and other tools write to it too.
+        hosts_tmp=$(/usr/bin/mktemp)
+        /usr/bin/awk '/^# nix-config start$/ { skip = 1 } !skip { print } /^# nix-config end$/ { skip = 0 }' /etc/hosts > "$hosts_tmp"
+        if [ -s ${extraHosts} ]; then
+          { echo "# nix-config start"; /bin/cat ${extraHosts}; echo "# nix-config end"; } >> "$hosts_tmp"
+        fi
+        /bin/cat "$hosts_tmp" > /etc/hosts
+        /bin/rm -f "$hosts_tmp"
       '';
 
       defaults = {
