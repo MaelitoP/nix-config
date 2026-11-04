@@ -9,7 +9,10 @@ let
   platform = config.host.platform;
   extraCasks = config.host.extraCasks or [ ];
   extraBrews = config.host.extraBrews or [ ];
-  brewBundle = config.homebrew.onActivation.brewBundleCmd { onlyCheck = false; };
+  # nix-darwin 26.05 (x86 host) exposes brewBundleCmd as a string; unstable made it a function.
+  brewBundleCmd = config.homebrew.onActivation.brewBundleCmd;
+  brewBundle =
+    if isFunction brewBundleCmd then brewBundleCmd { onlyCheck = false; } else brewBundleCmd;
   acceptXcodeLicense = "/bin/bash ${../scripts/accept-xcode-license.sh} || true";
 in
 {
