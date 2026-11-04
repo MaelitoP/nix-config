@@ -1,7 +1,10 @@
 { ... }:
 
 {
-  imports = [ ./default.nix ];
+  imports = [
+    ./default.nix
+    ./wireguard.nix
+  ];
 
   host = {
     username = "mael.lepetit";

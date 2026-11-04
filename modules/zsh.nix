@@ -102,6 +102,9 @@
       assume = "source assume";
 
       sleepstatus = "pmset -g | grep SleepDisabled";
+
+      vpnup = "sudo /run/current-system/sw/bin/wg-quick up laptop";
+      vpndown = "sudo /run/current-system/sw/bin/wg-quick down laptop";
     };
 
     initContent = ''
