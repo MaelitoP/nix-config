@@ -90,6 +90,8 @@ in
       ];
       brews = [
         "libomp"
+        "jpeg"
+        "zlib"
         {
           name = "emacs-plus@30";
           args = [

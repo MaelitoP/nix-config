@@ -9,7 +9,7 @@
         "--fg-daemon"
       ];
       RunAtLoad = true;
-      KeepAlive = true;
+      KeepAlive.Crashed = false;
       StandardOutPath = "/tmp/emacs-daemon.log";
       StandardErrorPath = "/tmp/emacs-daemon.log";
       EnvironmentVariables = {
