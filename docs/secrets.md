@@ -34,8 +34,8 @@ Secrets are split across several files in the [`secrets/`](../secrets/) director
 
 Secrets reach the machine in one of two ways:
 
-- **Read-only symlinks** (`sops.secrets.<name>.path`), for files that tools only read: SSH and GPG keys, `~/.netrc`, the scw config, the nomad token, the `.p12`.
-- **Plain files written on every activation**, for files that other tools also write to: `~/.agorapulse/environment/*` (pulse), `~/.aws/credentials`, `~/.config/npm/npmrc`. [`modules/agorapulse.nix`](../modules/agorapulse.nix) decrypts these with `sops` directly, because on macOS the sops-nix agent reloads asynchronously after activation.
+- **Read-only symlinks** (`sops.secrets.<name>.path`), for files that tools only read: SSH and GPG keys, `~/.netrc`, the nomad token, the `.p12`.
+- **Plain files written on every activation**, for files that other tools also write to or that refuse a symlink: `~/.agorapulse/environment/*` (pulse), `~/.aws/credentials`, `~/.config/npm/npmrc`, `~/.config/scw/config.yaml` (scw flags a symlinked config as too permissive). [`modules/agorapulse.nix`](../modules/agorapulse.nix) decrypts these with `sops` directly, because on macOS the sops-nix agent reloads asynchronously after activation.
 
 To add a new secret:
 
