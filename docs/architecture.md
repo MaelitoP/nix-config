@@ -44,7 +44,7 @@ Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `c
 | Terminal & editors | `ghostty`, `tmux` (catppuccin, resurrect/continuum, launchd-owned server), `emacs` (daemon via launchd), Neovim from the `nvim-config` flake |
 | Toolchains | `pkgs.nix` aggregates `rust`, `go`, `ocaml`, `php`, `python`, `haskell`, `java`, `lsp`; `mise.nix` writes the global mise config |
 | Identity & access | `git` (signed commits, https→ssh rewrite), `gpg`, `ssh` (keys from sops, keychain agent), `github`, `nix` (GitHub access token), `npm` |
-| Claude Code | `claude.nix`: `settings.json`, `CLAUDE.md`, skills, plugins, model settings; a launchd watcher in `zsh.nix` re-enables sleep when no session is left |
+| Claude Code | `claude.nix`: `settings.json`, `CLAUDE.md`, skills, plugins, model settings, the session-title hooks (`resources/claude/hooks/session-title.sh`: a background `Stop` hook asks Haiku for a title every few prompts, a `UserPromptSubmit` hook applies it like `/rename`); a launchd watcher in `zsh.nix` re-enables sleep when no session is left |
 | Own tools | `cairn` (daemon), `scwx` (Scaleway helper + scw config) |
 | Work (Agorapulse) | `agorapulse.nix`: pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate |
 | Look | catppuccin mocha everywhere (`modules/default.nix`), `wallpaper` |

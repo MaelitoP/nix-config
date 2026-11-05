@@ -41,21 +41,68 @@ let
 
   settingsFile = pkgs.writeText "claude-settings.json" (
     builtins.toJSON (
-      {
-        "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-        enabledPlugins = cfg.settings.enabledPlugins;
-        alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
-        cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
-        attribution = cfg.settings.attribution;
-        env = cfg.settings.env;
-        permissions = {
-          allow = cfg.settings.permissions.allow;
-        };
-        modelSettings = cfg.settings.modelSettings;
-      }
-      // optionalAttrs (cfg.settings.model != null) { model = cfg.settings.model; }
+      recursiveUpdate (
+        {
+          "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+          enabledPlugins = cfg.settings.enabledPlugins;
+          alwaysThinkingEnabled = cfg.settings.alwaysThinkingEnabled;
+          cleanupPeriodDays = cfg.settings.cleanupPeriodDays;
+          attribution = cfg.settings.attribution;
+          env = cfg.settings.env;
+          permissions = {
+            allow = cfg.settings.permissions.allow;
+          };
+          modelSettings = cfg.settings.modelSettings;
+          hooks = {
+            UserPromptSubmit = [
+              {
+                hooks = [
+                  {
+                    type = "command";
+                    command = "${sessionTitleHook}/bin/claude-session-title apply";
+                    timeout = 10;
+                  }
+                ];
+              }
+            ];
+            SessionStart = [
+              {
+                matcher = "resume";
+                hooks = [
+                  {
+                    type = "command";
+                    command = "${sessionTitleHook}/bin/claude-session-title apply";
+                    timeout = 10;
+                  }
+                ];
+              }
+            ];
+            Stop = [
+              {
+                hooks = [
+                  {
+                    type = "command";
+                    command = "${sessionTitleHook}/bin/claude-session-title refresh";
+                    async = true;
+                  }
+                ];
+              }
+            ];
+          };
+        }
+        // optionalAttrs (cfg.settings.model != null) { model = cfg.settings.model; }
+      ) cfg.settings.extra
     )
   );
+
+  sessionTitleHook = pkgs.writeShellApplication {
+    name = "claude-session-title";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.git
+    ];
+    text = builtins.readFile ../resources/claude/hooks/session-title.sh;
+  };
 
   claudeMdFile = ../resources/claude/CLAUDE.md;
   skillsDir = ../resources/claude/skills;
@@ -133,6 +180,12 @@ in
         type = types.listOf types.str;
         default = [ ];
         description = "Tool permission rules always allowed";
+      };
+
+      extra = mkOption {
+        type = types.attrs;
+        default = { };
+        description = "Additional settings.json keys written verbatim";
       };
     };
 
@@ -268,7 +321,7 @@ in
             pr = "";
           };
 
-          model = "opus";
+          model = "fable";
           modelSettings = {
             "claude-opus-5-5".effortLevel = "xhigh";
             "claude-fable-5-1".effortLevel = "high";
@@ -288,6 +341,18 @@ in
             "Read(~/.claude/plugins/cache/agorapulse-marketplace/project-memory/**/skills/**)"
             "Bash(git -C ${config.home.homeDirectory}/dev/claude-projects/shared:*)"
           ];
+
+          extra = {
+            permissions.defaultMode = "auto";
+            theme = "dark-ansi";
+            editorMode = "vim";
+            teammateMode = "auto";
+            timeFormat = "auto";
+            dialogExpiry = "never";
+            feedbackDrafts = "off";
+            switchModelsOnFlag = false;
+            pluginConfigs."cc-plugin-agents-md@builtin".options.instructionFiles = "claude-md-or-agents-md";
+          };
         };
       };
     }
