@@ -28,13 +28,13 @@ Secrets are split across several files in the [`secrets/`](../secrets/) director
 - **`secrets/common.yaml`** — Tokens and personal config: `github_token`, `npm_access_token`, `intelephense_licence`, `slite_api_key`, `shortcut_api_token`, `slack_bot_token`, `openai_token`, `1password_secret_key`, `netrc` (`~/.netrc`), `scw_config` (`~/.config/scw/config.yaml`)
 - **`secrets/gpg.yaml`** — GPG keys: `gpg_private_key`, `gpg_passphrase`
 - **`secrets/ssh.yaml`** — SSH keys: `id_rsa`, `id_rsa_pub`, `id_ed25519_scaleway`, `id_ed25519_scaleway_pub`
-- **`secrets/agorapulse.yaml`** — Everything tied to the Agorapulse job, so it can be dropped in one go: pulse tokens, `aws_credentials`, `nomad_token`, `historical_netrc`, `p12_password`
+- **`secrets/agorapulse.yaml`** — Everything tied to the Agorapulse job, so it can be dropped in one go: pulse tokens, `aws_credentials`, `nomad_token`, `historical_netrc`, `grafana_token`, `p12_password`
 - **`secrets/client-key_dev.p12`** — The dev client certificate, encrypted in sops binary format
 - **`secrets/wireguard.yaml`** — `wg_laptop_private_key`, decrypted at system level into `/run/secrets` for `wg-quick`
 
 Secrets reach the machine in one of two ways:
 
-- **Read-only symlinks** (`sops.secrets.<name>.path`), for files that tools only read: SSH and GPG keys, `~/.netrc`, the nomad token, the `.p12`.
+- **Read-only symlinks** (`sops.secrets.<name>.path`), for files that tools only read: SSH and GPG keys, `~/.netrc`, the nomad and Grafana tokens, the `.p12`.
 - **Plain files written on every activation**, for files that other tools also write to or that refuse a symlink: `~/.agorapulse/environment/*` (pulse), `~/.aws/credentials`, `~/.config/npm/npmrc`, `~/.config/scw/config.yaml` (scw flags a symlinked config as too permissive). [`modules/agorapulse.nix`](../modules/agorapulse.nix) decrypts these with `sops` directly, because on macOS the sops-nix agent reloads asynchronously after activation.
 
 To add a new secret:

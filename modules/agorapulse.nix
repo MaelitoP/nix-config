@@ -14,6 +14,42 @@ let
     file: key:
     "SOPS_AGE_KEY_FILE=${config.sops.age.keyFile} ${pkgs.sops}/bin/sops decrypt --extract '[\"${key}\"]' ${file}";
 
+  # The dev .p12 is encrypted with RC2/3DES, which OpenSSL 3 only reads through the legacy provider.
+  opensslLegacyConf = pkgs.writeText "openssl-legacy.cnf" ''
+    openssl_conf = openssl_init
+
+    [openssl_init]
+    providers = provider_sect
+
+    [provider_sect]
+    default = default_sect
+    legacy = legacy_sect
+
+    [default_sect]
+    activate = 1
+
+    [legacy_sect]
+    activate = 1
+  '';
+
+  grafana = pkgs.writeShellApplication {
+    name = "grafana";
+    runtimeInputs = [
+      pkgs.curl
+      pkgs.jq
+    ];
+    text = ''
+      GRAFANA_URL=https://grafana.mention.net:3000
+      GRAPHITE_UID=000000001
+      P12_PATH=${p12Path}
+      P12_PASSWORD_FILE=${config.sops.secrets.p12_password.path}
+      TOKEN_FILE=${config.sops.secrets.grafana_token.path}
+      export OPENSSL_CONF=${opensslLegacyConf}
+      export OPENSSL_MODULES=${pkgs.openssl.out}/lib/ossl-modules
+    ''
+    + builtins.readFile ../resources/grafana.sh;
+  };
+
   environment = {
     ".SCALEWAY_SSH_CONFIG" = ''SSH_KEY="${config.xdg.dataHome}/ssh/id_ed25519_scaleway"'';
     ORGANIZATION_UNIT = "tech/data";
@@ -48,6 +84,10 @@ in
       sopsFile = ../secrets/agorapulse.yaml;
       path = "${config.xdg.configHome}/historical/netrc.historical_ingestor";
     };
+    grafana_token = {
+      sopsFile = ../secrets/agorapulse.yaml;
+      path = "${config.xdg.configHome}/grafana/token";
+    };
     p12_password.sopsFile = ../secrets/agorapulse.yaml;
     client_key_dev_p12 = {
       sopsFile = ../secrets/client-key_dev.p12;
@@ -57,6 +97,8 @@ in
   };
 
   xdg.configFile."historical/ca.pem".source = ../resources/historical-ca.pem;
+
+  home.packages = [ grafana ];
 
   programs.zsh.initContent = ''
     export P12_CERTIFICATE_PATH="${p12Path}"

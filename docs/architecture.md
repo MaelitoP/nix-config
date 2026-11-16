@@ -46,7 +46,7 @@ Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `c
 | Identity & access | `git` (signed commits, https→ssh rewrite), `gpg`, `ssh` (keys from sops, keychain agent), `github`, `nix` (GitHub access token), `npm` |
 | Claude Code | `claude.nix`: `settings.json`, `CLAUDE.md`, skills, plugins, model settings, the session-title hooks (`resources/claude/hooks/session-title.sh`: a background `Stop` hook asks Haiku for a title every few prompts, a `UserPromptSubmit` hook applies it like `/rename`); a launchd watcher in `zsh.nix` re-enables sleep when no session is left |
 | Own tools | `cairn` (daemon), `scwx` (Scaleway helper + scw config) |
-| Work (Agorapulse) | `agorapulse.nix`: pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate |
+| Work (Agorapulse) | `agorapulse.nix`: pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate, the `grafana` CLI (`resources/grafana.sh`: read-only Grafana API and Graphite queries over the client certificate) |
 | Look | catppuccin mocha everywhere (`modules/default.nix`), `wallpaper` |
 
 Long-running user services are launchd agents declared next to their tool: tmux server, Emacs daemon, cairn daemon, Claude sleep watcher, `ssh-add` into the keychain, and the sops-nix agent.
@@ -73,4 +73,4 @@ Work-only secrets are isolated in `secrets/agorapulse.yaml` and `secrets/client-
 
 ## Leaving Agorapulse
 
-The work-specific parts are meant to be removable in one pass: `modules/agorapulse.nix`, `secrets/agorapulse.yaml`, `secrets/client-key_dev.p12`, `resources/historical-ca.pem`, `host.extraHosts` in `hosts/maelito-arm.nix`, the work aliases in `modules/zsh.nix`, and the Agorapulse repositories in `modules/cairn.nix`.
+The work-specific parts are meant to be removable in one pass: `modules/agorapulse.nix`, `secrets/agorapulse.yaml`, `secrets/client-key_dev.p12`, `resources/historical-ca.pem`, `resources/grafana.sh`, `host.extraHosts` in `hosts/maelito-arm.nix`, the work aliases in `modules/zsh.nix`, and the Agorapulse repositories in `modules/cairn.nix`.
