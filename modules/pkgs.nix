@@ -43,9 +43,14 @@ let
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
       apple-sdk_15
     ]
-    # On macOS mise is a Homebrew formula.
+    # On macOS these come from Homebrew, and Claude Code from its own installer.
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       mise
+      claude-code
+      scaleway-cli
+      ghz
+      mysql84
+      qemu
     ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
