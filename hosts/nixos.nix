@@ -51,5 +51,12 @@
   environment.systemPackages = with pkgs; [
     google-chrome
     spotify
+    jetbrains.goland
+    jetbrains.phpstorm
+    jetbrains.pycharm
+    jetbrains.rust-rover
+    jetbrains.idea
+    jetbrains.webstorm
+    android-studio
   ];
 }
