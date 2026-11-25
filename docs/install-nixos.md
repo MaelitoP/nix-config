@@ -61,7 +61,7 @@ NixOS boots through lanzaboote, which signs the boot files with keys generated o
    sudo sbctl verify
    ```
 
-2. Reboot into the firmware (ASUS: `Boot` → `Secure Boot`), set `Secure Boot Mode` to `Custom`, open `Key Management` → `PK Management` and delete the Platform Key. This puts the firmware in Setup Mode. Do not use "Clear Secure Boot Keys": it also empties the revocation list. Save and boot NixOS.
+2. Reboot into the firmware (Del or F2 at power-on; `systemctl reboot --firmware-setup` does not work on this board. ASUS: `Boot` → `Secure Boot`), set `Secure Boot Mode` to `Custom`, open `Key Management` → `PK Management` and delete the Platform Key. This puts the firmware in Setup Mode. Do not use "Clear Secure Boot Keys": it also empties the revocation list. Save and boot NixOS.
 
 3. Enroll the keys. `--microsoft` is required: without Microsoft's certificates Windows stops booting and the graphics card may not initialise.
 

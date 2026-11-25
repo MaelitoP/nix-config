@@ -11,7 +11,7 @@ This repository describes whole workstations: two Macs (nix-darwin, Homebrew app
 | `hosts/darwin.nix` | macOS system layer: nix-darwin settings, Homebrew, macOS defaults, activation scripts |
 | `hosts/maelito-arm.nix`, `hosts/maelito-x86.nix` | Per-machine values: user, platform, extra brews/casks, extra `/etc/hosts` lines, work module |
 | `hosts/nixos.nix` | NixOS system layer: boot loader, NetworkManager, user, sound, Docker, 1Password, GUI apps |
-| `hosts/hyprland.nix` | The desktop session (Hyprland behind greetd); swapping desktops means swapping this import. It pulls in `modules/hyprland.nix` |
+| `hosts/hyprland.nix` | The desktop session (Hyprland behind greetd); swapping desktops means swapping this import. It pulls in `modules/hyprland.nix` (window look, key bindings, launcher, notifications) and `modules/waybar.nix` (the top bar) |
 | `hosts/maelito-desktop/` | The NixOS desktop: hardware, NVIDIA driver, Secure Boot through lanzaboote, disk layout (`disk.nix`, applied by disko at install) |
 | `hosts/wireguard.nix` | The `laptop` WireGuard tunnel (arm host only) |
 | `modules/` | home-manager modules, one per tool; `modules/default.nix` lists the ones every host gets, `modules/agorapulse.nix` is imported by work hosts only |

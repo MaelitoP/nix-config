@@ -11,6 +11,8 @@ let
   workspaces = builtins.genList (i: i + 1) 9;
 in
 {
+  imports = [ ./waybar.nix ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     # Hyprland and its portal come from the NixOS module.
@@ -35,12 +37,34 @@ in
         };
 
         general = {
-          gaps_in = 4;
-          gaps_out = 8;
+          gaps_in = 5;
+          gaps_out = 12;
           border_size = 2;
+          col = {
+            active_border = {
+              colors = [
+                "rgba(cba6f7ff)"
+                "rgba(89b4faff)"
+              ];
+              angle = 45;
+            };
+            inactive_border = "rgba(313244ff)";
+          };
         };
 
-        decoration.rounding = 8;
+        decoration = {
+          rounding = 12;
+          blur = {
+            enabled = true;
+            size = 6;
+            passes = 3;
+          };
+          shadow = {
+            enabled = true;
+            range = 12;
+            render_power = 3;
+          };
+        };
       };
 
       on._args = [
@@ -85,7 +109,33 @@ in
     };
   };
 
-  programs.waybar.enable = true;
-  programs.fuzzel.enable = true;
-  services.mako.enable = true;
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        font = "JetBrainsMono Nerd Font:size=13";
+        terminal = "ghostty -e";
+        width = 40;
+        lines = 10;
+        horizontal-pad = 20;
+        vertical-pad = 16;
+        inner-pad = 10;
+      };
+      border = {
+        width = 2;
+        radius = 12;
+      };
+    };
+  };
+
+  services.mako = {
+    enable = true;
+    settings = {
+      font = "JetBrainsMono Nerd Font 11";
+      border-size = 2;
+      border-radius = 12;
+      padding = "12";
+      default-timeout = 5000;
+    };
+  };
 }

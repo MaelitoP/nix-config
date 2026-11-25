@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   programs.ghostty = {
@@ -33,6 +33,10 @@
         "ctrl+left=csi:1;5D"
         "ctrl+right=csi:1;5C"
       ];
+    }
+    # Lets the compositor's blur show through; macOS keeps an opaque window.
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+      background-opacity = 0.9;
     };
   };
 }
