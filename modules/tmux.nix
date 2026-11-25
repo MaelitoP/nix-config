@@ -6,6 +6,14 @@
 }:
 
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  zsh = if isDarwin then "/bin/zsh" else "${pkgs.zsh}/bin/zsh";
+  nvimSockets =
+    if isDarwin then
+      ''"$(getconf DARWIN_USER_TEMP_DIR)nvim.$(id -un)"/*/nvim.*.0''
+    else
+      ''"$XDG_RUNTIME_DIR"/nvim.*.0'';
+
   claudeResumeHook = pkgs.writeShellApplication {
     name = "tmux-resurrect-claude-resume";
     runtimeInputs = [
@@ -30,7 +38,7 @@ let
       rm -rf "$nvim_dir"
       mkdir -p "$nvim_dir"
       shopt -s nullglob
-      for socket in "$(getconf DARWIN_USER_TEMP_DIR)nvim.$(id -un)"/*/nvim.*.0; do
+      for socket in ${nvimSockets}; do
         id="$(timeout 2 nvim --server "$socket" --remote-expr "getenv('TMUX_PANE')")" || continue
         target="''${pane_targets[$id]:-}"
         [ -n "$target" ] || continue
@@ -92,7 +100,7 @@ in
   programs.tmux = {
     enable = true;
     baseIndex = 1;
-    shell = "/bin/zsh";
+    shell = zsh;
 
     plugins = with pkgs; [
       tmuxPlugins.sensible
@@ -155,7 +163,7 @@ in
     ];
 
     extraConfig = ''
-      set-option -g default-command "/bin/zsh -l"
+      set-option -g default-command "${zsh} -l"
 
       set-environment -g LANG "en_US.UTF-8"
 
