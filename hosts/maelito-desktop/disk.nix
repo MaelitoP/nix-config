@@ -1,7 +1,7 @@
 {
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/disk/by-id/ata-Samsung_SSD_870_QVO_1TB_SERIAL";
+    device = "/dev/disk/by-id/ata-Samsung_SSD_870_QVO_1TB_S5RRNF0T714600E";
     content = {
       type = "gpt";
       partitions = {
