@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  imports = [ ./default.nix ];
+  imports = [ ./darwin.nix ];
 
   host = {
     username = "maelito";

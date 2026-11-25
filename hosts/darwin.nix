@@ -9,11 +9,9 @@ with lib;
 
 let
   username = config.host.username;
-  realname = config.host.realname or username;
-  home = config.host.home or "/Users/${username}";
-  platform = config.host.platform;
-  extraCasks = config.host.extraCasks or [ ];
-  extraBrews = config.host.extraBrews or [ ];
+  home = config.host.home;
+  extraCasks = config.host.extraCasks;
+  extraBrews = config.host.extraBrews;
   extraHosts = pkgs.writeText "extra-hosts" config.host.extraHosts;
   # nix-darwin 26.05 (x86 host) exposes brewBundleCmd as a string; unstable made it a function.
   brewBundleCmd = config.homebrew.onActivation.brewBundleCmd;
@@ -22,25 +20,9 @@ let
   acceptXcodeLicense = "/bin/bash ${../scripts/accept-xcode-license.sh} || true";
 in
 {
+  imports = [ ./common.nix ];
+
   options.host = {
-    username = mkOption {
-      type = types.str;
-      description = "Username";
-    };
-    realname = mkOption {
-      type = types.str;
-      default = config.host.username;
-      description = "Real name (defaults to username)";
-    };
-    home = mkOption {
-      type = types.str;
-      default = "/Users/${config.host.username}";
-      description = "Home directory";
-    };
-    platform = mkOption {
-      type = types.str;
-      description = "Platform (e.g. 'aarch64-darwin')";
-    };
     extraCasks = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -51,43 +33,19 @@ in
       default = [ ];
       description = "Extra brews";
     };
-    extraHosts = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Lines kept in a managed block of /etc/hosts";
-    };
   };
 
   config = {
     system.stateVersion = 5;
     system.primaryUser = username;
 
-    users.users.maelito = {
-      name = realname;
-      home = home;
-    };
-
     security.pam.services.sudo_local.touchIdAuth = true;
     security.pam.services.sudo_local.reattach = true;
     security.sudo.extraConfig = ''
-      ${realname} ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 1, /usr/bin/pmset -a disablesleep 0
+      ${config.host.realname} ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 1, /usr/bin/pmset -a disablesleep 0
     '';
 
     networking.computerName = "maelito";
-
-    nixpkgs.hostPlatform = platform;
-    nix.settings.trusted-users = [
-      "root"
-      realname
-    ];
-    nix.settings.download-buffer-size = 268435456;
-
-    programs.zsh.enable = true;
-    programs.zsh.enableGlobalCompInit = false;
-
-    # git rewrites https://github.com/ to ssh (modules/git.nix); without this a fresh machine fails every clone with "Host key verification failed".
-    programs.ssh.knownHosts."github.com".publicKey =
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
 
     homebrew = {
       enable = true;

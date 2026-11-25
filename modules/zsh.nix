@@ -78,23 +78,6 @@
       ec = "emacsclient -c -n";
       et = "emacsclient -t";
 
-      cdi = "cd ~/dev/platform-ingestor";
-      iup = "cdi; ./tools/devenv.sh up";
-      istop = "cdi; ./tools/devenv.sh stop";
-      irdbt = "cdi; ./tools/reset-db.sh test";
-      irdtd = "cdi; ./tools/reset-db.sh dev";
-      itest = "cdi; ./tools/run-tests.sh";
-
-      cdm = "cd ~/dev/mention";
-      mup = "cdm; ./tools/devenv.sh up";
-      mstop = "cdm; ./tools/devenv.sh stop";
-      mrdbt = "cdm; ./tools/reset-db.sh test";
-      mrdtd = "cdm; ./tools/reset-db.sh dev";
-      mtest = "cdm; ./tools/run-tests.sh";
-      mphp = "docker exec -it php_cli";
-      mysql56 = "mphp mysql -u mention -p -h mysql_5_6";
-      mysql57 = "mphp mysql -u mention -p -h mysql_5_7";
-
       brdiff = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff origin/$def_branch...";
       brfiles = "def_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); git diff --name-only origin/$def_branch...";
       gpf = "git push --force-with-lease";

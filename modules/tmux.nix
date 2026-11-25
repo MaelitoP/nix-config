@@ -132,10 +132,13 @@ in
           set -gF @cpu_medium_bg_color "#{E:@catppuccin_status_module_text_bg}"
           set -gF @cpu_high_bg_color "#{E:@thm_red}"
 
-          source ${cairnModule}
           source ${ramModule}
 
-          set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}"
+          set -g status-right ""
+          ${lib.optionalString config.programs.cairn.enable ''
+            source ${cairnModule}
+            set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}"
+          ''}
           set -agF status-right "#{E:@catppuccin_status_cpu}#{E:@catppuccin_status_ram}"
           set -ag status-right "#{E:@catppuccin_status_user}#{E:@catppuccin_status_date_time}"
         '';

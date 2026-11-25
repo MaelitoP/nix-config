@@ -75,6 +75,11 @@ let
   };
 in
 {
+  imports = [
+    ./cairn.nix
+    ./scwx.nix
+  ];
+
   sops.secrets = {
     nomad_token = {
       sopsFile = ../secrets/agorapulse.yaml;
@@ -99,6 +104,25 @@ in
   xdg.configFile."historical/ca.pem".source = ../resources/historical-ca.pem;
 
   home.packages = [ grafana ];
+
+  programs.zsh.shellAliases = {
+    cdi = "cd ~/dev/platform-ingestor";
+    iup = "cdi; ./tools/devenv.sh up";
+    istop = "cdi; ./tools/devenv.sh stop";
+    irdbt = "cdi; ./tools/reset-db.sh test";
+    irdtd = "cdi; ./tools/reset-db.sh dev";
+    itest = "cdi; ./tools/run-tests.sh";
+
+    cdm = "cd ~/dev/mention";
+    mup = "cdm; ./tools/devenv.sh up";
+    mstop = "cdm; ./tools/devenv.sh stop";
+    mrdbt = "cdm; ./tools/reset-db.sh test";
+    mrdtd = "cdm; ./tools/reset-db.sh dev";
+    mtest = "cdm; ./tools/run-tests.sh";
+    mphp = "docker exec -it php_cli";
+    mysql56 = "mphp mysql -u mention -p -h mysql_5_6";
+    mysql57 = "mphp mysql -u mention -p -h mysql_5_7";
+  };
 
   programs.zsh.initContent = ''
     export P12_CERTIFICATE_PATH="${p12Path}"

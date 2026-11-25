@@ -7,10 +7,11 @@ This repository describes a whole macOS workstation: the system (nix-darwin), th
 | Path | Role |
 |---|---|
 | `flake.nix` | Inputs and the `mkDarwinConfig` function that assembles a host |
-| `hosts/default.nix` | System layer shared by every host: nix-darwin settings, Homebrew, macOS defaults, activation scripts |
-| `hosts/maelito-arm.nix`, `hosts/maelito-x86.nix` | Per-machine values: user, platform, extra brews/casks, extra `/etc/hosts` lines |
+| `hosts/common.nix` | `host.*` options and the system settings that are identical on every OS: user, nix settings, zsh, GitHub's SSH host key, fonts |
+| `hosts/darwin.nix` | macOS system layer: nix-darwin settings, Homebrew, macOS defaults, activation scripts |
+| `hosts/maelito-arm.nix`, `hosts/maelito-x86.nix` | Per-machine values: user, platform, extra brews/casks, extra `/etc/hosts` lines, work module |
 | `hosts/wireguard.nix` | The `laptop` WireGuard tunnel (arm host only) |
-| `modules/` | home-manager modules, one per tool; `modules/default.nix` lists them |
+| `modules/` | home-manager modules, one per tool; `modules/default.nix` lists the ones every host gets, `modules/agorapulse.nix` is imported by work hosts only |
 | `resources/` | Files deployed as-is: wallpaper, Claude `CLAUDE.md` and skills, the historical cluster CA |
 | `secrets/` | sops-encrypted secrets, see [secrets.md](secrets.md) |
 | `scripts/` | Bootstrap helpers called by `install.sh` and the `justfile` |
@@ -27,14 +28,14 @@ This repository describes a whole macOS workstation: the system (nix-darwin), th
 
 Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `cairn`) expose home-manager modules; their packages are pinned per host to that host's nixpkgs.
 
-## System layer (`hosts/default.nix`)
+## System layer (`hosts/common.nix`, `hosts/darwin.nix`)
 
-- **nix-darwin basics**: primary user, Touch ID for sudo, a passwordless `pmset` rule used by the Claude sleep guard, GitHub's SSH host key, zsh.
+- **Shared** (`common.nix`): the user, nix settings, zsh, GitHub's SSH host key, fonts (`modules/fonts.nix`).
+- **nix-darwin basics**: primary user, Touch ID for sudo, a passwordless `pmset` rule used by the Claude sleep guard.
 - **Homebrew**: brews, casks and Mac App Store apps are declared here (plus `extraBrews`/`extraCasks` per host). Activation runs `brew bundle` with `upgrade = true`, and a failed bundle only prints a warning instead of aborting the whole activation. There is no `cleanup`: removing something from the list does not uninstall it.
 - **macOS defaults**: Dock, key repeat, trackpad, dark mode, screenshot location.
 - **Activation extras**: links Emacs.app and copies Emacs Client.app into `/Applications`, creates `~/Documents/screenshots`, and rewrites the `# nix-config start/end` block of `/etc/hosts` from `host.extraHosts`. `/etc/hosts` stays a plain file because Docker Desktop writes to it too.
 - **WireGuard** (`hosts/wireguard.nix`): `networking.wg-quick.interfaces.laptop`, full tunnel, `autostart = false`. The private key is a system-level sops secret in `/run/secrets`, re-decrypted at boot by the `sops-install-secrets` daemon. `vpnup` / `vpndown` bring it up and down.
-- **Fonts**: `modules/fonts.nix`, installed system-wide from `flake.nix`.
 
 ## Home layer (`modules/`)
 
@@ -45,8 +46,7 @@ Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `c
 | Toolchains | `pkgs.nix` aggregates `rust`, `go`, `ocaml`, `php`, `python`, `haskell`, `java`, `lsp`; `mise.nix` writes the global mise config |
 | Identity & access | `git` (signed commits, https→ssh rewrite), `gpg`, `ssh` (keys from sops, keychain agent), `github`, `nix` (GitHub access token), `npm` |
 | Claude Code | `claude.nix`: `settings.json`, `CLAUDE.md`, skills, plugins, model settings, the session-title hooks (`resources/claude/hooks/session-title.sh`: a background `Stop` hook asks Haiku for a title every few prompts, a `UserPromptSubmit` hook applies it like `/rename`); a launchd watcher in `zsh.nix` re-enables sleep when no session is left |
-| Own tools | `cairn` (daemon), `scwx` (Scaleway helper + scw config) |
-| Work (Agorapulse) | `agorapulse.nix`: pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate, the `grafana` CLI (`resources/grafana.sh`: read-only Grafana API and Graphite queries over the client certificate) |
+| Work (Agorapulse) | `agorapulse.nix`, imported by `hosts/maelito-arm.nix` only: `cairn` (daemon) and `scwx` (Scaleway helper + scw config), work shell aliases, pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate, the `grafana` CLI (`resources/grafana.sh`: read-only Grafana API and Graphite queries over the client certificate) |
 | Look | catppuccin mocha everywhere (`modules/default.nix`), `wallpaper` |
 
 Long-running user services are launchd agents declared next to their tool: tmux server, Emacs daemon, cairn daemon, Claude sleep watcher, `ssh-add` into the keychain, and the sops-nix agent.
@@ -73,4 +73,4 @@ Work-only secrets are isolated in `secrets/agorapulse.yaml` and `secrets/client-
 
 ## Leaving Agorapulse
 
-The work-specific parts are meant to be removable in one pass: `modules/agorapulse.nix`, `secrets/agorapulse.yaml`, `secrets/client-key_dev.p12`, `resources/historical-ca.pem`, `resources/grafana.sh`, `host.extraHosts` in `hosts/maelito-arm.nix`, the work aliases in `modules/zsh.nix`, and the Agorapulse repositories in `modules/cairn.nix`.
+The work-specific parts are meant to be removable in one pass: `modules/agorapulse.nix` and its import in `hosts/maelito-arm.nix`, `secrets/agorapulse.yaml`, `secrets/client-key_dev.p12`, `resources/historical-ca.pem`, `resources/grafana.sh`, and `host.extraHosts` in `hosts/maelito-arm.nix`.

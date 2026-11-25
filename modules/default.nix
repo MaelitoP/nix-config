@@ -17,14 +17,11 @@ let
     ./fzf.nix
     ./tmux.nix
     ./fastfetch.nix
-    ./scwx.nix
-    ./cairn.nix
     ./claude.nix
     ./ghostty.nix
     ./emacs.nix
     ./wallpaper.nix
     ./mise.nix
-    ./agorapulse.nix
   ];
 in
 {

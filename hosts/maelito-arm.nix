@@ -2,9 +2,11 @@
 
 {
   imports = [
-    ./default.nix
+    ./darwin.nix
     ./wireguard.nix
   ];
+
+  home-manager.users.maelito.imports = [ ../modules/agorapulse.nix ];
 
   host = {
     username = "mael.lepetit";
