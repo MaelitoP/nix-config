@@ -1,7 +1,15 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   wallpaper = "${config.home.homeDirectory}/Pictures/background.jpg";
+  lua = lib.generators.mkLuaInline;
+  bind = keys: action: {
+    _args = [
+      keys
+      (lua "hl.dsp.${action}")
+    ];
+  };
+  workspaces = builtins.genList (i: i + 1) 9;
 in
 {
   wayland.windowManager.hyprland = {
@@ -9,57 +17,72 @@ in
     # Hyprland and its portal come from the NixOS module.
     package = null;
     portalPackage = null;
-    configType = "hyprlang";
+    configType = "lua";
 
     settings = {
-      "$mod" = "SUPER";
-
-      monitor = ",preferred,auto,1";
-
-      exec-once = [ "waybar" ];
-
-      input = {
-        kb_layout = "us";
-        kb_variant = "intl";
-        repeat_delay = 250;
-        repeat_rate = 40;
+      monitor = {
+        output = "";
+        mode = "preferred";
+        position = "auto";
+        scale = 1;
       };
 
-      general = {
-        gaps_in = 4;
-        gaps_out = 8;
-        border_size = 2;
+      config = {
+        input = {
+          kb_layout = "us";
+          kb_variant = "intl";
+          repeat_delay = 250;
+          repeat_rate = 40;
+        };
+
+        general = {
+          gaps_in = 4;
+          gaps_out = 8;
+          border_size = 2;
+        };
+
+        decoration.rounding = 8;
       };
 
-      decoration.rounding = 8;
+      on._args = [
+        "hyprland.start"
+        (lua ''
+          function()
+            hl.exec_cmd("waybar")
+          end'')
+      ];
 
       bind = [
-        "$mod, Return, exec, ghostty"
-        "$mod, Space, exec, fuzzel"
-        "$mod, Q, killactive"
-        "$mod, F, fullscreen"
-        "$mod, V, togglefloating"
-        "$mod SHIFT, E, exit"
+        (bind "SUPER + RETURN" ''exec_cmd("ghostty")'')
+        (bind "SUPER + SPACE" ''exec_cmd("fuzzel")'')
+        (bind "SUPER + Q" "window.close()")
+        (bind "SUPER + V" ''window.float({ action = "toggle" })'')
+        (bind "SUPER + SHIFT + E" "exit()")
 
-        "$mod, H, movefocus, l"
-        "$mod, L, movefocus, r"
-        "$mod, K, movefocus, u"
-        "$mod, J, movefocus, d"
+        (bind "SUPER + H" ''focus({ direction = "left" })'')
+        (bind "SUPER + L" ''focus({ direction = "right" })'')
+        (bind "SUPER + K" ''focus({ direction = "up" })'')
+        (bind "SUPER + J" ''focus({ direction = "down" })'')
 
-        "$mod SHIFT, H, movewindow, l"
-        "$mod SHIFT, L, movewindow, r"
-        "$mod SHIFT, K, movewindow, u"
-        "$mod SHIFT, J, movewindow, d"
+        {
+          _args = [
+            "SUPER + mouse:272"
+            (lua "hl.dsp.window.drag()")
+            { mouse = true; }
+          ];
+        }
+        {
+          _args = [
+            "SUPER + mouse:273"
+            (lua "hl.dsp.window.resize()")
+            { mouse = true; }
+          ];
+        }
       ]
-      ++ builtins.concatMap (n: [
-        "$mod, ${toString n}, workspace, ${toString n}"
-        "$mod SHIFT, ${toString n}, movetoworkspace, ${toString n}"
-      ]) (builtins.genList (i: i + 1) 9);
-
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-      ];
+      ++ map (n: bind "SUPER + ${toString n}" "focus({ workspace = ${toString n} })") workspaces
+      ++ map (
+        n: bind "SUPER + SHIFT + ${toString n}" "window.move({ workspace = ${toString n} })"
+      ) workspaces;
     };
   };
 
