@@ -1,5 +1,5 @@
 ---
-name: ship
+name: investigate
 description: Take an idea or ticket from exploration to a draft PR — investigate, plan approaches, create Shortcut ticket, implement, and open a PR
 argument-hint: <ticket-id or idea description>
 disable-model-invocation: true
