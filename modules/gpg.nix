@@ -7,7 +7,7 @@
 }:
 
 let
-  pinentry = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-curses;
+  pinentry = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt;
 
 in
 {
@@ -20,6 +20,9 @@ in
     pinentry
     pkgs.gnupg
   ];
+
+  # Outside the graphical session pinentry falls back to a terminal prompt, which needs the tty.
+  programs.zsh.initContent = lib.mkIf pkgs.stdenv.hostPlatform.isLinux "export GPG_TTY=$(tty)";
 
   home.file."${config.xdg.dataHome}/gnupg/gpg-agent.conf".text = ''
     enable-ssh-support
