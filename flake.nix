@@ -57,6 +57,11 @@
     };
     catppuccin.url = "github:catppuccin/nix";
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -141,6 +146,7 @@
           modules = [
             { nixpkgs.pkgs = pkgsFor nixpkgs system; }
             inputs.disko.nixosModules.disko
+            inputs.lanzaboote.nixosModules.lanzaboote
             hostModule
             home-manager.nixosModules.home-manager
             homeManagerConfig

@@ -5,7 +5,7 @@ The desktop dual-boots Windows (2 TB NVMe, never touched here) and NixOS (1 TB S
 ## Before
 
 - Windows: Fast Startup off (`powercfg /h off`), anything worth keeping copied off the Linux disk.
-- Firmware: Secure Boot disabled for the install. FACEIT refuses to start until it is back on.
+- Firmware: Secure Boot disabled for the install (ASUS: `OS Type` on `Other OS`). FACEIT refuses to start until it is back on, see [Secure Boot](#secure-boot).
 - A USB key with the NixOS graphical ISO, and the age key (`keys.txt`) on a second drive.
 
 ## Install
@@ -49,4 +49,26 @@ The desktop dual-boots Windows (2 TB NVMe, never touched here) and NixOS (1 TB S
 
 - Connect to Wi-Fi (`nmtui`), clone this repository into `~/dev/nix-config`, then use `just rebuild`.
 - Remove the stale Ubuntu firmware entry: `efibootmgr` to list, `sudo efibootmgr -b <number> -B` to delete.
-- Secure Boot is still off at this point.
+
+## Secure Boot
+
+NixOS boots through lanzaboote, which signs the boot files with keys generated on the machine (`/var/lib/sbctl`). The firmware only accepts them once they are enrolled, next to Microsoft's so that Windows and the graphics card firmware keep loading.
+
+1. Check that the keys exist and the boot files are signed. Files under `EFI/Linux` and `EFI/systemd` must show as signed; Windows files are not on this disk.
+
+   ```
+   sudo sbctl status
+   sudo sbctl verify
+   ```
+
+2. Reboot into the firmware (ASUS: `Boot` → `Secure Boot`), set `Secure Boot Mode` to `Custom`, open `Key Management` → `PK Management` and delete the Platform Key. This puts the firmware in Setup Mode. Do not use "Clear Secure Boot Keys": it also empties the revocation list. Save and boot NixOS.
+
+3. Enroll the keys. `--microsoft` is required: without Microsoft's certificates Windows stops booting and the graphics card may not initialise.
+
+   ```
+   sudo sbctl enroll-keys --microsoft
+   ```
+
+4. Reboot into the firmware, set `OS Type` to `Windows UEFI mode`, save. Check from NixOS with `bootctl status` (`Secure Boot: enabled (user)`) and from Windows with `Confirm-SecureBootUEFI`.
+
+If anything goes wrong, `Key Management` → `Install Default Secure Boot Keys` restores the factory keys: Windows boots again, and NixOS needs `OS Type` on `Other OS` until the keys are enrolled.

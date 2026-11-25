@@ -12,7 +12,7 @@ This repository describes whole workstations: two Macs (nix-darwin, Homebrew app
 | `hosts/maelito-arm.nix`, `hosts/maelito-x86.nix` | Per-machine values: user, platform, extra brews/casks, extra `/etc/hosts` lines, work module |
 | `hosts/nixos.nix` | NixOS system layer: boot loader, NetworkManager, user, sound, Docker, 1Password, GUI apps |
 | `hosts/hyprland.nix` | The desktop session (Hyprland behind greetd); swapping desktops means swapping this import. It pulls in `modules/hyprland.nix` |
-| `hosts/maelito-desktop/` | The NixOS desktop: hardware, NVIDIA driver, disk layout (`disk.nix`, applied by disko at install) |
+| `hosts/maelito-desktop/` | The NixOS desktop: hardware, NVIDIA driver, Secure Boot through lanzaboote, disk layout (`disk.nix`, applied by disko at install) |
 | `hosts/wireguard.nix` | The `laptop` WireGuard tunnel (arm host only) |
 | `modules/` | home-manager modules, one per tool; `modules/default.nix` lists the ones every host gets, `modules/agorapulse.nix` is imported by work hosts only |
 | `resources/` | Files deployed as-is: wallpaper, Claude `CLAUDE.md` and skills, the historical cluster CA |

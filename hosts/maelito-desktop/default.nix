@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
@@ -23,6 +23,16 @@
   boot.kernelModules = [ "kvm-amd" ];
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.amd.updateMicrocode = true;
+
+  # FACEIT on the Windows side needs Secure Boot on, so NixOS boots through lanzaboote,
+  # which signs the boot files with the machine's own keys and replaces the systemd-boot module.
+  boot.loader.systemd-boot.enable = false;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+    autoGenerateKeys.enable = true;
+  };
+  environment.systemPackages = [ pkgs.sbctl ];
 
   # Windows keeps the hardware clock in local time; without this each OS shifts the other's clock.
   time.hardwareClockInLocalTime = true;
