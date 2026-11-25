@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 xcode=/Applications/Xcode.app/Contents/Developer
