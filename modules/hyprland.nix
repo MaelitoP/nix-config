@@ -1,7 +1,6 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 let
-  wallpaper = "${config.home.homeDirectory}/Pictures/background.jpg";
   lua = lib.generators.mkLuaInline;
   bind = keys: action: {
     _args = [
@@ -89,17 +88,4 @@ in
   programs.waybar.enable = true;
   programs.fuzzel.enable = true;
   services.mako.enable = true;
-
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      splash = false;
-      wallpaper = [
-        {
-          monitor = "";
-          path = wallpaper;
-        }
-      ];
-    };
-  };
 }
