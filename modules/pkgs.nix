@@ -51,6 +51,12 @@ let
       ghz
       mysql84
       qemu
+      gdb
+      # nixpkgs' gdb handles every architecture; this is the name Homebrew gives the RISC-V build.
+      (runCommand "riscv64-elf-gdb" { } ''
+        mkdir -p $out/bin
+        ln -s ${gdb}/bin/gdb $out/bin/riscv64-elf-gdb
+      '')
     ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })

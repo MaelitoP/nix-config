@@ -51,9 +51,9 @@ Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `c
 | Shell | `zsh` (oh-my-zsh, XDG paths, aliases, tmux autostart), `starship`, `fzf`, `direnv`, `bat`, `fastfetch` |
 | Terminal & editors | `ghostty`, `tmux` (catppuccin, resurrect/continuum, launchd-owned server), `emacs` (daemon via launchd), Neovim from the `nvim-config` flake |
 | Toolchains | `pkgs.nix` aggregates `rust`, `go`, `ocaml`, `php`, `python`, `haskell`, `java`, `lsp`; `mise.nix` writes the global mise config |
-| Identity & access | `git` (signed commits, https→ssh rewrite), `gpg`, `ssh` (keys from sops, keychain agent), `github`, `nix` (GitHub access token), `npm` |
+| Identity & access | `git` (signed commits, https→ssh rewrite), `gpg`, `ssh` (keys from sops, keychain agent), `github`, `nix` (GitHub access token), `npm`, `scw` (Scaleway CLI config) |
 | Claude Code | `claude.nix`: `settings.json`, `CLAUDE.md`, skills, plugins, model settings, the session-title hooks (`resources/claude/hooks/session-title.sh`: a background `Stop` hook asks Haiku for a title every few prompts, a `UserPromptSubmit` hook applies it like `/rename`); a launchd watcher in `zsh.nix` re-enables sleep when no session is left |
-| Work (Agorapulse) | `agorapulse.nix`, imported by `hosts/maelito-arm.nix` only: `cairn` (daemon) and `scwx` (Scaleway helper + scw config), work shell aliases, pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate, the `grafana` CLI (`resources/grafana.sh`: read-only Grafana API and Graphite queries over the client certificate) |
+| Work (Agorapulse) | `agorapulse.nix`, imported by `hosts/maelito-arm.nix` only: `cairn` (daemon) and `scwx` (Scaleway helper), work shell aliases, pulse environment files, AWS credentials, nomad and historical cluster credentials, dev client certificate, the `grafana` CLI (`resources/grafana.sh`: read-only Grafana API and Graphite queries over the client certificate) |
 | Look | catppuccin mocha everywhere (`modules/default.nix`), `wallpaper` |
 
 Long-running user services are launchd agents declared next to their tool: tmux server, Emacs daemon, cairn daemon, Claude sleep watcher, `ssh-add` into the keychain, and the sops-nix agent.
