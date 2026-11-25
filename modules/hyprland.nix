@@ -20,6 +20,7 @@ in
 
       input = {
         kb_layout = "us";
+        kb_variant = "intl";
         repeat_delay = 250;
         repeat_rate = 40;
       };
