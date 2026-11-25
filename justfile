@@ -4,7 +4,8 @@ hostname := if os() == "linux" { "maelito-desktop" } else if arch() == "aarch64"
 brew_prefix := if arch() == "aarch64" { "/opt/homebrew" } else { "/usr/local" }
 nix := "nix --extra-experimental-features 'nix-command flakes'"
 
-export PATH := "/etc/profiles/per-user/" + env("USER") + "/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:" + brew_prefix + "/bin:" + env("PATH")
+# /run/wrappers/bin first: on NixOS the sudo in /run/current-system/sw/bin is not setuid.
+export PATH := "/run/wrappers/bin:/etc/profiles/per-user/" + env("USER") + "/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:" + brew_prefix + "/bin:" + env("PATH")
 
 build := nix + " build .#darwinConfigurations." + hostname + ".system"
 switch := "sudo -H ./scripts/with-github-token.sh ./result/sw/bin/darwin-rebuild switch --flake .#" + hostname + " --show-trace"
