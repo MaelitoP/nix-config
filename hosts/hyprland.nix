@@ -11,5 +11,8 @@
   # Electron and Chromium apps pick X11 without this.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
+  # Without an input method running, GTK's Wayland input module drops dead-key sequences.
+  environment.sessionVariables.GTK_IM_MODULE = "simple";
+
   home-manager.users.maelito.imports = [ ../modules/hyprland.nix ];
 }
