@@ -89,7 +89,10 @@
         ControlMaster = "no";
         ControlPath = "~/.ssh/master-%r@%n:%p";
         ControlPersist = "no";
-        UseKeychain = if pkgs.stdenv.hostPlatform.isDarwin then "yes" else "no";
+      }
+      # Only Apple's OpenSSH knows this option; elsewhere it is a fatal config error.
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        UseKeychain = "yes";
       };
     };
   };
