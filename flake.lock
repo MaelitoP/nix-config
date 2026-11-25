@@ -60,6 +60,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795168368,
+        "narHash": "sha256-D35n2Q2v1KrlF9LS/pFl8Z3EBMJW6qvPw5q4HMbXXLg=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "44761d4f745b95e037458a0e57133c5700c8e320",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "emacs-config": {
       "inputs": {
         "flake-utils": "flake-utils_3",
@@ -453,6 +473,7 @@
         "cairn": "cairn",
         "cairn-x86": "cairn-x86",
         "catppuccin": "catppuccin",
+        "disko": "disko",
         "emacs-config": "emacs-config",
         "home-manager": "home-manager_2",
         "home-manager-x86": "home-manager-x86",

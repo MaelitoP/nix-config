@@ -1,6 +1,18 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
+  # On macOS Emacs is the Homebrew emacs-plus build, run by the launchd agent below.
+  programs.emacs = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    enable = true;
+    package = pkgs.emacs-pgtk;
+  };
+  services.emacs.enable = pkgs.stdenv.hostPlatform.isLinux;
+
   launchd.agents.emacs = {
     enable = true;
     config = {

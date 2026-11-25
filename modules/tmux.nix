@@ -135,7 +135,7 @@ in
           source ${ramModule}
 
           set -g status-right ""
-          ${lib.optionalString config.programs.cairn.enable ''
+          ${lib.optionalString (config.programs.cairn.enable or false) ''
             source ${cairnModule}
             set -g status-right "#{?#{!=:#(cairn status --tmux),},#{E:@catppuccin_status_cairn},}"
           ''}

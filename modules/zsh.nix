@@ -1,5 +1,16 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
+let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  androidHome = "${config.home.homeDirectory}/${
+    if isDarwin then "Library/Android/sdk" else "Android/Sdk"
+  }";
+in
 {
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -20,8 +31,6 @@
 
     # Go
     GOPATH = "${config.xdg.dataHome}/go";
-    CGO_CC = "/usr/bin/clang";
-    CGO_CXX = "/usr/bin/clang++";
 
     # Rust
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
@@ -32,8 +41,8 @@
     DUNE_CACHE_ROOT = "${config.xdg.dataHome}/dune";
 
     # Android
-    ANDROID_HOME = "${config.home.homeDirectory}/Library/Android/sdk";
-    ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Library/Android/sdk";
+    ANDROID_HOME = androidHome;
+    ANDROID_SDK_ROOT = androidHome;
 
     LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
 
@@ -41,6 +50,10 @@
     PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
 
     SSH_HOME = "${config.xdg.configHome}/ssh/ssh_config";
+  }
+  // lib.optionalAttrs isDarwin {
+    CGO_CC = "/usr/bin/clang";
+    CGO_CXX = "/usr/bin/clang++";
   };
 
   programs.zsh = {
@@ -84,6 +97,8 @@
 
       assume = "source assume";
 
+    }
+    // lib.optionalAttrs isDarwin {
       sleepstatus = "pmset -g | grep SleepDisabled";
 
       vpnup = "sudo /run/current-system/sw/bin/wg-quick up laptop";
@@ -96,10 +111,12 @@
       bindkey "^[[1;5D" backward-word
       bindkey "^[[1;5C" forward-word
 
-      # Appended, not prepended: nix tools must win over brew's (both ship git).
-      export PATH="$PATH:/opt/homebrew/bin:/opt/homebrew/sbin"
+      ${lib.optionalString isDarwin ''
+        # Appended, not prepended: nix tools must win over brew's (both ship git).
+        export PATH="$PATH:/opt/homebrew/bin:/opt/homebrew/sbin"
 
-      export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+        export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+      ''}
 
       export PATH="$HOME/.local/bin:$PATH"
 
@@ -107,16 +124,18 @@
 
       export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
-      claude() {
-        sudo /usr/bin/pmset -a disablesleep 1
-        trap 'pgrep -x claude >/dev/null || sudo /usr/bin/pmset -a disablesleep 0' EXIT
-        command claude "$@"
-      }
+      ${lib.optionalString isDarwin ''
+        claude() {
+          sudo /usr/bin/pmset -a disablesleep 1
+          trap 'pgrep -x claude >/dev/null || sudo /usr/bin/pmset -a disablesleep 0' EXIT
+          command claude "$@"
+        }
 
-      export CGO_CC="/usr/bin/clang"
-      export CGO_CXX="/usr/bin/clang++"
-      export CC="/usr/bin/clang"
-      export CXX="/usr/bin/clang++"
+        export CGO_CC="/usr/bin/clang"
+        export CGO_CXX="/usr/bin/clang++"
+        export CC="/usr/bin/clang"
+        export CXX="/usr/bin/clang++"
+      ''}
 
       # Opam configuration
       [[ ! -r "$HOME/.local/share/opam/opam-init/init.zsh" ]] || source "$HOME/.local/share/opam/opam-init/init.zsh" > /dev/null 2> /dev/null
@@ -153,7 +172,7 @@
       # oh-my-zsh already runs compinit with -u (skip insecure dirs check),
       # and scw's redundant bare compinit re-triggers the security audit,
       # causing "insecure files" warnings from Docker Desktop's completions.
-      if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
+      if [ -z "$INTELLIJ_ENVIRONMENT_READER" ] && command -v scw > /dev/null; then
         eval "$(scw autocomplete script shell=zsh | grep -v compinit)"
       fi
 

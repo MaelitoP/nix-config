@@ -56,6 +56,11 @@
       inputs.nixpkgs.follows = "nixpkgs-x86";
     };
     catppuccin.url = "github:catppuccin/nix";
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -69,6 +74,31 @@
       ...
     }:
     let
+      pkgsFor =
+        nixpkgs: system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [
+            (final: prev: {
+              cargo-watch = inputs.nixpkgs-cargo-watch.legacyPackages.${system}.cargo-watch;
+            })
+          ];
+        };
+
+      homeManagerConfig = {
+        home-manager.backupFileExtension = "bak";
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.maelito.imports = [
+          sops-nix.homeManagerModules.sops
+          ./modules
+          catppuccin.homeModules.catppuccin
+          inputs.nvim-config.homeManagerModules.nvim-config
+          inputs.emacs-config.homeManagerModules.emacs-config
+        ];
+      };
+
       mkDarwinConfig =
         {
           system,
@@ -84,31 +114,14 @@
           inherit system;
 
           modules = [
-            {
-              nixpkgs.pkgs = import nixpkgs {
-                inherit system;
-                config.allowUnfree = true;
-                overlays = [
-                  (final: prev: {
-                    cargo-watch = inputs.nixpkgs-cargo-watch.legacyPackages.${system}.cargo-watch;
-                  })
-                ];
-              };
-            }
+            { nixpkgs.pkgs = pkgsFor nixpkgs system; }
             sops-nix.darwinModules.sops
             hostModule
             home-manager.darwinModules.home-manager
+            homeManagerConfig
             {
-              home-manager.backupFileExtension = "bak";
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
               home-manager.users.maelito = {
                 imports = [
-                  sops-nix.homeManagerModules.sops
-                  ./modules
-                  catppuccin.homeModules.catppuccin
-                  inputs.nvim-config.homeManagerModules.nvim-config
-                  inputs.emacs-config.homeManagerModules.emacs-config
                   inputs.scwx.homeManagerModules.scwx
                   inputs.cairn.homeManagerModules.default
                 ];
@@ -119,6 +132,18 @@
                 programs.cairn.package = cairn.packages.${system}.default;
               };
             }
+          ];
+        };
+
+      mkNixosConfig =
+        { system, hostModule }:
+        nixpkgs.lib.nixosSystem {
+          modules = [
+            { nixpkgs.pkgs = pkgsFor nixpkgs system; }
+            inputs.disko.nixosModules.disko
+            hostModule
+            home-manager.nixosModules.home-manager
+            homeManagerConfig
           ];
         };
     in
@@ -140,6 +165,11 @@
           scwx = inputs.scwx-x86;
           cairn = inputs.cairn-x86;
         };
+      };
+
+      nixosConfigurations.maelito-desktop = mkNixosConfig {
+        system = "x86_64-linux";
+        hostModule = ./hosts/maelito-desktop;
       };
     };
 }

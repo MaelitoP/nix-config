@@ -6,6 +6,19 @@ on:
   pull_request:
 
 jobs:
+  nixos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Evaluate NixOS configuration
+        run: |
+          nix build .#nixosConfigurations.maelito-desktop.config.system.build.toplevel --dry-run
+
   check:
     runs-on: macos-latest
     steps:

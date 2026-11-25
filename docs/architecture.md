@@ -1,22 +1,25 @@
 # Architecture
 
-This repository describes a whole macOS workstation: the system (nix-darwin), the user environment (home-manager), Homebrew apps, and secrets (sops). A fresh Mac converges to the same state with `scripts/install.sh`, and every later change goes through `just rebuild`.
+This repository describes whole workstations: two Macs (nix-darwin, Homebrew apps) and one NixOS desktop, sharing the same user environment (home-manager) and secrets (sops). A fresh Mac converges to the same state with `scripts/install.sh`, the desktop with [install-nixos.md](install-nixos.md), and every later change goes through `just rebuild`.
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `flake.nix` | Inputs and the `mkDarwinConfig` function that assembles a host |
+| `flake.nix` | Inputs and the `mkDarwinConfig` / `mkNixosConfig` functions that assemble a host around the shared home-manager block |
 | `hosts/common.nix` | `host.*` options and the system settings that are identical on every OS: user, nix settings, zsh, GitHub's SSH host key, fonts |
 | `hosts/darwin.nix` | macOS system layer: nix-darwin settings, Homebrew, macOS defaults, activation scripts |
 | `hosts/maelito-arm.nix`, `hosts/maelito-x86.nix` | Per-machine values: user, platform, extra brews/casks, extra `/etc/hosts` lines, work module |
+| `hosts/nixos.nix` | NixOS system layer: boot loader, NetworkManager, user, sound, Docker, 1Password, GUI apps |
+| `hosts/hyprland.nix` | The desktop session (Hyprland behind greetd); swapping desktops means swapping this import. It pulls in `modules/hyprland.nix` |
+| `hosts/maelito-desktop/` | The NixOS desktop: hardware, NVIDIA driver, disk layout (`disk.nix`, applied by disko at install) |
 | `hosts/wireguard.nix` | The `laptop` WireGuard tunnel (arm host only) |
 | `modules/` | home-manager modules, one per tool; `modules/default.nix` lists the ones every host gets, `modules/agorapulse.nix` is imported by work hosts only |
 | `resources/` | Files deployed as-is: wallpaper, Claude `CLAUDE.md` and skills, the historical cluster CA |
 | `secrets/` | sops-encrypted secrets, see [secrets.md](secrets.md) |
 | `scripts/` | Bootstrap helpers called by `install.sh` and the `justfile` |
 | `justfile` | Day-to-day entry points (`bootstrap`, `rebuild`, `check`, `brew`, `update`…) |
-| `.github/workflows/check.yml` | CI: evaluates both hosts, checks formatting, lints scripts |
+| `.github/workflows/check.yml` | CI: evaluates every host (the Macs on macOS, the desktop on Linux), checks formatting, lints scripts |
 | `.githooks/pre-commit` | Formats staged `.nix` files with nixfmt |
 
 ## Hosts
@@ -25,6 +28,10 @@ This repository describes a whole macOS workstation: the system (nix-darwin), th
 
 - **`maelito-arm`** (Apple Silicon, the work laptop) follows `nixpkgs-unstable` and the matching home-manager / nix-darwin branches.
 - **`maelito-x86`** (Intel) is pinned to the 26.05 branches, because nixpkgs 26.11 dropped `x86_64-darwin`. Options sometimes differ between the two generations (e.g. `homebrew.onActivation.brewBundleCmd` is a function on unstable and a string on 26.05), so shared code must evaluate on both. CI dry-builds both hosts for that reason.
+
+- **`maelito-desktop`** (x86_64 Linux, dual-booted with Windows) is built by `mkNixosConfig` on `nixpkgs-unstable`. It gets none of the work modules, and its flake inputs are all public, so it installs without a GitHub token. It cannot be evaluated on a Mac: the catppuccin module builds its themes during evaluation, which needs a Linux builder.
+
+Modules that differ per OS branch inline on `pkgs.stdenv.hostPlatform`; `launchd.agents` are ignored on Linux and `systemd.user` on macOS, so both can sit next to their tool.
 
 Flake inputs that are my own projects (`nvim-config`, `emacs-config`, `scwx`, `cairn`) expose home-manager modules; their packages are pinned per host to that host's nixpkgs.
 
@@ -68,7 +75,7 @@ Work-only secrets are isolated in `secrets/agorapulse.yaml` and `secrets/client-
 
 1. **Fresh machine**: `scripts/install.sh` installs the Xcode CLI tools, Nix (flakes enabled), Homebrew, clones this repo, asks for the age key, then runs `just bootstrap`: first build, move `/etc/{bashrc,zshrc}` aside, `darwin-rebuild switch` (retried once), GPG key import, `mise install`.
 2. **Every change**: edit, `just check` (dry build of the current host, shellcheck, nixfmt), `just rebuild`.
-3. **CI**: on pushes to `main` and on pull requests, dry builds of both hosts, nixfmt, shellcheck.
+3. **CI**: on pushes to `main` and on pull requests, dry builds of every host, nixfmt, shellcheck.
 4. **Upkeep**: `just update` (flake inputs), `just brew` (bundle only), `just clean` (garbage collection).
 
 ## Leaving Agorapulse

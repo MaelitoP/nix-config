@@ -1,10 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.ghostty = {
     enable = true;
 
-    package = null;
+    # On macOS Ghostty is the Homebrew cask.
+    package = if pkgs.stdenv.hostPlatform.isDarwin then null else pkgs.ghostty;
 
     enableZshIntegration = false;
     enableBashIntegration = false;

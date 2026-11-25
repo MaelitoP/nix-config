@@ -1,6 +1,6 @@
 set shell := ["zsh", "-c"]
 
-hostname := if arch() == "aarch64" { "maelito-arm" } else { "maelito-x86" }
+hostname := if os() == "linux" { "maelito-desktop" } else if arch() == "aarch64" { "maelito-arm" } else { "maelito-x86" }
 brew_prefix := if arch() == "aarch64" { "/opt/homebrew" } else { "/usr/local" }
 nix := "nix --extra-experimental-features 'nix-command flakes'"
 
@@ -32,6 +32,13 @@ rebuild:
     {{switch}}
     ./scripts/import-gpg-key-once.sh
 
+# Rebuild and apply the configuration
+[linux]
+rebuild:
+    @echo "Rebuilding configuration for {{hostname}}"
+    sudo nixos-rebuild switch --flake .#{{hostname}} --show-trace
+    ./scripts/import-gpg-key-once.sh
+
 # Re-run the Homebrew bundle without a full switch
 [macos]
 brew:
@@ -43,6 +50,16 @@ brew:
 check:
     @echo "Checking configuration for {{hostname}}"
     ./scripts/with-github-token.sh {{build}} --dry-run
+    @echo "Linting shell scripts"
+    shellcheck scripts/*.sh
+    @echo "Checking formatting"
+    @fd -e nix -x nixfmt --check
+
+# Dry-run build to validate without applying
+[linux]
+check:
+    @echo "Checking configuration for {{hostname}}"
+    {{nix}} build .#nixosConfigurations.{{hostname}}.config.system.build.toplevel --dry-run
     @echo "Linting shell scripts"
     shellcheck scripts/*.sh
     @echo "Checking formatting"

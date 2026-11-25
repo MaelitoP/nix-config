@@ -43,6 +43,10 @@ let
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
       apple-sdk_15
     ]
+    # On macOS mise is a Homebrew formula.
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+      mise
+    ]
     ++ (import ./rust.nix { pkgs = pkgs; })
     ++ (import ./lsp.nix { pkgs = pkgs; })
     ++ (import ./go.nix { pkgs = pkgs; })
