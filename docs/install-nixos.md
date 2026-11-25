@@ -37,6 +37,12 @@ The desktop dual-boots Windows (2 TB NVMe, never touched here) and NixOS (1 TB S
    sudo install -D -m 600 -o 1000 -g 100 /path/to/keys.txt /mnt/home/maelito/.config/sops/age/keys.txt
    ```
 
+   `install -D` creates the missing parent directories as root, home included, so hand them back:
+
+   ```
+   sudo chown -R 1000:100 /mnt/home/maelito
+   ```
+
 6. Reboot without the key. In the firmware, keep Windows Boot Manager first in the boot order; NixOS is "Linux Boot Manager" in the boot menu.
 
 ## After the first boot
